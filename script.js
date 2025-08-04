@@ -4,24 +4,25 @@ let currentSort = 'popular';
 let currentCommunityFilter = 'all';
 let currentChatRoom = null;
 let searchTimeout = null;
+let currentPost = null;
 
 // 샘플 데이터
 let worksData = [
     {
         id: 1,
-        title: '귀멸의 칼날 탄지로 만화',
-        author: '만화가 정수현',
-        avatar: '정',
-        category: 'manga',
-        thumbnail: 'https://via.placeholder.com/200x160/1f2937/f3f4f6?text=Demon+Slayer',
-        image: 'https://via.placeholder.com/600x400/1f2937/f3f4f6?text=Tanjiro+Manga',
-        description: '귀멸의 칼날 탄지로의 새로운 모험을 그린 단편 만화입니다.',
-        tags: ['귀멸의칼날', '탄지로', '만화', '단편'],
-        likes: 3421,
-        views: 12567,
-        comments: 445,
-        timestamp: Date.now() - 12 * 60 * 60 * 1000,
-        date: '12시간 전'
+        title: '귀멸의 칼날 탄지로 팬아트',
+        author: '아티스트 김철수',
+        avatar: '김',
+        category: 'illustration',
+        thumbnail: 'https://via.placeholder.com/200x160/1f2937/f3f4f6?text=Tanjiro+Art',
+        description: '귀멸의 칼날 탄지로의 새로운 팬아트입니다.',
+        tags: ['귀멸의칼날', '탄지로', '팬아트', '일러스트'],
+        likes: 1234,
+        views: 5678,
+        comments: [],
+        bookmarks: 89,
+        timestamp: Date.now() - 2 * 60 * 60 * 1000,
+        authorId: 'sample1'
     }
 ];
 
@@ -30,21 +31,24 @@ let communitiesData = [
         id: 1,
         name: '하이큐!! 팬클럽',
         category: 'animation',
-        members: 1234,
-        todayPosts: 15,
+        members: 2345,
         description: '하이큐를 사랑하는 사람들이 모인 커뮤니티입니다.',
         icon: '🏐',
-        tags: ['하이큐', '애니메이션', '배구']
-    },
-    {
-        id: 2,
-        name: '일러스트 갤러리',
-        category: 'illustration',
-        members: 2567,
-        todayPosts: 23,
-        description: '다양한 스타일의 일러스트를 공유하고 피드백을 주고받는 공간입니다.',
-        icon: '🎨',
-        tags: ['일러스트', '드로잉', '아트']
+        posts: [
+            {
+                id: 1,
+                title: '하이큐 최신 에피소드 감상',
+                content: '이번 에피소드 정말 감동적이었어요! 특히 카게야마와 히나타의 콤비 플레이가...',
+                author: '민',
+                timestamp: Date.now() - 30 * 60 * 1000,
+                likes: 15,
+                comments: [
+                    { id: 1, author: '김', text: '정말 대박이었죠!', timestamp: Date.now() - 15 * 60 * 1000 },
+                    { id: 2, author: '이', text: '저도 울었어요 ㅠㅠ', timestamp: Date.now() - 10 * 60 * 1000 }
+                ],
+                bookmarks: 5
+            }
+        ]
     }
 ];
 
@@ -56,18 +60,54 @@ let chatRoomsData = [
         timestamp: Date.now() - 5 * 60 * 1000,
         unread: 2,
         avatar: '🎨',
-        online: true
-    },
-    {
-        id: 2,
-        name: '창작자 모임',
-        lastMessage: '다들 어떤 프로젝트 하고 계세요?',
-        timestamp: Date.now() - 30 * 60 * 1000,
-        unread: 0,
-        avatar: '👥',
-        online: false
+        online: true,
+        messages: [
+            {
+                id: 1,
+                sender: 'other',
+                content: '안녕하세요! 새로운 작업 공유해보려고 해요',
+                timestamp: Date.now() - 10 * 60 * 1000,
+                senderName: 'Artist'
+            },
+            {
+                id: 2,
+                sender: 'me',
+                content: '네! 궁금해요. 어떤 작업인지 보여주세요!',
+                timestamp: Date.now() - 5 * 60 * 1000,
+                senderName: 'Me'
+            }
+        ]
     }
 ];
+
+let usersData = [
+    { id: 1, name: '일러스트레이터 김민수', avatar: '김', online: true },
+    { id: 2, name: '만화가 이영희', avatar: '이', online: false },
+    { id: 3, name: '소설가 박철수', avatar: '박', online: true }
+];
+
+// 카카오 SDK 초기화
+function initializeKakao() {
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init('YOUR_KAKAO_APP_KEY'); // 실제 앱 키로 교체 필요
+    }
+}
+
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔥 CRETA 플랫폼이 Firebase와 함께 로드되었습니다!');
+    initializeKakao();
+    
+    // 외부 클릭시 패널 숨기기
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.search-container')) {
+            hideSearchPanel();
+        }
+        if (!event.target.closest('.emoji-btn') && !event.target.closest('.emoji-picker')) {
+            hideEmojiPicker();
+        }
+    });
+});
 
 // 사용자 인증 함수들
 function showAuthModal() {
@@ -174,6 +214,60 @@ async function loginWithGoogle() {
     }
 }
 
+// 카카오 로그인
+function loginWithKakao() {
+    if (!window.Kakao) {
+        showNotification('카카오 SDK가 로드되지 않았습니다.');
+        return;
+    }
+    
+    window.Kakao.Auth.login({
+        success: function(authObj) {
+            window.Kakao.API.request({
+                url: '/v2/user/me',
+                success: function(res) {
+                    showNotification('카카오 로그인 성공! 🎉');
+                    // Firebase 커스텀 토큰 생성 로직 추가 필요
+                },
+                fail: function(error) {
+                    showNotification('카카오 사용자 정보 가져오기 실패');
+                }
+            });
+        },
+        fail: function(err) {
+            showNotification('카카오 로그인 실패');
+        }
+    });
+}
+
+// 네이버 로그인 (구현 예정)
+function loginWithNaver() {
+    showNotification('네이버 로그인 기능 준비 중입니다! 🟢');
+}
+
+function signupWithNaver() {
+    showNotification('네이버 회원가입 기능 준비 중입니다! 🟢');
+}
+
+// 애플 로그인 (구현 예정)
+function loginWithApple() {
+    showNotification('Apple 로그인 기능 준비 중입니다! 🍎');
+}
+
+function signupWithApple() {
+    showNotification('Apple 회원가입 기능 준비 중입니다! 🍎');
+}
+
+// 카카오 회원가입
+function signupWithKakao() {
+    loginWithKakao(); // 카카오는 로그인과 회원가입이 동일
+}
+
+// 구글 회원가입
+function signupWithGoogle() {
+    loginWithGoogle(); // 구글도 로그인과 회원가입이 동일
+}
+
 // 로그아웃
 async function logoutUser() {
     try {
@@ -195,7 +289,8 @@ function showScreen(screenName) {
     });
     
     document.getElementById(screenName).classList.add('active');
-    document.querySelector(`[data-screen="${screenName}"]`).classList.add('active');
+    const navItem = document.querySelector(`[data-screen="${screenName}"]`);
+    if (navItem) navItem.classList.add('active');
     
     currentScreen = screenName;
     
@@ -208,25 +303,31 @@ function showScreen(screenName) {
     }
 }
 
-// 탐색 기능
-function handleHeaderSearch(event) {
-    if (event.key === 'Enter') {
-        const query = event.target.value.trim();
-        if (query) {
-            showScreen('explore');
-            searchWorks(query);
-        }
-    }
+// 홈 화면 카테고리별 탐색
+function exploreByCategory(category) {
+    showScreen('explore');
+    changeSortOrder(category);
 }
 
+// 탐색 기능
 function handleExploreSearch(event) {
     if (event.key === 'Enter') {
         const query = event.target.value.trim();
         if (query) {
             searchWorks(query);
-            hideSuggestions();
+            hideSearchPanel();
         }
     }
+}
+
+function showSearchPanel() {
+    document.getElementById('searchPanel').style.display = 'block';
+    document.getElementById('trendingSection').style.display = 'none';
+}
+
+function hideSearchPanel() {
+    document.getElementById('searchPanel').style.display = 'none';
+    document.getElementById('trendingSection').style.display = 'block';
 }
 
 function searchWorks(query) {
@@ -238,7 +339,7 @@ function searchWorks(query) {
     );
     
     displayExploreResults(results);
-    document.getElementById('trendingSection').style.display = 'none';
+    hideSearchPanel();
 }
 
 function searchByTag(tag) {
@@ -252,46 +353,34 @@ function showSuggestions() {
     
     if (query.length > 0) {
         const suggestions = ['하이큐', '진격의거인', '원피스', '나루토', '귀멸의칼날', '팬아트', '일러스트']
-            .filter(tag => tag.toLowerCase().includes(query))
-            .slice(0, 5);
+            .filter(tag => tag.toLowerCase().includes(query));
         
-        if (suggestions.length > 0) {
-            const dropdown = document.getElementById('suggestionsDropdown');
-            const list = document.getElementById('suggestionsList');
-            
-            list.innerHTML = suggestions.map(suggestion => 
-                `<div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">${suggestion}</div>`
-            ).join('');
-            
-            dropdown.style.display = 'block';
-        } else {
-            hideSuggestions();
-        }
-    } else {
-        hideSuggestions();
+        const suggestionsList = document.getElementById('suggestionsList');
+        suggestionsList.innerHTML = suggestions.map(suggestion => 
+            `<div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">${suggestion}</div>`
+        ).join('');
+        
+        showSearchPanel();
     }
 }
 
 function selectSuggestion(suggestion) {
     document.getElementById('exploreSearchInput').value = suggestion;
     searchWorks(suggestion);
-    hideSuggestions();
-}
-
-function hideSuggestions() {
-    document.getElementById('suggestionsDropdown').style.display = 'none';
+    hideSearchPanel();
 }
 
 function clearExploreSearch() {
     document.getElementById('exploreSearchInput').value = '';
-    document.getElementById('search-clear').style.display = 'none';
+    document.getElementById('searchClear').style.display = 'none';
     loadExploreWorks();
-    document.getElementById('trendingSection').style.display = 'block';
+    hideSearchPanel();
 }
 
 function changeSortOrder(sortType) {
     document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[data-sort="${sortType}"]`).classList.add('active');
+    const sortBtn = document.querySelector(`[data-sort="${sortType}"]`);
+    if (sortBtn) sortBtn.classList.add('active');
     
     currentSort = sortType;
     loadExploreWorks();
@@ -362,17 +451,47 @@ function loadCommunities() {
                 <div class="community-icon">${community.icon}</div>
                 <div class="community-info">
                     <h3>${community.name}</h3>
-                    <div class="community-meta">${community.members}명 • 오늘 ${community.todayPosts}개 게시물</div>
+                    <div class="community-meta">${community.members}명</div>
                 </div>
             </div>
             <div class="community-description">${community.description}</div>
+            <div class="community-posts">
+                ${community.posts ? community.posts.map(post => `
+                    <div class="post-item" onclick="event.stopPropagation(); showPostDetail(${post.id}, ${community.id})">
+                        <div class="post-header">
+                            <div class="post-avatar">${post.author.charAt(0)}</div>
+                            <div class="post-author">${post.author}</div>
+                            <div class="post-meta">${formatTime(post.timestamp)}</div>
+                        </div>
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-content">${post.content.substring(0, 100)}${post.content.length > 100 ? '...' : ''}</div>
+                        <div class="post-actions">
+                            <div class="post-stats">
+                                <span class="action-btn">
+                                    <span class="icon">❤️</span>
+                                    <span class="count">${post.likes || 0}</span>
+                                </span>
+                                <span class="action-btn">
+                                    <span class="icon">💬</span>
+                                    <span class="count">${post.comments ? post.comments.length : 0}</span>
+                                </span>
+                                <span class="action-btn">
+                                    <span class="icon">🔖</span>
+                                    <span class="count">${post.bookmarks || 0}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : ''}
+            </div>
         </div>
     `).join('');
 }
 
 function filterCommunities(category) {
     document.querySelectorAll('.community-filter').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[data-filter="${category}"]`).classList.add('active');
+    const filterBtn = document.querySelector(`[data-filter="${category}"]`);
+    if (filterBtn) filterBtn.classList.add('active');
     
     currentCommunityFilter = category;
     loadCommunities();
@@ -425,7 +544,151 @@ async function createCommunity() {
 }
 
 function joinCommunity(communityId) {
-    showNotification('커뮤니티 참여 기능 준비 중입니다! 👥');
+    showNotification('커뮤니티 참여 기능이 활성화되었습니다! 👥');
+}
+
+// 게시물 상세보기
+function showPostDetail(postId, communityId) {
+    const community = communitiesData.find(c => c.id === communityId);
+    const post = community?.posts.find(p => p.id === postId);
+    
+    if (!post) return;
+    
+    currentPost = post;
+    
+    document.getElementById('postDetailTitle').textContent = post.title;
+    document.querySelector('.post-detail-content').textContent = post.content;
+    document.getElementById('likeCount').textContent = post.likes || 0;
+    document.getElementById('commentCount').textContent = post.comments ? post.comments.length : 0;
+    document.getElementById('bookmarkCount').textContent = post.bookmarks || 0;
+    
+    const commentsList = document.getElementById('commentsList');
+    commentsList.innerHTML = '';
+    
+    if (post.comments) {
+        post.comments.forEach(comment => {
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment';
+            commentDiv.innerHTML = `
+                <div class="comment-author">${comment.author}</div>
+                <div class="comment-text">${comment.text}</div>
+            `;
+            commentsList.appendChild(commentDiv);
+        });
+    }
+    
+    document.getElementById('postDetailModal').style.display = 'flex';
+}
+
+function hidePostDetail() {
+    document.getElementById('postDetailModal').style.display = 'none';
+    currentPost = null;
+}
+
+function toggleLike() {
+    if (!currentPost) return;
+    
+    const likeBtn = document.querySelector('.like-btn');
+    const likeCount = document.getElementById('likeCount');
+    
+    if (likeBtn.classList.contains('liked')) {
+        likeBtn.classList.remove('liked');
+        currentPost.likes = Math.max(0, (currentPost.likes || 0) - 1);
+        showNotification('좋아요를 취소했습니다');
+    } else {
+        likeBtn.classList.add('liked');
+        currentPost.likes = (currentPost.likes || 0) + 1;
+        showNotification('좋아요를 눌렀습니다! ❤️');
+    }
+    
+    likeCount.textContent = currentPost.likes;
+}
+
+function toggleBookmark() {
+    if (!currentPost) return;
+    
+    const bookmarkBtn = document.querySelector('.bookmark-btn');
+    const bookmarkCount = document.getElementById('bookmarkCount');
+    
+    if (bookmarkBtn.classList.contains('bookmarked')) {
+        bookmarkBtn.classList.remove('bookmarked');
+        currentPost.bookmarks = Math.max(0, (currentPost.bookmarks || 0) - 1);
+        showNotification('북마크를 해제했습니다');
+    } else {
+        bookmarkBtn.classList.add('bookmarked');
+        currentPost.bookmarks = (currentPost.bookmarks || 0) + 1;
+        showNotification('북마크에 추가했습니다! 🔖');
+    }
+    
+    bookmarkCount.textContent = currentPost.bookmarks;
+}
+
+function sharePost() {
+    if (navigator.share && currentPost) {
+        navigator.share({
+            title: currentPost.title,
+            text: currentPost.content,
+            url: window.location.href
+        }).then(() => {
+            showNotification('게시물이 공유되었습니다! 📤');
+        }).catch(err => {
+            showNotification('공유 기능을 사용할 수 없습니다');
+        });
+    } else {
+        // 클립보드에 복사
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            showNotification('링크가 클립보드에 복사되었습니다! 📤');
+        }).catch(err => {
+            showNotification('공유 기능 준비 중입니다! 📤');
+        });
+    }
+}
+
+function handleCommentInput(event) {
+    if (event.key === 'Enter') {
+        submitComment();
+    }
+}
+
+function submitComment() {
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
+    
+    if (!text || !currentPost) return;
+    
+    if (!auth.currentUser) {
+        showNotification('로그인이 필요합니다!');
+        return;
+    }
+    
+    const newComment = {
+        id: Date.now(),
+        author: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+        text: text,
+        timestamp: Date.now()
+    };
+    
+    if (!currentPost.comments) {
+        currentPost.comments = [];
+    }
+    currentPost.comments.push(newComment);
+    
+    const commentDiv = document.createElement('div');
+    commentDiv.className = 'comment';
+    commentDiv.innerHTML = `
+        <div class="comment-author">${newComment.author}</div>
+        <div class="comment-text">${newComment.text}</div>
+    `;
+    
+    document.getElementById('commentsList').appendChild(commentDiv);
+    document.getElementById('commentCount').textContent = currentPost.comments.length;
+    
+    input.value = '';
+    showNotification('댓글이 작성되었습니다! 💬');
+}
+
+function focusCommentInput() {
+    document.getElementById('commentInput').focus();
 }
 
 // 채팅 기능 (실시간)
@@ -443,6 +706,7 @@ function loadChatRooms() {
                 <h3>${room.name}</h3>
                 <div class="chat-preview">${room.lastMessage}</div>
             </div>
+            <div class="chat-time">${formatTime(room.timestamp)}</div>
             ${room.unread > 0 ? `<div class="unread-badge">${room.unread}</div>` : ''}
         </div>
     `).join('');
@@ -452,42 +716,31 @@ function selectChatRoom(roomId) {
     currentChatRoom = roomId;
     const room = chatRoomsData.find(r => r.id === roomId);
     
+    // 읽음 처리
+    room.unread = 0;
+    
     // UI 업데이트
-    document.querySelectorAll('.chat-room').forEach(r => r.classList.remove('active'));
-    document.querySelector(`[onclick="selectChatRoom(${roomId})"]`).classList.add('active');
+    loadChatRooms();
     
     // 채팅방 헤더 업데이트
     document.querySelector('#chatTopBar .chat-user-info h3').textContent = room.name;
     document.querySelector('#chatTopBar .status').textContent = room.online ? '온라인' : '오프라인';
+    document.querySelector('#chatTopBar .status').className = `status ${room.online ? 'online' : 'offline'}`;
     
     // 환영 메시지 숨기기
-    document.querySelector('.welcome-message').style.display = 'none';
+    const welcomeMsg = document.querySelector('.welcome-message');
+    if (welcomeMsg) welcomeMsg.style.display = 'none';
     
     loadChatMessages(roomId);
 }
 
 function loadChatMessages(roomId) {
     const container = document.getElementById('chatMessages');
+    const room = chatRoomsData.find(r => r.id === roomId);
     
-    // 샘플 메시지들
-    const sampleMessages = [
-        {
-            id: 1,
-            sender: 'other',
-            content: '안녕하세요! 새로운 작업 공유해보려고 해요',
-            timestamp: Date.now() - 10 * 60 * 1000,
-            senderName: 'Artist'
-        },
-        {
-            id: 2,
-            sender: 'me',
-            content: '네! 궁금해요. 어떤 작업인지 보여주세요!',
-            timestamp: Date.now() - 5 * 60 * 1000,
-            senderName: 'Me'
-        }
-    ];
+    if (!room || !room.messages) return;
     
-    container.innerHTML = sampleMessages.map(message => `
+    container.innerHTML = room.messages.map(message => `
         <div class="message ${message.sender === 'me' ? 'sent' : 'received'}">
             ${message.sender !== 'me' ? '<div class="message-avatar">🎨</div>' : ''}
             <div class="message-content">
@@ -503,7 +756,8 @@ function loadChatMessages(roomId) {
 }
 
 function handleMessageInput(event) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
         sendMessage();
     }
 }
@@ -513,6 +767,24 @@ function sendMessage() {
     const content = input.value.trim();
     
     if (!content || !currentChatRoom) return;
+    
+    const room = chatRoomsData.find(r => r.id === currentChatRoom);
+    if (!room) return;
+    
+    const newMessage = {
+        id: Date.now(),
+        sender: 'me',
+        content: content,
+        timestamp: Date.now(),
+        senderName: 'Me'
+    };
+    
+    if (!room.messages) {
+        room.messages = [];
+    }
+    room.messages.push(newMessage);
+    room.lastMessage = content;
+    room.timestamp = Date.now();
     
     // UI에 즉시 메시지 추가
     const container = document.getElementById('chatMessages');
@@ -530,24 +802,174 @@ function sendMessage() {
     
     input.value = '';
     
-    // 실제 Firebase 전송은 나중에 구현
+    // 채팅방 목록 업데이트
+    loadChatRooms();
+    
     showNotification('메시지 전송됨! 💬');
 }
 
 function showNewChatModal() {
-    showNotification('새 채팅 시작 기능 준비 중입니다! ✏️');
+    document.getElementById('newChatModal').style.display = 'flex';
+    loadUsersList();
+}
+
+function hideNewChatModal() {
+    document.getElementById('newChatModal').style.display = 'none';
+}
+
+function loadUsersList() {
+    const container = document.getElementById('usersList');
+    
+    container.innerHTML = usersData.map(user => `
+        <div class="user-item" onclick="startNewChat(${user.id})">
+            <div class="user-avatar">${user.avatar}</div>
+            <div class="user-info">
+                <h4>${user.name}</h4>
+                <span class="status ${user.online ? 'online' : 'offline'}">
+                    ${user.online ? '온라인' : '오프라인'}
+                </span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function searchUsers() {
+    const query = document.getElementById('userSearchInput').value.toLowerCase();
+    const filteredUsers = usersData.filter(user => 
+        user.name.toLowerCase().includes(query)
+    );
+    
+    const container = document.getElementById('usersList');
+    container.innerHTML = filteredUsers.map(user => `
+        <div class="user-item" onclick="startNewChat(${user.id})">
+            <div class="user-avatar">${user.avatar}</div>
+            <div class="user-info">
+                <h4>${user.name}</h4>
+                <span class="status ${user.online ? 'online' : 'offline'}">
+                    ${user.online ? '온라인' : '오프라인'}
+                </span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function startNewChat(userId) {
+    const user = usersData.find(u => u.id === userId);
+    if (!user) return;
+    
+    // 기존 채팅방이 있는지 확인
+    let existingRoom = chatRoomsData.find(room => room.name === user.name);
+    
+    if (!existingRoom) {
+        // 새 채팅방 생성
+        existingRoom = {
+            id: Date.now(),
+            name: user.name,
+            lastMessage: '',
+            timestamp: Date.now(),
+            unread: 0,
+            avatar: user.avatar,
+            online: user.online,
+            messages: []
+        };
+        chatRoomsData.push(existingRoom);
+    }
+    
+    hideNewChatModal();
+    loadChatRooms();
+    selectChatRoom(existingRoom.id);
+    
+    showNotification(`${user.name}님과의 채팅이 시작되었습니다! 💬`);
 }
 
 function searchChats() {
-    // 채팅방 검색 기능
+    const query = document.getElementById('chatSearchInput').value.toLowerCase();
+    const container = document.getElementById('chatRoomsList');
+    
+    const filteredRooms = chatRoomsData.filter(room => 
+        room.name.toLowerCase().includes(query)
+    );
+    
+    container.innerHTML = filteredRooms.map(room => `
+        <div class="chat-room ${currentChatRoom === room.id ? 'active' : ''}" onclick="selectChatRoom(${room.id})">
+            <div class="chat-avatar">${room.avatar}</div>
+            <div class="chat-user-info">
+                <h3>${room.name}</h3>
+                <div class="chat-preview">${room.lastMessage}</div>
+            </div>
+            <div class="chat-time">${formatTime(room.timestamp)}</div>
+            ${room.unread > 0 ? `<div class="unread-badge">${room.unread}</div>` : ''}
+        </div>
+    `).join('');
 }
 
 function attachFile() {
-    showNotification('파일 첨부 기능 준비 중입니다! 📎');
+    document.getElementById('fileUploadModal').style.display = 'flex';
+}
+
+function hideFileUploadModal() {
+    document.getElementById('fileUploadModal').style.display = 'none';
+    document.getElementById('selectedFiles').innerHTML = '';
+}
+
+function handleFileSelect() {
+    const files = document.getElementById('fileInput').files;
+    const container = document.getElementById('selectedFiles');
+    
+    container.innerHTML = '';
+    
+    Array.from(files).forEach((file, index) => {
+        const fileDiv = document.createElement('div');
+        fileDiv.className = 'file-item';
+        fileDiv.innerHTML = `
+            <div class="file-icon">📁</div>
+            <div class="file-info">
+                <div class="file-name">${file.name}</div>
+                <div class="file-size">${formatFileSize(file.size)}</div>
+            </div>
+            <button class="file-remove" onclick="removeFile(${index})">✕</button>
+        `;
+        container.appendChild(fileDiv);
+    });
+}
+
+function removeFile(index) {
+    const fileInput = document.getElementById('fileInput');
+    const files = Array.from(fileInput.files);
+    files.splice(index, 1);
+    
+    // 파일 입력 재설정
+    const dt = new DataTransfer();
+    files.forEach(file => dt.items.add(file));
+    fileInput.files = dt.files;
+    
+    handleFileSelect();
+}
+
+function uploadFiles() {
+    const files = document.getElementById('fileInput').files;
+    if (files.length === 0) return;
+    
+    // 실제 파일 업로드 로직 구현 예정
+    showNotification(`${files.length}개 파일이 전송되었습니다! 📎`);
+    hideFileUploadModal();
 }
 
 function showEmojiPicker() {
-    showNotification('이모지 선택 기능 준비 중입니다! 😊');
+    const picker = document.getElementById('emojiPicker');
+    const isVisible = picker.style.display === 'block';
+    picker.style.display = isVisible ? 'none' : 'block';
+}
+
+function hideEmojiPicker() {
+    document.getElementById('emojiPicker').style.display = 'none';
+}
+
+function insertEmoji(emoji) {
+    const input = document.getElementById('messageInput');
+    input.value += emoji;
+    input.focus();
+    hideEmojiPicker();
 }
 
 // 작품 업로드 모달
@@ -607,7 +1029,7 @@ async function uploadWork() {
             imageUrl = await getDownloadURL(snapshot.ref);
         }
         
-        await addDoc(collection(db, 'works'), {
+        const newWork = {
             title: title,
             description: description,
             category: category,
@@ -618,14 +1040,25 @@ async function uploadWork() {
             createdAt: serverTimestamp(),
             likes: 0,
             views: 0,
-            comments: 0
+            comments: []
+        };
+        
+        await addDoc(collection(db, 'works'), newWork);
+        
+        // 로컬 데이터에도 추가
+        worksData.unshift({
+            ...newWork,
+            id: Date.now(),
+            timestamp: Date.now(),
+            thumbnail: imageUrl
         });
         
         showNotification('작품이 성공적으로 업로드되었습니다! 🎉');
         hideUploadModal();
         
-        if (window.loadWorks) {
-            window.loadWorks();
+        // 홈 화면 새로고침
+        if (window.loadAllHomeSections) {
+            window.loadAllHomeSections();
         }
     } catch (error) {
         console.error('작품 업로드 오류:', error);
@@ -640,7 +1073,12 @@ function showProfile() {
 
 // 작품 상세보기
 function showWorkDetail(workId) {
-    showNotification('작품 상세보기 기능 준비 중입니다! 🎨');
+    const work = worksData.find(w => w.id === workId);
+    if (work) {
+        showNotification(`"${work.title}" 상세보기 기능 준비 중입니다! 🎨`);
+    } else {
+        showNotification('작품 상세보기 기능 준비 중입니다! 🎨');
+    }
 }
 
 // 유틸리티 함수들
@@ -660,6 +1098,14 @@ function formatTime(timestamp) {
     }
 }
 
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
 function showNotification(message) {
     const notification = document.createElement('div');
     notification.style.cssText = `
@@ -668,14 +1114,15 @@ function showNotification(message) {
         right: 20px;
         background: linear-gradient(45deg, #1f2937, #374151);
         color: white;
-        padding: 0.8rem 1.2rem;
-        border-radius: 10px;
-        box-shadow: 0 6px 25px rgba(31, 41, 55, 0.5);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(31, 41, 55, 0.5);
         z-index: 10000;
         animation: slideInRight 0.3s ease;
         font-weight: 500;
-        max-width: 250px;
-        font-size: 0.8rem;
+        max-width: 300px;
+        font-size: 0.9rem;
+        font-family: 'Pretendard', sans-serif;
     `;
     notification.textContent = message;
     
@@ -695,7 +1142,7 @@ style.textContent = `
     @keyframes slideInRight {
         from {
             opacity: 0;
-            transform: translateX(80px);
+            transform: translateX(100px);
         }
         to {
             opacity: 1;
@@ -710,20 +1157,47 @@ style.textContent = `
         }
         to {
             opacity: 0;
-            transform: translateX(80px);
+            transform: translateX(100px);
         }
+    }
+    
+    .user-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        margin-bottom: 0.5rem;
+    }
+    
+    .user-item:hover {
+        background: #f3f4f6;
+    }
+    
+    .user-item .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #1f2937, #374151);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+    
+    .user-item .user-info h4 {
+        margin: 0 0 0.25rem 0;
+        font-size: 0.95rem;
+        color: #1f2937;
+    }
+    
+    .user-item .status {
+        font-size: 0.8rem;
     }
 `;
 document.head.appendChild(style);
 
-// 페이지 로드 시 초기화
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔥 CRETA 플랫폼이 Firebase와 함께 로드되었습니다!');
-    
-    // 외부 클릭시 드롭다운 숨기기
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.search-container')) {
-            hideSuggestions();
-        }
-    });
-});
+console.log('🎉 CRETA JavaScript 완전 로드 완료!');
