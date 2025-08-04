@@ -1,420 +1,375 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Creta</title>
-  <link rel="stylesheet" href="./style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRETA - 창작자를 위한 플랫폼</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<div class="app-container">
-  <header class="header">
-    <div class="header-content">
-      <div class="logo">
-        <span class="logo-icon">🎨</span>
-        <span class="logo-text">CRETA</span>
-      </div>
-      <div class="search-bar">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="작품, 작가, 태그 검색..." class="header-search">
-      </div>
-      <div class="user-info">
-        <button class="notification-btn">
-          <span class="icon">🔔</span>
-          <span class="badge">3</span>
-        </button>
-        <div class="user-avatar" onclick="showProfile()">김</div>
-      </div>
-    </div>
-  </header>
-
-  <div class="main-layout">
-    <nav class="sidebar">
-      <button class="nav-item active" onclick="showScreen('home')" data-screen="home">
-        <div class="nav-icon">🏠</div>
-        <span>홈</span>
-      </button>
-      <button class="nav-item" onclick="showScreen('explore')" data-screen="explore">
-        <div class="nav-icon">🔍</div>
-        <span>탐색</span>
-      </button>
-      <button class="nav-item" onclick="showScreen('community')" data-screen="community">
-        <div class="nav-icon">👥</div>
-        <span>커뮤니티</span>
-      </button>
-      <button class="nav-item" onclick="showScreen('messages')" data-screen="messages">
-        <div class="nav-icon">💬</div>
-        <span>메시지</span>
-        <span class="nav-badge">2</span>
-      </button>
-      <button class="nav-item" onclick="showScreen('profile')" data-screen="profile">
-        <div class="nav-icon">👤</div>
-        <span>프로필</span>
-      </button>
-      <div class="nav-divider"></div>
-      <button class="nav-item upload-btn" onclick="showCreateModal()">
-        <div class="nav-icon create-icon">➕</div>
-        <span>작품 업로드</span>
-      </button>
-    </nav>
-
-    <main class="content-area">
-      <!-- 홈 화면 (갤러리 스타일) -->
-      <div id="home" class="screen active">
-        <div class="home-banner">
-          <div class="banner-content">
-            <h1>오늘의 추천 작품</h1>
-            <p>CRETA에서 선별한 최고의 창작물들을 만나보세요</p>
-          </div>
-          <div class="featured-works">
-            <div class="featured-item large" onclick="openWork(1)">
-              <img src="https://via.placeholder.com/400x250/1f2937/f3f4f6?text=Featured+Haikyuu" alt="하이큐 팬아트">
-              <div class="featured-overlay">
-                <div class="featured-info">
-                  <h3>하이큐!! 최신 팬아트</h3>
-                  <p>애니메이터 김철수</p>
-                  <div class="featured-stats">
-                    <span>❤️ 1.2K</span>
-                    <span>👀 5.8K</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="featured-item" onclick="openWork(2)">
-              <img src="https://via.placeholder.com/190x250/374151/f3f4f6?text=Attack+on+Titan" alt="진격의 거인">
-              <div class="featured-overlay">
-                <div class="featured-info">
-                  <h4>진격의 거인 소설</h4>
-                  <p>소설가 박영희</p>
-                </div>
-              </div>
-            </div>
-            <div class="featured-item" onclick="openWork(3)">
-              <img src="https://via.placeholder.com/190x250/6b7280/f3f4f6?text=One+Piece" alt="원피스">
-              <div class="featured-overlay">
-                <div class="featured-info">
-                  <h4>원피스 일러스트</h4>
-                  <p>일러스트레이터 최민수</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="content-sections">
-          <!-- 인기 작품 그리드 -->
-          <section class="works-section">
-            <div class="section-header">
-              <h2>🔥 인기 작품</h2>
-              <button class="see-more-btn" onclick="showScreen('explore')">더보기</button>
-            </div>
-            <div class="works-grid" id="popularWorks">
-              <!-- 작품들이 여기에 동적으로 생성됩니다 -->
-            </div>
-          </section>
-
-          <!-- 최신 업로드 -->
-          <section class="works-section">
-            <div class="section-header">
-              <h2>✨ 최신 업로드</h2>
-              <button class="see-more-btn">더보기</button>
-            </div>
-            <div class="works-scroll" id="latestWorks">
-              <!-- 가로 스크롤 작품들 -->
-            </div>
-          </section>
-
-          <!-- 장르별 추천 -->
-          <section class="works-section">
-            <div class="section-header">
-              <h2>🎨 장르별 추천</h2>
-              <div class="genre-tabs">
-                <button class="genre-tab active" onclick="filterByGenre('all')">전체</button>
-                <button class="genre-tab" onclick="filterByGenre('animation')">애니메이션</button>
-                <button class="genre-tab" onclick="filterByGenre('illustration')">일러스트</button>
-                <button class="genre-tab" onclick="filterByGenre('novel')">소설</button>
-                <button class="genre-tab" onclick="filterByGenre('manga')">만화</button>
-              </div>
-            </div>
-            <div class="works-grid genre-works" id="genreWorks">
-              <!-- 장르별 작품들 -->
-            </div>
-          </section>
-        </div>
-      </div>
-
-      <!-- 탐색 화면 -->
-      <div id="explore" class="screen">
-        <div class="explore-header">
-          <div class="search-section">
-            <div class="search-container">
-              <span class="search-icon">🔍</span>
-              <input type="text" class="search-input" placeholder="작품, 작가, 태그 검색..." 
-                     oninput="handleSearch()" id="exploreSearch">
-              <button class="search-clear" onclick="clearSearch()" style="display: none;">✕</button>
-            </div>
-            <div class="trending-tags" id="trendingTags">
-              <h3>🔥 인기 태그</h3>
-              <div class="tag-list">
-                <span class="tag" onclick="searchByTag('하이큐')">#하이큐</span>
-                <span class="tag" onclick="searchByTag('진격의거인')">#진격의거인</span>
-                <span class="tag" onclick="searchByTag('원피스')">#원피스</span>
-                <span class="tag" onclick="searchByTag('나루토')">#나루토</span>
-                <span class="tag" onclick="searchByTag('귀멸의칼날')">#귀멸의칼날</span>
-                <span class="tag" onclick="searchByTag('팬아트')">#팬아트</span>
-                <span class="tag" onclick="searchByTag('일러스트')">#일러스트</span>
-                <span class="tag" onclick="searchByTag('소설')">#소설</span>
-              </div>
-            </div>
-            <div class="suggested-tags" id="suggestedTags" style="display: none;">
-              <h3>연관 검색어</h3>
-              <div class="tag-list" id="suggestedList"></div>
-            </div>
-          </div>
-          
-          <div class="filter-controls">
-            <div class="sort-options">
-              <button class="sort-btn active" onclick="changeSort('popular')" data-sort="popular">
-                <span class="icon">🔥</span>인기순
-              </button>
-              <button class="sort-btn" onclick="changeSort('latest')" data-sort="latest">
-                <span class="icon">🕐</span>최신순
-              </button>
-              <button class="sort-btn" onclick="changeSort('trending')" data-sort="trending">
-                <span class="icon">📈</span>트렌딩
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="explore-results" id="exploreResults">
-          <!-- 탐색 결과 작품들 -->
-        </div>
-      </div>
-
-      <!-- 커뮤니티 화면 -->
-      <div id="community" class="screen">
-        <div class="community-header">
-          <div class="community-title">
-            <h1>커뮤니티</h1>
-            <button class="create-community-btn" onclick="showCreateCommunityModal()">
-              <span class="icon">➕</span>커뮤니티 만들기
-            </button>
-          </div>
-          <div class="community-filters">
-            <button class="community-filter active" onclick="filterCommunities('all')" data-filter="all">
-              🌟 전체
-            </button>
-            <button class="community-filter" onclick="filterCommunities('animation')" data-filter="animation">
-              🎬 애니메이션
-            </button>
-            <button class="community-filter" onclick="filterCommunities('illustration')" data-filter="illustration">
-              🎨 일러스트
-            </button>
-            <button class="community-filter" onclick="filterCommunities('novel')" data-filter="novel">
-              📚 소설
-            </button>
-            <button class="community-filter" onclick="filterCommunities('manga')" data-filter="manga">
-              📖 만화
-            </button>
-          </div>
-        </div>
-        
-        <div class="communities-grid" id="communitiesList">
-          <!-- 커뮤니티 목록 -->
-        </div>
-
-        <!-- 커뮤니티 생성 모달 -->
-        <div id="createCommunityModal" class="modal" style="display: none;">
-          <div class="modal-content">
+    <!-- 로그인 모달 -->
+    <div id="authModal" class="modal" style="display: none;">
+        <div class="modal-content">
             <div class="modal-header">
-              <h2>새 커뮤니티 만들기</h2>
-              <button class="modal-close" onclick="hideCreateCommunityModal()">✕</button>
+                <h2>CRETA에 오신 것을 환영합니다!</h2>
+                <button class="modal-close" onclick="hideAuthModal()">✕</button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
-                <label>커뮤니티 이름</label>
-                <input type="text" id="communityName" placeholder="커뮤니티 이름을 입력하세요">
-              </div>
-              <div class="form-group">
-                <label>카테고리</label>
-                <select id="communityCategory">
-                  <option value="animation">애니메이션</option>
-                  <option value="illustration">일러스트</option>
-                  <option value="novel">소설</option>
-                  <option value="manga">만화</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>커뮤니티 소개</label>
-                <textarea id="communityDescription" placeholder="커뮤니티에 대해 간단히 소개해주세요"></textarea>
-              </div>
-              <div class="form-group">
-                <label>태그 (선택사항)</label>
-                <input type="text" id="communityTags" placeholder="태그를 쉼표로 구분해서 입력하세요">
-              </div>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="showLogin()">로그인</button>
+                    <button class="auth-tab" onclick="showSignup()">회원가입</button>
+                </div>
+                
+                <div id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>비밀번호</label>
+                        <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요">
+                    </div>
+                    <button class="btn btn-primary" onclick="loginUser()">로그인</button>
+                    
+                    <div class="social-login">
+                        <button class="btn btn-google" onclick="loginWithGoogle()">
+                            🔵 Google로 로그인
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="signupForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label>이름</label>
+                        <input type="text" id="signupName" placeholder="닉네임을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" id="signupEmail" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>비밀번호</label>
+                        <input type="password" id="signupPassword" placeholder="6자 이상 입력하세요">
+                    </div>
+                    <button class="btn btn-primary" onclick="signupUser()">회원가입</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 기존 CRETA HTML 구조 -->
+    <div class="app-container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🎨</span>
+                    <span class="logo-text">CRETA</span>
+                </div>
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="작품, 작가, 태그 검색..." class="header-search">
+                </div>
+                <div class="user-info">
+                    <button class="notification-btn">
+                        <span class="icon">🔔</span>
+                        <span class="badge">3</span>
+                    </button>
+                    <div class="user-avatar" onclick="showProfile()">
+                        <span id="userAvatarText">로그인</span>
+                    </div>
+                    <button class="logout-btn" onclick="logoutUser()" style="display: none;">로그아웃</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <nav class="sidebar">
+                <button class="nav-item active" onclick="showScreen('home')" data-screen="home">
+                    <div class="nav-icon">🏠</div>
+                    <span>홈</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('explore')" data-screen="explore">
+                    <div class="nav-icon">🔍</div>
+                    <span>탐색</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('community')" data-screen="community">
+                    <div class="nav-icon">👥</div>
+                    <span>커뮤니티</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('messages')" data-screen="messages">
+                    <div class="nav-icon">💬</div>
+                    <span>메시지</span>
+                    <span class="nav-badge">2</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('profile')" data-screen="profile">
+                    <div class="nav-icon">👤</div>
+                    <span>프로필</span>
+                </button>
+                <div class="nav-divider"></div>
+                <button class="nav-item upload-btn" onclick="showUploadModal()">
+                    <div class="nav-icon create-icon">➕</div>
+                    <span>작품 업로드</span>
+                </button>
+            </nav>
+
+            <main class="content-area">
+                <!-- 홈 화면 -->
+                <div id="home" class="screen active">
+                    <div class="home-banner">
+                        <div class="banner-content">
+                            <h1>오늘의 추천 작품</h1>
+                            <p>CRETA에서 선별한 최고의 창작물들을 만나보세요</p>
+                        </div>
+                        <div class="featured-works">
+                            <div class="featured-item large">
+                                <img src="https://via.placeholder.com/400x250/1f2937/f3f4f6?text=Featured+Work" alt="추천 작품">
+                                <div class="featured-overlay">
+                                    <div class="featured-info">
+                                        <h3>하이큐!! 최신 팬아트</h3>
+                                        <p>애니메이터 김철수</p>
+                                        <div class="featured-stats">
+                                            <span>❤️ 1.2K</span>
+                                            <span>👀 5.8K</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-sections">
+                        <section class="works-section">
+                            <div class="section-header">
+                                <h2>🔥 인기 작품</h2>
+                                <button class="see-more-btn">더보기</button>
+                            </div>
+                            <div class="works-grid" id="worksContainer">
+                                <!-- 작품들이 여기에 동적으로 로드됩니다 -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- 다른 화면들... -->
+                <div id="explore" class="screen">
+                    <h2>탐색 화면</h2>
+                    <p>검색 및 탐색 기능이 여기에 구현됩니다.</p>
+                </div>
+
+                <div id="community" class="screen">
+                    <h2>커뮤니티 화면</h2>
+                    <p>커뮤니티 기능이 여기에 구현됩니다.</p>
+                </div>
+
+                <div id="messages" class="screen">
+                    <h2>메시지 화면</h2>
+                    <p>실시간 채팅 기능이 여기에 구현됩니다.</p>
+                </div>
+
+                <div id="profile" class="screen">
+                    <div class="profile-container">
+                        <div class="profile-banner">
+                            <div class="profile-main">
+                                <div class="profile-avatar-large" id="profileAvatar">김</div>
+                                <div class="profile-info">
+                                    <h1 id="profileName">김창작</h1>
+                                    <p class="profile-bio">일러스트레이터 • 애니메이션 덕후</p>
+                                    <div class="profile-stats">
+                                        <div class="stat">
+                                            <span class="stat-number">0</span>
+                                            <span class="stat-label">팔로워</span>
+                                        </div>
+                                        <div class="stat">
+                                            <span class="stat-number">0</span>
+                                            <span class="stat-label">팔로잉</span>
+                                        </div>
+                                        <div class="stat">
+                                            <span class="stat-number">0</span>
+                                            <span class="stat-label">작품</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 작품 업로드 모달 -->
+    <div id="uploadModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>새 작품 업로드</h2>
+                <button class="modal-close" onclick="hideUploadModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>작품 제목</label>
+                    <input type="text" id="workTitle" placeholder="작품 제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label>작품 설명</label>
+                    <textarea id="workDescription" placeholder="작품에 대한 설명을 입력하세요"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>카테고리</label>
+                    <select id="workCategory">
+                        <option value="illustration">일러스트</option>
+                        <option value="animation">애니메이션</option>
+                        <option value="novel">소설</option>
+                        <option value="manga">만화</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>이미지 파일</label>
+                    <input type="file" id="workImage" accept="image/*">
+                    <div id="imagePreview"></div>
+                </div>
+                <div class="form-group">
+                    <label>태그</label>
+                    <input type="text" id="workTags" placeholder="태그를 쉼표로 구분해서 입력하세요">
+                </div>
             </div>
             <div class="modal-footer">
-              <button class="btn btn-secondary" onclick="hideCreateCommunityModal()">취소</button>
-              <button class="btn btn-primary" onclick="createCommunity()">만들기</button>
+                <button class="btn btn-secondary" onclick="hideUploadModal()">취소</button>
+                <button class="btn btn-primary" onclick="uploadWork()">업로드</button>
             </div>
-          </div>
         </div>
-      </div>
-
-      <!-- 메시지 화면 -->
-      <div id="messages" class="screen">
-        <div class="messages-layout">
-          <div class="chat-sidebar">
-            <div class="chat-header">
-              <h2>메시지</h2>
-              <button class="new-chat-btn" onclick="showNewChatModal()">✏️</button>
-            </div>
-            <div class="chat-search">
-              <input type="text" placeholder="채팅방 검색..." oninput="searchChats()">
-            </div>
-            <div class="chat-list" id="chatRoomsList">
-              <!-- 채팅방 목록 -->
-            </div>
-          </div>
-          
-          <div class="chat-main">
-            <div class="chat-top-bar" id="chatTopBar">
-              <div class="chat-user">
-                <div class="chat-avatar">김</div>
-                <div class="chat-user-info">
-                  <h3>김애니</h3>
-                  <span class="status online">온라인</span>
-                </div>
-              </div>
-              <div class="chat-actions">
-                <button class="chat-action">📞</button>
-                <button class="chat-action">📹</button>
-                <button class="chat-action">ℹ️</button>
-              </div>
-            </div>
-            
-            <div class="chat-messages" id="chatMessages">
-              <!-- 메시지들 -->
-            </div>
-            
-            <div class="chat-input-area">
-              <button class="attachment-btn">📎</button>
-              <div class="input-wrapper">
-                <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." 
-                       onkeypress="handleMessageInput(event)">
-                <button class="emoji-btn">😊</button>
-              </div>
-              <button class="send-btn" onclick="sendMessage()">➤</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 프로필 화면 -->
-      <div id="profile" class="screen">
-        <div class="profile-container">
-          <div class="profile-banner">
-            <div class="profile-main">
-              <div class="profile-avatar-large">김</div>
-              <div class="profile-info">
-                <h1>김창작</h1>
-                <p class="profile-bio">일러스트레이터 • 애니메이션 덕후</p>
-                <div class="profile-stats">
-                  <div class="stat">
-                    <span class="stat-number">127</span>
-                    <span class="stat-label">팔로워</span>
-                  </div>
-                  <div class="stat">
-                    <span class="stat-number">89</span>
-                    <span class="stat-label">팔로잉</span>
-                  </div>
-                  <div class="stat">
-                    <span class="stat-number">45</span>
-                    <span class="stat-label">작품</span>
-                  </div>
-                </div>
-                <button class="profile-edit-btn">프로필 편집</button>
-              </div>
-            </div>
-          </div>
-          
-          <div class="profile-content">
-            <div class="profile-tabs">
-              <button class="profile-tab active">작품</button>
-              <button class="profile-tab">컬렉션</button>
-              <button class="profile-tab">좋아요</button>
-            </div>
-            <div class="profile-works">
-              <!-- 프로필 작품들 -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- 작품 상세 모달 -->
-  <div id="workModal" class="modal work-modal" style="display: none;">
-    <div class="work-modal-content">
-      <button class="modal-close work-close" onclick="closeWorkModal()">✕</button>
-      <div class="work-display">
-        <img id="workImage" src="" alt="작품">
-      </div>
-      <div class="work-info">
-        <div class="work-header">
-          <div class="work-author">
-            <div class="author-avatar">A</div>
-            <div class="author-info">
-              <h3 id="workAuthor">작가명</h3>
-              <span id="workDate">날짜</span>
-            </div>
-          </div>
-          <button class="follow-btn">팔로우</button>
-        </div>
-        
-        <div class="work-details">
-          <h2 id="workTitle">작품 제목</h2>
-          <p id="workDescription">작품 설명</p>
-          <div class="work-tags" id="workTags">
-            <!-- 태그들 -->
-          </div>
-        </div>
-        
-        <div class="work-actions">
-          <button class="action-btn like-btn" onclick="toggleWorkLike()">
-            <span class="icon">❤️</span>
-            <span class="count">24</span>
-          </button>
-          <button class="action-btn comment-btn" onclick="toggleWorkComments()">
-            <span class="icon">💬</span>
-            <span class="count">8</span>
-          </button>
-          <button class="action-btn bookmark-btn" onclick="toggleWorkBookmark()">
-            <span class="icon">🔖</span>
-            <span class="text">스크랩</span>
-          </button>
-          <button class="action-btn share-btn" onclick="shareWork()">
-            <span class="icon">📤</span>
-            <span class="text">공유</span>
-          </button>
-        </div>
-        
-        <div class="work-comments" id="workComments">
-          <!-- 댓글들 -->
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- 플로팅 업로드 버튼 -->
-  <button class="floating-btn" onclick="showCreateModal()">
-    <span class="icon">📁</span>
-  </button>
-</div>
-<!-- partial -->
-  <script  src="./script.js"></script>
+    <!-- Firebase 스크립트 -->
+    <script type="module">
+        // Firebase 설정
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyAYrLmXnpMPd0FjGQ-3_IXBF_ZqGV-mOk8",
+            authDomain: "creta-30c69.firebaseapp.com",
+            projectId: "creta-30c69",
+            storageBucket: "creta-30c69.firebasestorage.app",
+            messagingSenderId: "126716257571",
+            appId: "1:126716257571:web:33dfd5dbd1bcdb7a229896"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // 전역으로 내보내기
+        window.auth = auth;
+        window.db = db;
+        window.storage = storage;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.GoogleAuthProvider = GoogleAuthProvider;
+        window.signInWithPopup = signInWithPopup;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut = signOut;
+        window.updateProfile = updateProfile;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.serverTimestamp = serverTimestamp;
+        window.query = query;
+        window.orderBy = orderBy;
+        window.ref = ref;
+        window.uploadBytes = uploadBytes;
+        window.getDownloadURL = getDownloadURL;
+
+        // 인증 상태 확인
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('사용자 로그인:', user.email);
+                updateUserInterface(user);
+                hideAuthModal();
+                loadWorks();
+            } else {
+                console.log('사용자 로그아웃');
+                showAuthModal();
+                resetUserInterface();
+            }
+        });
+
+        // 사용자 인터페이스 업데이트
+        function updateUserInterface(user) {
+            const userAvatarText = document.getElementById('userAvatarText');
+            const logoutBtn = document.querySelector('.logout-btn');
+            
+            if (userAvatarText) {
+                userAvatarText.textContent = user.displayName ? user.displayName.charAt(0) : user.email.charAt(0);
+            }
+            
+            if (logoutBtn) {
+                logoutBtn.style.display = 'block';
+            }
+        }
+
+        function resetUserInterface() {
+            const userAvatarText = document.getElementById('userAvatarText');
+            const logoutBtn = document.querySelector('.logout-btn');
+            
+            if (userAvatarText) {
+                userAvatarText.textContent = '로그인';
+            }
+            
+            if (logoutBtn) {
+                logoutBtn.style.display = 'none';
+            }
+        }
+
+        // 작품 로드
+        async function loadWorks() {
+            try {
+                const worksQuery = query(collection(db, 'works'), orderBy('createdAt', 'desc'));
+                const querySnapshot = await getDocs(worksQuery);
+                const worksContainer = document.getElementById('worksContainer');
+                
+                if (worksContainer) {
+                    worksContainer.innerHTML = '';
+                    
+                    querySnapshot.forEach((doc) => {
+                        const work = doc.data();
+                        const workElement = createWorkElement(work);
+                        worksContainer.appendChild(workElement);
+                    });
+                }
+            } catch (error) {
+                console.error('작품 로드 실패:', error);
+            }
+        }
+
+        function createWorkElement(work) {
+            const workDiv = document.createElement('div');
+            workDiv.className = 'work-item';
+            workDiv.innerHTML = `
+                <img src="${work.imageUrl || 'https://via.placeholder.com/200x160/1f2937/f3f4f6?text=No+Image'}" alt="${work.title}" class="work-thumbnail">
+                <div class="work-content">
+                    <h3>${work.title}</h3>
+                    <div class="work-author">${work.authorName}</div>
+                    <div class="work-stats">
+                        <span>❤️ ${work.likes || 0}</span>
+                        <span>👀 ${work.views || 0}</span>
+                    </div>
+                </div>
+            `;
+            return workDiv;
+        }
+
+        // 전역 함수로 내보내기
+        window.updateUserInterface = updateUserInterface;
+        window.resetUserInterface = resetUserInterface;
+        window.loadWorks = loadWorks;
+    </script>
+
+    <script src="script.js"></script>
 </body>
 </html>
