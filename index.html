@@ -7,12 +7,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 로딩 화면 -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo">
+                <span class="logo-icon">🎨</span>
+                <span class="logo-text">CRETA</span>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>창작의 세계로 입장 중...</p>
+        </div>
+    </div>
+
     <!-- 로그인 모달 -->
     <div id="authModal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>CRETA에 오신 것을 환영합니다!</h2>
-                <button class="modal-close" onclick="hideAuthModal()">✕</button>
             </div>
             <div class="modal-body">
                 <div class="auth-tabs">
@@ -57,8 +68,8 @@
         </div>
     </div>
 
-    <!-- 기존 CRETA HTML 구조 -->
-    <div class="app-container">
+    <!-- 메인 앱 -->
+    <div class="app-container" id="mainApp" style="display: none;">
         <header class="header">
             <div class="header-content">
                 <div class="logo">
@@ -115,9 +126,14 @@
             <main class="content-area">
                 <!-- 홈 화면 -->
                 <div id="home" class="screen active">
+                    <div class="welcome-banner">
+                        <h1>🎨 환영합니다, <span id="welcomeUserName">창작자</span>님!</h1>
+                        <p>CRETA에서 여러분의 창작 여정을 시작해보세요</p>
+                    </div>
+
                     <div class="home-banner">
                         <div class="banner-content">
-                            <h1>오늘의 추천 작품</h1>
+                            <h2>오늘의 추천 작품</h2>
                             <p>CRETA에서 선별한 최고의 창작물들을 만나보세요</p>
                         </div>
                         <div class="featured-works">
@@ -140,41 +156,71 @@
                     <div class="content-sections">
                         <section class="works-section">
                             <div class="section-header">
-                                <h2>🔥 인기 작품</h2>
-                                <button class="see-more-btn">더보기</button>
+                                <h2>🔥 최신 업로드 작품</h2>
+                                <button class="see-more-btn" onclick="showScreen('explore')">더보기</button>
                             </div>
                             <div class="works-grid" id="worksContainer">
-                                <!-- 작품들이 여기에 동적으로 로드됩니다 -->
+                                <div class="empty-state">
+                                    <div class="empty-icon">📁</div>
+                                    <h3>아직 업로드된 작품이 없어요</h3>
+                                    <p>첫 번째 작품을 업로드해보세요!</p>
+                                    <button class="btn btn-primary" onclick="showUploadModal()">작품 업로드하기</button>
+                                </div>
                             </div>
                         </section>
                     </div>
                 </div>
 
-                <!-- 다른 화면들... -->
+                <!-- 탐색 화면 -->
                 <div id="explore" class="screen">
-                    <h2>탐색 화면</h2>
-                    <p>검색 및 탐색 기능이 여기에 구현됩니다.</p>
+                    <h2>🔍 작품 탐색</h2>
+                    <div class="search-section">
+                        <input type="text" class="search-input" placeholder="작품, 작가, 태그로 검색해보세요...">
+                    </div>
+                    <div id="exploreResults" class="works-grid">
+                        <div class="empty-state">
+                            <div class="empty-icon">🔍</div>
+                            <h3>검색 결과가 여기에 표시됩니다</h3>
+                            <p>위 검색창에서 원하는 작품을 찾아보세요</p>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- 커뮤니티 화면 -->
                 <div id="community" class="screen">
-                    <h2>커뮤니티 화면</h2>
-                    <p>커뮤니티 기능이 여기에 구현됩니다.</p>
+                    <h2>👥 커뮤니티</h2>
+                    <p>다른 창작자들과 소통하고 영감을 나누세요</p>
+                    <div class="community-placeholder">
+                        <div class="empty-icon">👥</div>
+                        <h3>커뮤니티 기능 준비 중</h3>
+                        <p>곧 다양한 커뮤니티 기능을 만나보실 수 있습니다!</p>
+                    </div>
                 </div>
 
+                <!-- 메시지 화면 -->
                 <div id="messages" class="screen">
-                    <h2>메시지 화면</h2>
-                    <p>실시간 채팅 기능이 여기에 구현됩니다.</p>
+                    <h2>💬 메시지</h2>
+                    <div class="messages-placeholder">
+                        <div class="empty-icon">💬</div>
+                        <h3>메시지 기능 준비 중</h3>
+                        <p>다른 창작자들과 실시간으로 소통할 수 있는 기능을 준비하고 있습니다!</p>
+                    </div>
                 </div>
 
+                <!-- 프로필 화면 -->
                 <div id="profile" class="screen">
                     <div class="profile-container">
                         <div class="profile-banner">
                             <div class="profile-main">
-                                <div class="profile-avatar-large" id="profileAvatar">김</div>
+                                <div class="profile-avatar-large" id="profileAvatar">👤</div>
                                 <div class="profile-info">
-                                    <h1 id="profileName">김창작</h1>
-                                    <p class="profile-bio">일러스트레이터 • 애니메이션 덕후</p>
+                                    <h1 id="profileName">사용자</h1>
+                                    <p class="profile-bio" id="profileEmail">이메일</p>
                                     <div class="profile-stats">
+                                        <div class="stat">
+                                            <span class="stat-number" id="userWorks">0</span>
+                                            <span class="stat-label">작품</span>
+                                        </div>
                                         <div class="stat">
                                             <span class="stat-number">0</span>
                                             <span class="stat-label">팔로워</span>
@@ -183,11 +229,19 @@
                                             <span class="stat-number">0</span>
                                             <span class="stat-label">팔로잉</span>
                                         </div>
-                                        <div class="stat">
-                                            <span class="stat-number">0</span>
-                                            <span class="stat-label">작품</span>
-                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-works-section">
+                            <h3>내 작품</h3>
+                            <div class="user-works-grid" id="userWorksContainer">
+                                <div class="empty-state">
+                                    <div class="empty-icon">🎨</div>
+                                    <h3>아직 업로드한 작품이 없어요</h3>
+                                    <p>첫 작품을 업로드해보세요!</p>
+                                    <button class="btn btn-primary" onclick="showUploadModal()">작품 업로드</button>
                                 </div>
                             </div>
                         </div>
@@ -201,51 +255,54 @@
     <div id="uploadModal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>새 작품 업로드</h2>
+                <h2>✨ 새 작품 업로드</h2>
                 <button class="modal-close" onclick="hideUploadModal()">✕</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>작품 제목</label>
-                    <input type="text" id="workTitle" placeholder="작품 제목을 입력하세요">
+                    <label>작품 제목 *</label>
+                    <input type="text" id="workTitle" placeholder="멋진 작품 제목을 입력하세요">
                 </div>
                 <div class="form-group">
                     <label>작품 설명</label>
-                    <textarea id="workDescription" placeholder="작품에 대한 설명을 입력하세요"></textarea>
+                    <textarea id="workDescription" placeholder="작품에 대한 설명을 입력하세요" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label>카테고리</label>
                     <select id="workCategory">
-                        <option value="illustration">일러스트</option>
-                        <option value="animation">애니메이션</option>
-                        <option value="novel">소설</option>
-                        <option value="manga">만화</option>
+                        <option value="illustration">🎨 일러스트</option>
+                        <option value="animation">🎬 애니메이션</option>
+                        <option value="novel">📚 소설</option>
+                        <option value="manga">📖 만화</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>이미지 파일</label>
-                    <input type="file" id="workImage" accept="image/*">
-                    <div id="imagePreview"></div>
+                    <label>작품 이미지 *</label>
+                    <input type="file" id="workImage" accept="image/*" onchange="previewImage()">
+                    <div id="imagePreview" class="image-preview"></div>
                 </div>
                 <div class="form-group">
                     <label>태그</label>
-                    <input type="text" id="workTags" placeholder="태그를 쉼표로 구분해서 입력하세요">
+                    <input type="text" id="workTags" placeholder="태그를 쉼표로 구분해서 입력하세요 (예: 하이큐, 팬아트, 애니메이션)">
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="hideUploadModal()">취소</button>
-                <button class="btn btn-primary" onclick="uploadWork()">업로드</button>
+                <button class="btn btn-primary" onclick="uploadWork()">
+                    <span class="upload-icon">📤</span>
+                    업로드
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Firebase 스크립트 -->
     <script type="module">
-        // Firebase 설정
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
+        // Firebase 설정 및 초기화
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAYrLmXnpMPd0FjGQ-3_IXBF_ZqGV-mOk8",
@@ -281,49 +338,65 @@
         window.serverTimestamp = serverTimestamp;
         window.query = query;
         window.orderBy = orderBy;
+        window.where = where;
         window.ref = ref;
         window.uploadBytes = uploadBytes;
         window.getDownloadURL = getDownloadURL;
 
+        // 로딩 화면 숨기기
+        setTimeout(() => {
+            document.getElementById('loadingScreen').style.display = 'none';
+        }, 2000);
+
         // 인증 상태 확인
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('사용자 로그인:', user.email);
+                console.log('✅ 사용자 로그인:', user.email);
                 updateUserInterface(user);
-                hideAuthModal();
+                showMainApp();
                 loadWorks();
+                loadUserWorks(user.uid);
             } else {
-                console.log('사용자 로그아웃');
+                console.log('❌ 사용자 로그아웃');
                 showAuthModal();
                 resetUserInterface();
             }
         });
 
+        // 메인 앱 표시
+        function showMainApp() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
         // 사용자 인터페이스 업데이트
         function updateUserInterface(user) {
             const userAvatarText = document.getElementById('userAvatarText');
             const logoutBtn = document.querySelector('.logout-btn');
+            const welcomeUserName = document.getElementById('welcomeUserName');
+            const profileName = document.getElementById('profileName');
+            const profileEmail = document.getElementById('profileEmail');
+            const profileAvatar = document.getElementById('profileAvatar');
             
-            if (userAvatarText) {
-                userAvatarText.textContent = user.displayName ? user.displayName.charAt(0) : user.email.charAt(0);
-            }
+            const displayName = user.displayName || user.email.split('@')[0];
+            const firstChar = displayName.charAt(0).toUpperCase();
             
-            if (logoutBtn) {
-                logoutBtn.style.display = 'block';
-            }
+            if (userAvatarText) userAvatarText.textContent = firstChar;
+            if (logoutBtn) logoutBtn.style.display = 'inline-block';
+            if (welcomeUserName) welcomeUserName.textContent = displayName;
+            if (profileName) profileName.textContent = displayName;
+            if (profileEmail) profileEmail.textContent = user.email;
+            if (profileAvatar) profileAvatar.textContent = firstChar;
         }
 
         function resetUserInterface() {
             const userAvatarText = document.getElementById('userAvatarText');
             const logoutBtn = document.querySelector('.logout-btn');
             
-            if (userAvatarText) {
-                userAvatarText.textContent = '로그인';
-            }
+            if (userAvatarText) userAvatarText.textContent = '로그인';
+            if (logoutBtn) logoutBtn.style.display = 'none';
             
-            if (logoutBtn) {
-                logoutBtn.style.display = 'none';
-            }
+            document.getElementById('mainApp').style.display = 'none';
         }
 
         // 작품 로드
@@ -333,43 +406,114 @@
                 const querySnapshot = await getDocs(worksQuery);
                 const worksContainer = document.getElementById('worksContainer');
                 
-                if (worksContainer) {
+                if (worksContainer && !querySnapshot.empty) {
                     worksContainer.innerHTML = '';
                     
                     querySnapshot.forEach((doc) => {
-                        const work = doc.data();
+                        const work = { id: doc.id, ...doc.data() };
                         const workElement = createWorkElement(work);
                         worksContainer.appendChild(workElement);
                     });
                 }
             } catch (error) {
-                console.error('작품 로드 실패:', error);
+                console.error('❌ 작품 로드 실패:', error);
             }
         }
 
-        function createWorkElement(work) {
+        // 사용자 작품 로드
+        async function loadUserWorks(userId) {
+            try {
+                const userWorksQuery = query(
+                    collection(db, 'works'), 
+                    where('authorId', '==', userId),
+                    orderBy('createdAt', 'desc')
+                );
+                const querySnapshot = await getDocs(userWorksQuery);
+                const userWorksContainer = document.getElementById('userWorksContainer');
+                const userWorksCount = document.getElementById('userWorks');
+                
+                if (userWorksContainer) {
+                    if (!querySnapshot.empty) {
+                        userWorksContainer.innerHTML = '';
+                        querySnapshot.forEach((doc) => {
+                            const work = { id: doc.id, ...doc.data() };
+                            const workElement = createWorkElement(work, true);
+                            userWorksContainer.appendChild(workElement);
+                        });
+                        
+                        if (userWorksCount) {
+                            userWorksCount.textContent = querySnapshot.size;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('❌ 사용자 작품 로드 실패:', error);
+            }
+        }
+
+        function createWorkElement(work, isUserWork = false) {
             const workDiv = document.createElement('div');
             workDiv.className = 'work-item';
             workDiv.innerHTML = `
-                <img src="${work.imageUrl || 'https://via.placeholder.com/200x160/1f2937/f3f4f6?text=No+Image'}" alt="${work.title}" class="work-thumbnail">
+                <img src="${work.imageUrl || 'https://via.placeholder.com/200x160/1f2937/f3f4f6?text=No+Image'}" 
+                     alt="${work.title}" class="work-thumbnail" loading="lazy">
                 <div class="work-content">
                     <h3>${work.title}</h3>
                     <div class="work-author">${work.authorName}</div>
+                    <div class="work-category">${getCategoryIcon(work.category)} ${getCategoryName(work.category)}</div>
                     <div class="work-stats">
                         <span>❤️ ${work.likes || 0}</span>
                         <span>👀 ${work.views || 0}</span>
                     </div>
+                    ${work.tags && work.tags.length > 0 ? `
+                        <div class="work-tags">
+                            ${work.tags.slice(0, 3).map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
                 </div>
             `;
+            
+            workDiv.addEventListener('click', () => {
+                showWorkDetail(work);
+            });
+            
             return workDiv;
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'illustration': '🎨',
+                'animation': '🎬',
+                'novel': '📚',
+                'manga': '📖'
+            };
+            return icons[category] || '🎨';
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'illustration': '일러스트',
+                'animation': '애니메이션',
+                'novel': '소설',
+                'manga': '만화'
+            };
+            return names[category] || category;
+        }
+
+        function showWorkDetail(work) {
+            showNotification(`"${work.title}" 상세보기 기능 준비 중입니다! 🎨`);
         }
 
         // 전역 함수로 내보내기
         window.updateUserInterface = updateUserInterface;
         window.resetUserInterface = resetUserInterface;
         window.loadWorks = loadWorks;
+        window.loadUserWorks = loadUserWorks;
+        window.showMainApp = showMainApp;
     </script>
 
     <script src="script.js"></script>
 </body>
 </html>
+
+
