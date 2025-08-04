@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRETA - 창작자를 위한 플랫폼</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,9 +24,10 @@
 
     <!-- 로그인 모달 -->
     <div id="authModal" class="modal" style="display: none;">
-        <div class="modal-content">
+        <div class="modal-content auth-modal">
             <div class="modal-header">
                 <h2>CRETA에 오신 것을 환영합니다!</h2>
+                <button class="modal-close" onclick="hideAuthModal()">✕</button>
             </div>
             <div class="modal-body">
                 <div class="auth-tabs">
@@ -78,7 +82,7 @@
                 </div>
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="작품, 작가, 태그 검색..." class="header-search">
+                    <input type="text" placeholder="작품, 작가, 태그 검색..." class="header-search" onkeypress="handleHeaderSearch(event)">
                 </div>
                 <div class="user-info">
                     <button class="notification-btn">
@@ -131,28 +135,6 @@
                         <p>CRETA에서 여러분의 창작 여정을 시작해보세요</p>
                     </div>
 
-                    <div class="home-banner">
-                        <div class="banner-content">
-                            <h2>오늘의 추천 작품</h2>
-                            <p>CRETA에서 선별한 최고의 창작물들을 만나보세요</p>
-                        </div>
-                        <div class="featured-works">
-                            <div class="featured-item large">
-                                <img src="https://via.placeholder.com/400x250/1f2937/f3f4f6?text=Featured+Work" alt="추천 작품">
-                                <div class="featured-overlay">
-                                    <div class="featured-info">
-                                        <h3>하이큐!! 최신 팬아트</h3>
-                                        <p>애니메이터 김철수</p>
-                                        <div class="featured-stats">
-                                            <span>❤️ 1.2K</span>
-                                            <span>👀 5.8K</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="content-sections">
                         <section class="works-section">
                             <div class="section-header">
@@ -173,37 +155,182 @@
 
                 <!-- 탐색 화면 -->
                 <div id="explore" class="screen">
-                    <h2>🔍 작품 탐색</h2>
-                    <div class="search-section">
-                        <input type="text" class="search-input" placeholder="작품, 작가, 태그로 검색해보세요...">
-                    </div>
-                    <div id="exploreResults" class="works-grid">
-                        <div class="empty-state">
-                            <div class="empty-icon">🔍</div>
-                            <h3>검색 결과가 여기에 표시됩니다</h3>
-                            <p>위 검색창에서 원하는 작품을 찾아보세요</p>
+                    <div class="explore-container">
+                        <div class="explore-header">
+                            <h1>🔍 작품 탐색</h1>
+                            <div class="search-section">
+                                <div class="search-container">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" class="search-input" placeholder="작품, 작가, 태그로 검색해보세요..." 
+                                           id="exploreSearchInput" onkeypress="handleExploreSearch(event)" oninput="showSuggestions()">
+                                    <button class="search-clear" onclick="clearExploreSearch()" style="display: none;">✕</button>
+                                </div>
+                                
+                                <!-- 연관 검색어 -->
+                                <div class="suggestions-dropdown" id="suggestionsDropdown" style="display: none;">
+                                    <div class="suggestions-list" id="suggestionsList">
+                                        <!-- 동적으로 생성됩니다 -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 인기 태그 -->
+                            <div class="trending-section" id="trendingSection">
+                                <h3>🔥 인기 태그</h3>
+                                <div class="tag-list">
+                                    <span class="tag" onclick="searchByTag('하이큐')">#하이큐</span>
+                                    <span class="tag" onclick="searchByTag('진격의거인')">#진격의거인</span>
+                                    <span class="tag" onclick="searchByTag('원피스')">#원피스</span>
+                                    <span class="tag" onclick="searchByTag('나루토')">#나루토</span>
+                                    <span class="tag" onclick="searchByTag('귀멸의칼날')">#귀멸의칼날</span>
+                                    <span class="tag" onclick="searchByTag('팬아트')">#팬아트</span>
+                                    <span class="tag" onclick="searchByTag('일러스트')">#일러스트</span>
+                                    <span class="tag" onclick="searchByTag('소설')">#소설</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 정렬 옵션 -->
+                            <div class="sort-section">
+                                <div class="sort-buttons">
+                                    <button class="sort-btn active" onclick="changeSortOrder('popular')" data-sort="popular">
+                                        <span class="sort-icon">🔥</span>인기순
+                                    </button>
+                                    <button class="sort-btn" onclick="changeSortOrder('latest')" data-sort="latest">
+                                        <span class="sort-icon">🕐</span>최신순
+                                    </button>
+                                    <button class="sort-btn" onclick="changeSortOrder('trending')" data-sort="trending">
+                                        <span class="sort-icon">📈</span>트렌딩
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 검색 결과 -->
+                        <div class="explore-results">
+                            <div class="works-grid postype-style" id="exploreResults">
+                                <!-- 검색 결과가 여기에 표시됩니다 -->
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 커뮤니티 화면 -->
                 <div id="community" class="screen">
-                    <h2>👥 커뮤니티</h2>
-                    <p>다른 창작자들과 소통하고 영감을 나누세요</p>
-                    <div class="community-placeholder">
-                        <div class="empty-icon">👥</div>
-                        <h3>커뮤니티 기능 준비 중</h3>
-                        <p>곧 다양한 커뮤니티 기능을 만나보실 수 있습니다!</p>
+                    <div class="community-container">
+                        <div class="community-header">
+                            <h1>👥 커뮤니티</h1>
+                            <button class="create-community-btn" onclick="showCreateCommunityModal()">
+                                <span class="icon">➕</span>커뮤니티 만들기
+                            </button>
+                        </div>
+                        
+                        <div class="community-filters">
+                            <button class="community-filter active" onclick="filterCommunities('all')" data-filter="all">
+                                🌟 전체
+                            </button>
+                            <button class="community-filter" onclick="filterCommunities('animation')" data-filter="animation">
+                                🎬 애니메이션
+                            </button>
+                            <button class="community-filter" onclick="filterCommunities('illustration')" data-filter="illustration">
+                                🎨 일러스트
+                            </button>
+                            <button class="community-filter" onclick="filterCommunities('novel')" data-filter="novel">
+                                📚 소설
+                            </button>
+                            <button class="community-filter" onclick="filterCommunities('manga')" data-filter="manga">
+                                📖 만화
+                            </button>
+                        </div>
+                        
+                        <div class="communities-grid" id="communitiesList">
+                            <!-- 커뮤니티 목록이 여기에 표시됩니다 -->
+                        </div>
+                    </div>
+
+                    <!-- 커뮤니티 생성 모달 -->
+                    <div id="createCommunityModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>새 커뮤니티 만들기</h2>
+                                <button class="modal-close" onclick="hideCreateCommunityModal()">✕</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>커뮤니티 이름</label>
+                                    <input type="text" id="communityName" placeholder="커뮤니티 이름을 입력하세요">
+                                </div>
+                                <div class="form-group">
+                                    <label>카테고리</label>
+                                    <select id="communityCategory">
+                                        <option value="animation">🎬 애니메이션</option>
+                                        <option value="illustration">🎨 일러스트</option>
+                                        <option value="novel">📚 소설</option>
+                                        <option value="manga">📖 만화</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>커뮤니티 소개</label>
+                                    <textarea id="communityDescription" placeholder="커뮤니티에 대해 간단히 소개해주세요"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="hideCreateCommunityModal()">취소</button>
+                                <button class="btn btn-primary" onclick="createCommunity()">만들기</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 메시지 화면 -->
                 <div id="messages" class="screen">
-                    <h2>💬 메시지</h2>
-                    <div class="messages-placeholder">
-                        <div class="empty-icon">💬</div>
-                        <h3>메시지 기능 준비 중</h3>
-                        <p>다른 창작자들과 실시간으로 소통할 수 있는 기능을 준비하고 있습니다!</p>
+                    <div class="messages-layout">
+                        <div class="chat-sidebar">
+                            <div class="chat-header">
+                                <h2>💬 메시지</h2>
+                                <button class="new-chat-btn" onclick="showNewChatModal()">✏️</button>
+                            </div>
+                            <div class="chat-search">
+                                <input type="text" placeholder="채팅방 검색..." oninput="searchChats()">
+                            </div>
+                            <div class="chat-list" id="chatRoomsList">
+                                <!-- 채팅방 목록이 여기에 표시됩니다 -->
+                            </div>
+                        </div>
+                        
+                        <div class="chat-main">
+                            <div class="chat-top-bar" id="chatTopBar">
+                                <div class="chat-user">
+                                    <div class="chat-avatar">👤</div>
+                                    <div class="chat-user-info">
+                                        <h3>채팅방을 선택하세요</h3>
+                                        <span class="status">대화를 시작해보세요</span>
+                                    </div>
+                                </div>
+                                <div class="chat-actions">
+                                    <button class="chat-action">📞</button>
+                                    <button class="chat-action">📹</button>
+                                    <button class="chat-action">ℹ️</button>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="welcome-message">
+                                    <div class="welcome-icon">💬</div>
+                                    <h3>실시간 채팅을 시작해보세요!</h3>
+                                    <p>다른 창작자들과 소통하고 아이디어를 나눠보세요</p>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-input-area">
+                                <button class="attachment-btn" onclick="attachFile()">📎</button>
+                                <div class="input-wrapper">
+                                    <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." 
+                                           onkeypress="handleMessageInput(event)">
+                                    <button class="emoji-btn" onclick="showEmojiPicker()">😊</button>
+                                </div>
+                                <button class="send-btn" onclick="sendMessage()">➤</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -301,7 +428,7 @@
         // Firebase 설정 및 초기화
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -339,6 +466,7 @@
         window.query = query;
         window.orderBy = orderBy;
         window.where = where;
+        window.onSnapshot = onSnapshot;
         window.ref = ref;
         window.uploadBytes = uploadBytes;
         window.getDownloadURL = getDownloadURL;
@@ -356,6 +484,8 @@
                 showMainApp();
                 loadWorks();
                 loadUserWorks(user.uid);
+                initializeCommunities();
+                initializeChatRooms();
             } else {
                 console.log('❌ 사용자 로그아웃');
                 showAuthModal();
@@ -502,6 +632,16 @@
 
         function showWorkDetail(work) {
             showNotification(`"${work.title}" 상세보기 기능 준비 중입니다! 🎨`);
+        }
+
+        // 커뮤니티 초기화
+        function initializeCommunities() {
+            window.initializeCommunities();
+        }
+
+        // 채팅방 초기화
+        function initializeChatRooms() {
+            window.initializeChatRooms();
         }
 
         // 전역 함수로 내보내기
