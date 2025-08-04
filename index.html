@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,51 +23,108 @@
         </div>
     </div>
 
-    <!-- 로그인 모달 -->
-    <div id="authModal" class="modal" style="display: none;">
-        <div class="modal-content auth-modal">
-            <div class="modal-header">
-                <h2>CRETA에 오신 것을 환영합니다!</h2>
-                <button class="modal-close" onclick="hideAuthModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="auth-tabs">
-                    <button class="auth-tab active" onclick="showLogin()">로그인</button>
-                    <button class="auth-tab" onclick="showSignup()">회원가입</button>
+    <!-- 로그인/회원가입 모달 (새로운 디자인) -->
+    <div id="authModal" class="modal auth-modal-overlay" style="display: none;">
+        <div class="auth-modal-content">
+            <button class="auth-modal-close" onclick="hideAuthModal()">
+                <svg width="16" height="16" viewBox="0 0 16 16">
+                    <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <span class="logo-icon">🎨</span>
+                    <span class="logo-text">CRETA</span>
                 </div>
-                
+            </div>
+
+            <div class="auth-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="showLogin()" data-tab="login">로그인</button>
+                    <button class="auth-tab" onclick="showSignup()" data-tab="signup">회원가입</button>
+                </div>
+
+                <!-- 로그인 폼 -->
                 <div id="loginForm" class="auth-form">
                     <div class="form-group">
-                        <label>이메일</label>
-                        <input type="email" id="loginEmail" placeholder="your@email.com">
+                        <input type="email" id="loginEmail" placeholder="이메일" class="auth-input">
                     </div>
                     <div class="form-group">
-                        <label>비밀번호</label>
-                        <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요">
+                        <input type="password" id="loginPassword" placeholder="비밀번호" class="auth-input">
                     </div>
-                    <button class="btn btn-primary" onclick="loginUser()">로그인</button>
                     
+                    <div class="auth-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="keepLoggedIn">
+                            <span class="checkmark"></span>
+                            자동 로그인
+                        </label>
+                        <a href="#" class="forgot-password">ID/PASS 찾기</a>
+                    </div>
+
+                    <button class="btn auth-primary-btn" onclick="loginUser()">로그인</button>
+                    
+                    <div class="social-divider">
+                        <span>또는 아래 방법으로 회원가입 하세요</span>
+                    </div>
+
                     <div class="social-login">
-                        <button class="btn btn-google" onclick="loginWithGoogle()">
-                            🔵 Google로 로그인
+                        <button class="social-btn kakao-btn" onclick="loginWithKakao()">
+                            <span class="social-icon">💬</span>
+                            카카오로 시작하기
+                        </button>
+                        <button class="social-btn naver-btn" onclick="loginWithNaver()">
+                            <span class="social-icon">N</span>
+                            네이버로 시작하기
+                        </button>
+                        <button class="social-btn apple-btn" onclick="loginWithApple()">
+                            <span class="social-icon">🍎</span>
+                            Apple로 시작하기
+                        </button>
+                        <button class="social-btn google-btn" onclick="loginWithGoogle()">
+                            <span class="social-icon">🔵</span>
+                            유심심로 시작하기
                         </button>
                     </div>
                 </div>
-                
+
+                <!-- 회원가입 폼 -->
                 <div id="signupForm" class="auth-form" style="display: none;">
                     <div class="form-group">
-                        <label>이름</label>
-                        <input type="text" id="signupName" placeholder="닉네임을 입력하세요">
+                        <input type="text" id="signupName" placeholder="닉네임" class="auth-input">
                     </div>
                     <div class="form-group">
-                        <label>이메일</label>
-                        <input type="email" id="signupEmail" placeholder="your@email.com">
+                        <input type="email" id="signupEmail" placeholder="이메일" class="auth-input">
                     </div>
                     <div class="form-group">
-                        <label>비밀번호</label>
-                        <input type="password" id="signupPassword" placeholder="6자 이상 입력하세요">
+                        <input type="password" id="signupPassword" placeholder="비밀번호 (6자 이상)" class="auth-input">
                     </div>
-                    <button class="btn btn-primary" onclick="signupUser()">회원가입</button>
+
+                    <button class="btn auth-primary-btn" onclick="signupUser()">회원가입</button>
+                    
+                    <div class="social-divider">
+                        <span>또는 아래 방법으로 회원가입 하세요</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button class="social-btn kakao-btn" onclick="signupWithKakao()">
+                            <span class="social-icon">💬</span>
+                            카카오로 시작하기
+                        </button>
+                        <button class="social-btn naver-btn" onclick="signupWithNaver()">
+                            <span class="social-icon">N</span>
+                            네이버로 시작하기
+                        </button>
+                        <button class="social-btn apple-btn" onclick="signupWithApple()">
+                            <span class="social-icon">🍎</span>
+                            Apple로 시작하기
+                        </button>
+                        <button class="social-btn google-btn" onclick="signupWithGoogle()">
+                            <span class="social-icon">🔵</span>
+                            유심심로 시작하기
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,11 +138,8 @@
                     <span class="logo-icon">🎨</span>
                     <span class="logo-text">CRETA</span>
                 </div>
-                <div class="search-bar">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="작품, 작가, 태그 검색..." class="header-search" onkeypress="handleHeaderSearch(event)">
-                </div>
-                <div class="user-info">
+                <!-- 홈화면 검색창 제거 -->
+                <div class="header-actions">
                     <button class="notification-btn">
                         <span class="icon">🔔</span>
                         <span class="badge">3</span>
@@ -128,32 +183,64 @@
             </nav>
 
             <main class="content-area">
-                <!-- 홈 화면 -->
+                <!-- 홈 화면 (다양한 섹션 추가) -->
                 <div id="home" class="screen active">
                     <div class="welcome-banner">
                         <h1>🎨 환영합니다, <span id="welcomeUserName">창작자</span>님!</h1>
                         <p>CRETA에서 여러분의 창작 여정을 시작해보세요</p>
                     </div>
 
-                    <div class="content-sections">
-                        <section class="works-section">
-                            <div class="section-header">
-                                <h2>🔥 최신 업로드 작품</h2>
-                                <button class="see-more-btn" onclick="showScreen('explore')">더보기</button>
+                    <!-- 최신 업로드 작품 -->
+                    <section class="works-section">
+                        <div class="section-header">
+                            <h2>🔥 최신 업로드 작품</h2>
+                            <button class="see-more-btn" onclick="showScreen('explore')">더보기</button>
+                        </div>
+                        <div class="works-grid" id="latestWorksContainer">
+                            <div class="empty-state">
+                                <div class="empty-icon">📁</div>
+                                <h3>아직 업로드된 작품이 없어요</h3>
+                                <p>첫 번째 작품을 업로드해보세요!</p>
+                                <button class="btn btn-primary" onclick="showUploadModal()">작품 업로드하기</button>
                             </div>
-                            <div class="works-grid" id="worksContainer">
-                                <div class="empty-state">
-                                    <div class="empty-icon">📁</div>
-                                    <h3>아직 업로드된 작품이 없어요</h3>
-                                    <p>첫 번째 작품을 업로드해보세요!</p>
-                                    <button class="btn btn-primary" onclick="showUploadModal()">작품 업로드하기</button>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
+                        </div>
+                    </section>
+
+                    <!-- 인기 급상승 작품 -->
+                    <section class="works-section">
+                        <div class="section-header">
+                            <h2>📈 인기 급상승 작품</h2>
+                            <button class="see-more-btn" onclick="exploreByCategory('trending')">더보기</button>
+                        </div>
+                        <div class="works-grid" id="trendingWorksContainer">
+                            <!-- 동적으로 로드됩니다 -->
+                        </div>
+                    </section>
+
+                    <!-- 스테디셀러 -->
+                    <section class="works-section">
+                        <div class="section-header">
+                            <h2>⭐ 스테디셀러</h2>
+                            <button class="see-more-btn" onclick="exploreByCategory('steady')">더보기</button>
+                        </div>
+                        <div class="works-grid" id="steadyWorksContainer">
+                            <!-- 동적으로 로드됩니다 -->
+                        </div>
+                    </section>
+
+                    <!-- 이주의 베스트 -->
+                    <section class="works-section">
+                        <div class="section-header">
+                            <h2>🏆 이주의 베스트</h2>
+                            <button class="see-more-btn" onclick="exploreByCategory('weekly')">더보기</button>
+                        </div>
+                        <div class="works-grid" id="weeklyBestContainer">
+                            <!-- 동적으로 로드됩니다 -->
+                        </div>
+                    </section>
                 </div>
 
-                <!-- 탐색 화면 -->
+                <!-- 탐색 화면 (연관검색어, 실시간 검색어 추가) -->
                 <div id="explore" class="screen">
                     <div class="explore-container">
                         <div class="explore-header">
@@ -162,14 +249,69 @@
                                 <div class="search-container">
                                     <span class="search-icon">🔍</span>
                                     <input type="text" class="search-input" placeholder="작품, 작가, 태그로 검색해보세요..." 
-                                           id="exploreSearchInput" onkeypress="handleExploreSearch(event)" oninput="showSuggestions()">
+                                           id="exploreSearchInput" onkeypress="handleExploreSearch(event)" 
+                                           oninput="showSuggestions()" onfocus="showSearchPanel()">
                                     <button class="search-clear" onclick="clearExploreSearch()" style="display: none;">✕</button>
                                 </div>
                                 
-                                <!-- 연관 검색어 -->
-                                <div class="suggestions-dropdown" id="suggestionsDropdown" style="display: none;">
-                                    <div class="suggestions-list" id="suggestionsList">
-                                        <!-- 동적으로 생성됩니다 -->
+                                <!-- 검색 패널 -->
+                                <div class="search-panel" id="searchPanel" style="display: none;">
+                                    <div class="search-panel-content">
+                                        <div class="search-left">
+                                            <h3>연관 검색어</h3>
+                                            <div class="suggestions-list" id="suggestionsList">
+                                                <div class="suggestion-item" onclick="selectSuggestion('하이큐')">하이큐</div>
+                                                <div class="suggestion-item" onclick="selectSuggestion('진격의거인')">진격의거인</div>
+                                                <div class="suggestion-item" onclick="selectSuggestion('원피스')">원피스</div>
+                                                <div class="suggestion-item" onclick="selectSuggestion('나루토')">나루토</div>
+                                                <div class="suggestion-item" onclick="selectSuggestion('귀멸의칼날')">귀멸의칼날</div>
+                                            </div>
+                                        </div>
+                                        <div class="search-right">
+                                            <h3>실시간 검색어</h3>
+                                            <div class="realtime-keywords" id="realtimeKeywords">
+                                                <div class="keyword-item">
+                                                    <span class="rank">1</span>
+                                                    <span class="keyword" onclick="selectSuggestion('탄지로')">탄지로</span>
+                                                    <span class="trend up">↑</span>
+                                                </div>
+                                                <div class="keyword-item">
+                                                    <span class="rank">2</span>
+                                                    <span class="keyword" onclick="selectSuggestion('미루 업계')">미루 업계</span>
+                                                    <span class="trend up">↑</span>
+                                                </div>
+                                                <div class="keyword-item">
+                                                    <span class="rank">3</span>
+                                                    <span class="keyword" onclick="selectSuggestion('라원스')">라원스</span>
+                                                    <span class="trend down">↓</span>
+                                                </div>
+                                                <div class="keyword-item">
+                                                    <span class="rank">4</span>
+                                                    <span class="keyword" onclick="selectSuggestion('강철울')">강철울</span>
+                                                    <span class="trend down">↓</span>
+                                                </div>
+                                                <div class="keyword-item">
+                                                    <span class="rank">5</span>
+                                                    <span class="keyword" onclick="selectSuggestion('남친 발언')">남친 발언</span>
+                                                    <span class="trend up">↑</span>
+                                                </div>
+                                                <div class="keyword-item">
+                                                    <span class="rank">6</span>
+                                                    <span class="keyword" onclick="selectSuggestion('소아 이')">소아 이</span>
+                                                    <span class="trend up">↑</span>
+                                                </div>
+                                                <div class="keyword-item">
+                                                    <span class="rank">7</span>
+                                                    <span class="keyword" onclick="selectSuggestion('대몬던스')">대몬던스</span>
+                                                    <span class="trend up">↑</span>
+                                                </div>
+                                                <div class="keyword-item">
+                                                    <span class="rank">8</span>
+                                                    <span class="keyword" onclick="selectSuggestion('바비')">바비</span>
+                                                    <span class="trend down">↓</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -189,7 +331,7 @@
                                 </div>
                             </div>
                             
-                            <!-- 정렬 옵션 -->
+                            <!-- 정렬 버튼 -->
                             <div class="sort-section">
                                 <div class="sort-buttons">
                                     <button class="sort-btn active" onclick="changeSortOrder('popular')" data-sort="popular">
@@ -214,7 +356,7 @@
                     </div>
                 </div>
 
-                <!-- 커뮤니티 화면 -->
+                <!-- 커뮤니티 화면 (게시물 기능 강화) -->
                 <div id="community" class="screen">
                     <div class="community-container">
                         <div class="community-header">
@@ -242,7 +384,7 @@
                             </button>
                         </div>
                         
-                        <div class="communities-grid" id="communitiesList">
+                        <div class="communities-list" id="communitiesList">
                             <!-- 커뮤니티 목록이 여기에 표시됩니다 -->
                         </div>
                     </div>
@@ -279,9 +421,60 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 게시물 상세보기 모달 -->
+                    <div id="postDetailModal" class="modal" style="display: none;">
+                        <div class="modal-content post-detail-modal">
+                            <div class="modal-header">
+                                <h2 id="postDetailTitle">게시물 제목</h2>
+                                <button class="modal-close" onclick="hidePostDetail()">✕</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="post-detail-content" id="postDetailContent">
+                                    <!-- 게시물 내용이 여기에 표시됩니다 -->
+                                </div>
+                                
+                                <!-- 게시물 액션 -->
+                                <div class="post-actions">
+                                    <button class="action-btn like-btn" onclick="toggleLike()">
+                                        <span class="icon">❤️</span>
+                                        <span class="count" id="likeCount">0</span>
+                                    </button>
+                                    <button class="action-btn comment-btn" onclick="focusCommentInput()">
+                                        <span class="icon">💬</span>
+                                        <span class="count" id="commentCount">0</span>
+                                    </button>
+                                    <button class="action-btn bookmark-btn" onclick="toggleBookmark()">
+                                        <span class="icon">🔖</span>
+                                        <span class="count" id="bookmarkCount">0</span>
+                                    </button>
+                                    <button class="action-btn share-btn" onclick="sharePost()">
+                                        <span class="icon">📤</span>
+                                        <span class="text">공유</span>
+                                    </button>
+                                </div>
+
+                                <!-- 댓글 섹션 -->
+                                <div class="comments-section">
+                                    <div class="comments-header">
+                                        <h4>댓글</h4>
+                                    </div>
+                                    <div class="comments-list" id="commentsList">
+                                        <!-- 댓글들이 여기에 표시됩니다 -->
+                                    </div>
+                                    <div class="comment-input-section">
+                                        <div class="comment-input-wrapper">
+                                            <input type="text" id="commentInput" placeholder="댓글을 입력하세요..." onkeypress="handleCommentInput(event)">
+                                            <button class="comment-submit" onclick="submitComment()">작성</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- 메시지 화면 -->
+                <!-- 메시지 화면 (기능 강화) -->
                 <div id="messages" class="screen">
                     <div class="messages-layout">
                         <div class="chat-sidebar">
@@ -290,7 +483,7 @@
                                 <button class="new-chat-btn" onclick="showNewChatModal()">✏️</button>
                             </div>
                             <div class="chat-search">
-                                <input type="text" placeholder="채팅방 검색..." oninput="searchChats()">
+                                <input type="text" placeholder="채팅방 검색..." oninput="searchChats()" id="chatSearchInput">
                             </div>
                             <div class="chat-list" id="chatRoomsList">
                                 <!-- 채팅방 목록이 여기에 표시됩니다 -->
@@ -329,6 +522,121 @@
                                     <button class="emoji-btn" onclick="showEmojiPicker()">😊</button>
                                 </div>
                                 <button class="send-btn" onclick="sendMessage()">➤</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 새 채팅 모달 -->
+                    <div id="newChatModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>새 채팅 시작</h2>
+                                <button class="modal-close" onclick="hideNewChatModal()">✕</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="search-users">
+                                    <input type="text" placeholder="사용자 검색..." id="userSearchInput" oninput="searchUsers()">
+                                </div>
+                                <div class="users-list" id="usersList">
+                                    <!-- 사용자 목록이 여기에 표시됩니다 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 이모지 피커 -->
+                    <div id="emojiPicker" class="emoji-picker" style="display: none;">
+                        <div class="emoji-grid">
+                            <span class="emoji" onclick="insertEmoji('😀')">😀</span>
+                            <span class="emoji" onclick="insertEmoji('😃')">😃</span>
+                            <span class="emoji" onclick="insertEmoji('😄')">😄</span>
+                            <span class="emoji" onclick="insertEmoji('😁')">😁</span>
+                            <span class="emoji" onclick="insertEmoji('😆')">😆</span>
+                            <span class="emoji" onclick="insertEmoji('😅')">😅</span>
+                            <span class="emoji" onclick="insertEmoji('😂')">😂</span>
+                            <span class="emoji" onclick="insertEmoji('🤣')">🤣</span>
+                            <span class="emoji" onclick="insertEmoji('🥲')">🥲</span>
+                            <span class="emoji" onclick="insertEmoji('😊')">😊</span>
+                            <span class="emoji" onclick="insertEmoji('😇')">😇</span>
+                            <span class="emoji" onclick="insertEmoji('🙂')">🙂</span>
+                            <span class="emoji" onclick="insertEmoji('🙃')">🙃</span>
+                            <span class="emoji" onclick="insertEmoji('😉')">😉</span>
+                            <span class="emoji" onclick="insertEmoji('😌')">😌</span>
+                            <span class="emoji" onclick="insertEmoji('😍')">😍</span>
+                            <span class="emoji" onclick="insertEmoji('🥰')">🥰</span>
+                            <span class="emoji" onclick="insertEmoji('😘')">😘</span>
+                            <span class="emoji" onclick="insertEmoji('😗')">😗</span>
+                            <span class="emoji" onclick="insertEmoji('😙')">😙</span>
+                            <span class="emoji" onclick="insertEmoji('😚')">😚</span>
+                            <span class="emoji" onclick="insertEmoji('😋')">😋</span>
+                            <span class="emoji" onclick="insertEmoji('😛')">😛</span>
+                            <span class="emoji" onclick="insertEmoji('😝')">😝</span>
+                            <span class="emoji" onclick="insertEmoji('😜')">😜</span>
+                            <span class="emoji" onclick="insertEmoji('🤪')">🤪</span>
+                            <span class="emoji" onclick="insertEmoji('🤨')">🤨</span>
+                            <span class="emoji" onclick="insertEmoji('🧐')">🧐</span>
+                            <span class="emoji" onclick="insertEmoji('🤓')">🤓</span>
+                            <span class="emoji" onclick="insertEmoji('😎')">😎</span>
+                            <span class="emoji" onclick="insertEmoji('🥸')">🥸</span>
+                            <span class="emoji" onclick="insertEmoji('🤩')">🤩</span>
+                            <span class="emoji" onclick="insertEmoji('🥳')">🥳</span>
+                            <span class="emoji" onclick="insertEmoji('😏')">😏</span>
+                            <span class="emoji" onclick="insertEmoji('😒')">😒</span>
+                            <span class="emoji" onclick="insertEmoji('😞')">😞</span>
+                            <span class="emoji" onclick="insertEmoji('😔')">😔</span>
+                            <span class="emoji" onclick="insertEmoji('😟')">😟</span>
+                            <span class="emoji" onclick="insertEmoji('😕')">😕</span>
+                            <span class="emoji" onclick="insertEmoji('🙁')">🙁</span>
+                            <span class="emoji" onclick="insertEmoji('☹️')">☹️</span>
+                            <span class="emoji" onclick="insertEmoji('😣')">😣</span>
+                            <span class="emoji" onclick="insertEmoji('😖')">😖</span>
+                            <span class="emoji" onclick="insertEmoji('😫')">😫</span>
+                            <span class="emoji" onclick="insertEmoji('😩')">😩</span>
+                            <span class="emoji" onclick="insertEmoji('🥺')">🥺</span>
+                            <span class="emoji" onclick="insertEmoji('😢')">😢</span>
+                            <span class="emoji" onclick="insertEmoji('😭')">😭</span>
+                            <span class="emoji" onclick="insertEmoji('❤️')">❤️</span>
+                            <span class="emoji" onclick="insertEmoji('💕')">💕</span>
+                            <span class="emoji" onclick="insertEmoji('💖')">💖</span>
+                            <span class="emoji" onclick="insertEmoji('💗')">💗</span>
+                            <span class="emoji" onclick="insertEmoji('💙')">💙</span>
+                            <span class="emoji" onclick="insertEmoji('💚')">💚</span>
+                            <span class="emoji" onclick="insertEmoji('💛')">💛</span>
+                            <span class="emoji" onclick="insertEmoji('🧡')">🧡</span>
+                            <span class="emoji" onclick="insertEmoji('💜')">💜</span>
+                            <span class="emoji" onclick="insertEmoji('🖤')">🖤</span>
+                            <span class="emoji" onclick="insertEmoji('🤍')">🤍</span>
+                            <span class="emoji" onclick="insertEmoji('🤎')">🤎</span>
+                            <span class="emoji" onclick="insertEmoji('💔')">💔</span>
+                            <span class="emoji" onclick="insertEmoji('❣️')">❣️</span>
+                            <span class="emoji" onclick="insertEmoji('💯')">💯</span>
+                            <span class="emoji" onclick="insertEmoji('👍')">👍</span>
+                            <span class="emoji" onclick="insertEmoji('👎')">👎</span>
+                            <span class="emoji" onclick="insertEmoji('👏')">👏</span>
+                            <span class="emoji" onclick="insertEmoji('🙏')">🙏</span>
+                        </div>
+                    </div>
+
+                    <!-- 파일 업로드 모달 -->
+                    <div id="fileUploadModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>파일 첨부</h2>
+                                <button class="modal-close" onclick="hideFileUploadModal()">✕</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                                    <div class="upload-icon">📁</div>
+                                    <p>클릭하여 파일을 선택하거나 드래그하여 업로드하세요</p>
+                                    <input type="file" id="fileInput" style="display: none;" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx" onchange="handleFileSelect()">
+                                </div>
+                                <div class="selected-files" id="selectedFiles">
+                                    <!-- 선택된 파일들이 여기에 표시됩니다 -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="hideFileUploadModal()">취소</button>
+                                <button class="btn btn-primary" onclick="uploadFiles()">전송</button>
                             </div>
                         </div>
                     </div>
@@ -425,10 +733,9 @@
 
     <!-- Firebase 스크립트 -->
     <script type="module">
-        // Firebase 설정 및 초기화
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, where, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -440,13 +747,14 @@
             appId: "1:126716257571:web:33dfd5dbd1bcdb7a229896"
         };
 
-        // Firebase 초기화
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // 전역으로 내보내기
+        // 카카오 SDK 초기화
+        Kakao.init('YOUR_KAKAO_APP_KEY'); // 실제 앱 키로 교체 필요
+
         window.auth = auth;
         window.db = db;
         window.storage = storage;
@@ -467,39 +775,35 @@
         window.orderBy = orderBy;
         window.where = where;
         window.onSnapshot = onSnapshot;
+        window.updateDoc = updateDoc;
+        window.increment = increment;
         window.ref = ref;
         window.uploadBytes = uploadBytes;
         window.getDownloadURL = getDownloadURL;
+        window.Kakao = Kakao;
 
-        // 로딩 화면 숨기기
         setTimeout(() => {
             document.getElementById('loadingScreen').style.display = 'none';
         }, 2000);
 
-        // 인증 상태 확인
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log('✅ 사용자 로그인:', user.email);
                 updateUserInterface(user);
                 showMainApp();
-                loadWorks();
-                loadUserWorks(user.uid);
+                loadAllHomeSections();
                 initializeCommunities();
                 initializeChatRooms();
             } else {
-                console.log('❌ 사용자 로그아웃');
                 showAuthModal();
                 resetUserInterface();
             }
         });
 
-        // 메인 앱 표시
         function showMainApp() {
             document.getElementById('authModal').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
         }
 
-        // 사용자 인터페이스 업데이트
         function updateUserInterface(user) {
             const userAvatarText = document.getElementById('userAvatarText');
             const logoutBtn = document.querySelector('.logout-btn');
@@ -529,12 +833,19 @@
             document.getElementById('mainApp').style.display = 'none';
         }
 
-        // 작품 로드
+        // 홈 섹션 로드
+        async function loadAllHomeSections() {
+            await loadWorks();
+            await loadTrendingWorks();
+            await loadSteadyWorks();
+            await loadWeeklyBestWorks();
+        }
+
         async function loadWorks() {
             try {
                 const worksQuery = query(collection(db, 'works'), orderBy('createdAt', 'desc'));
                 const querySnapshot = await getDocs(worksQuery);
-                const worksContainer = document.getElementById('worksContainer');
+                const worksContainer = document.getElementById('latestWorksContainer');
                 
                 if (worksContainer && !querySnapshot.empty) {
                     worksContainer.innerHTML = '';
@@ -546,39 +857,62 @@
                     });
                 }
             } catch (error) {
-                console.error('❌ 작품 로드 실패:', error);
+                console.error('작품 로드 실패:', error);
             }
         }
 
-        // 사용자 작품 로드
-        async function loadUserWorks(userId) {
-            try {
-                const userWorksQuery = query(
-                    collection(db, 'works'), 
-                    where('authorId', '==', userId),
-                    orderBy('createdAt', 'desc')
-                );
-                const querySnapshot = await getDocs(userWorksQuery);
-                const userWorksContainer = document.getElementById('userWorksContainer');
-                const userWorksCount = document.getElementById('userWorks');
-                
-                if (userWorksContainer) {
-                    if (!querySnapshot.empty) {
-                        userWorksContainer.innerHTML = '';
-                        querySnapshot.forEach((doc) => {
-                            const work = { id: doc.id, ...doc.data() };
-                            const workElement = createWorkElement(work, true);
-                            userWorksContainer.appendChild(workElement);
-                        });
-                        
-                        if (userWorksCount) {
-                            userWorksCount.textContent = querySnapshot.size;
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('❌ 사용자 작품 로드 실패:', error);
+        async function loadTrendingWorks() {
+            // 샘플 데이터로 트렌딩 작품 표시
+            const trendingContainer = document.getElementById('trendingWorksContainer');
+            if (trendingContainer) {
+                trendingContainer.innerHTML = generateSampleWorks('trending');
             }
+        }
+
+        async function loadSteadyWorks() {
+            // 샘플 데이터로 스테디셀러 작품 표시
+            const steadyContainer = document.getElementById('steadyWorksContainer');
+            if (steadyContainer) {
+                steadyContainer.innerHTML = generateSampleWorks('steady');
+            }
+        }
+
+        async function loadWeeklyBestWorks() {
+            // 샘플 데이터로 주간 베스트 작품 표시
+            const weeklyContainer = document.getElementById('weeklyBestContainer');
+            if (weeklyContainer) {
+                weeklyContainer.innerHTML = generateSampleWorks('weekly');
+            }
+        }
+
+        function generateSampleWorks(type) {
+            const sampleTitles = {
+                trending: ['하이큐!! 신작 팬아트', '진격의거인 최종화', '원피스 1000화 기념'],
+                steady: ['나루토 클래식', '귀멸의칼날 인기작', '원피스 명장면'],
+                weekly: ['이주의 HOT', '베스트 일러스트', '인기 소설']
+            };
+            
+            const titles = sampleTitles[type] || sampleTitles.trending;
+            
+            return titles.map((title, index) => `
+                <div class="work-item" onclick="showWorkDetail(${index})">
+                    <img src="https://via.placeholder.com/200x160/1f2937/f3f4f6?text=Sample+${index + 1}" 
+                         alt="${title}" class="work-thumbnail" loading="lazy">
+                    <div class="work-content">
+                        <h3>${title}</h3>
+                        <div class="work-author">샘플 작가</div>
+                        <div class="work-category">🎨 일러스트</div>
+                        <div class="work-stats">
+                            <span>❤️ ${Math.floor(Math.random() * 1000)}</span>
+                            <span>👀 ${Math.floor(Math.random() * 5000)}</span>
+                        </div>
+                        <div class="work-tags">
+                            <span class="tag">#샘플</span>
+                            <span class="tag">#테스트</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function createWorkElement(work, isUserWork = false) {
@@ -631,29 +965,24 @@
         }
 
         function showWorkDetail(work) {
-            showNotification(`"${work.title}" 상세보기 기능 준비 중입니다! 🎨`);
+            showNotification(`"${work.title || work}" 상세보기 기능 준비 중입니다! 🎨`);
         }
 
-        // 커뮤니티 초기화
         function initializeCommunities() {
             window.initializeCommunities();
         }
 
-        // 채팅방 초기화
         function initializeChatRooms() {
             window.initializeChatRooms();
         }
 
-        // 전역 함수로 내보내기
         window.updateUserInterface = updateUserInterface;
         window.resetUserInterface = resetUserInterface;
         window.loadWorks = loadWorks;
-        window.loadUserWorks = loadUserWorks;
+        window.loadAllHomeSections = loadAllHomeSections;
         window.showMainApp = showMainApp;
     </script>
 
     <script src="script.js"></script>
 </body>
 </html>
-
-
