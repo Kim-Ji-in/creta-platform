@@ -1,3 +1,3 @@
 # creta-platform
-CRETA - Create beyong border
+CRETA - Create beyond border
 
