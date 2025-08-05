@@ -447,19 +447,21 @@ function loadExploreWorks() {
 }
 
 function displayExploreResults(works) {
+    // 기존 displayExploreResults 함수에서 empty state 부분만 수정
+function displayExploreResults(works) {
     const container = document.getElementById('exploreResults');
     
     if (works.length === 0) {
         container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">🔍</div>
+            <div class="search-empty-state">
                 <h3>검색 결과가 없어요</h3>
-                <p>다른 키워드로 검색해보세요</p>
+                <p>검색어를 정확하게 입력했는지 확인해주세요</p>
             </div>
         `;
         return;
     }
     
+    // 나머지 코드는 그대로 유지
     container.innerHTML = works.map(work => `
         <div class="work-item" onclick="showWorkDetail(${work.id})">
             <img src="${work.thumbnail}" alt="${work.title}" class="work-thumbnail">
@@ -477,6 +479,7 @@ function displayExploreResults(works) {
         </div>
     `).join('');
 }
+
 
 // 커뮤니티 기능
 function initializeCommunities() {
