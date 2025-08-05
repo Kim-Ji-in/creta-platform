@@ -1041,29 +1041,76 @@ body {
 }
 
 /* 빈 상태 */
+/* 기존 .empty-state 스타일을 이것으로 완전 교체 */
 .empty-state {
     text-align: center;
-    padding: 4rem 2rem;
-    color: #6b7280;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
+    padding: 6rem 3rem;
+    background: #ffffff;
+    border-radius: 16px;
+    margin: 2rem 0;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .empty-state h3 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 600;
+    color: #1f2937;
     margin-bottom: 1rem;
-    color: #374151;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
 }
 
 .empty-state p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+    line-height: 1.5;
 }
+
+.empty-icon {
+    display: none; /* 기존 이모지 아이콘 숨기기 */
+}
+
+/* 검색 결과 전용 empty state 스타일 추가 */
+.search-empty-state {
+    text-align: center;
+    padding: 8rem 3rem;
+    background: #ffffff;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+    margin: 0;
+}
+
+.search-empty-state h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.search-empty-state p {
+    font-size: 1.1rem;
+    color: #9ca3af;
+    margin-bottom: 0;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.search-empty-state .btn {
+    display: none; /* 버튼 숨기기 */
+}
+
 
 /* 커뮤니티 */
 .community-container {
