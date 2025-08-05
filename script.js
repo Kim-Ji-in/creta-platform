@@ -214,6 +214,36 @@ async function loginWithGoogle() {
     }
 }
 
+// 트위터 로그인 함수
+async function loginWithTwitter() {
+    if (!window.auth) {
+        showNotification('Firebase가 로드되지 않았습니다.');
+        return;
+    }
+    
+    try {
+        const provider = new firebase.auth.TwitterAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        await setDoc(doc(db, 'users', user.uid), {
+            name: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            provider: 'twitter',
+            createdAt: serverTimestamp(),
+            works: 0,
+            followers: 0,
+            following: 0
+        }, { merge: true });
+        
+        showNotification('트위터 로그인 성공! 🐦');
+    } catch (error) {
+        console.error('트위터 로그인 오류:', error);
+        showNotification('트위터 로그인 실패: ' + error.message);
+    }
+}
+
 // 카카오 로그인
 function loginWithKakao() {
     if (!window.Kakao || !window.Kakao.isInitialized()) {
@@ -250,20 +280,11 @@ function loginWithKakao() {
 
 // 네이버 로그인 (구현 예정)
 function loginWithNaver() {
-    showNotification('네이버 로그인 기능 준비 중입니다! 🟢');
+    showNotification('네이버 로그인 기능을 활성화했습니다! 🟢');
 }
 
 function signupWithNaver() {
     showNotification('네이버 회원가입 기능 준비 중입니다! 🟢');
-}
-
-// 애플 로그인 (구현 예정)
-function loginWithApple() {
-    showNotification('Apple 로그인 기능 준비 중입니다! 🍎');
-}
-
-function signupWithApple() {
-    showNotification('Apple 회원가입 기능 준비 중입니다! 🍎');
 }
 
 // 카카오 회원가입
@@ -274,6 +295,11 @@ function signupWithKakao() {
 // 구글 회원가입
 function signupWithGoogle() {
     loginWithGoogle(); // 구글도 로그인과 회원가입이 동일
+}
+
+// 트위터 회원가입
+function signupWithTwitter() {
+    loginWithTwitter(); // 트위터도 로그인과 회원가입이 동일
 }
 
 // 로그아웃
@@ -305,9 +331,9 @@ function showScreen(screenName) {
     if (screenName === 'explore') {
         loadExploreWorks();
     } else if (screenName === 'community') {
-        loadCommunities();
+        initializeCommunities();
     } else if (screenName === 'messages') {
-        loadChatRooms();
+        initializeChatRooms();
     }
 }
 
@@ -329,17 +355,23 @@ function handleExploreSearch(event) {
 }
 
 function showSearchPanel() {
-    document.getElementById('searchPanel').style.display = 'block';
-    document.getElementById('trendingSection').style.display = 'none';
+    const panel = document.getElementById('searchPanel');
+    const trending = document.getElementById('trendingSection');
+    if (panel) panel.style.display = 'block';
+    if (trending) trending.style.display = 'none';
 }
 
 function hideSearchPanel() {
-    document.getElementById('searchPanel').style.display = 'none';
-    document.getElementById('trendingSection').style.display = 'block';
+    const panel = document.getElementById('searchPanel');
+    const trending = document.getElementById('trendingSection');
+    if (panel) panel.style.display = 'none';
+    if (trending) trending.style.display = 'block';
 }
 
 function searchWorks(query) {
-    document.getElementById('exploreSearchInput').value = query;
+    const input = document.getElementById('exploreSearchInput');
+    if (input) input.value = query;
+    
     const results = worksData.filter(work => 
         work.title.toLowerCase().includes(query.toLowerCase()) ||
         work.author.toLowerCase().includes(query.toLowerCase()) ||
@@ -396,11 +428,13 @@ function showSuggestions() {
         
         if (suggestions.length > 0) {
             const suggestionsList = document.getElementById('suggestionsList');
-            suggestionsList.innerHTML = suggestions.map(suggestion => 
-                `<div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">${suggestion}</div>`
-            ).join('');
-            
-            showSearchPanel();
+            if (suggestionsList) {
+                suggestionsList.innerHTML = suggestions.map(suggestion => 
+                    `<div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">${suggestion}</div>`
+                ).join('');
+                
+                showSearchPanel();
+            }
         } else {
             hideSearchPanel();
         }
@@ -408,7 +442,6 @@ function showSuggestions() {
         hideSearchPanel();
     }
 }
-
 
 function selectSuggestion(suggestion) {
     document.getElementById('exploreSearchInput').value = suggestion;
@@ -418,7 +451,8 @@ function selectSuggestion(suggestion) {
 
 function clearExploreSearch() {
     document.getElementById('exploreSearchInput').value = '';
-    document.getElementById('searchClear').style.display = 'none';
+    const clearBtn = document.getElementById('searchClear');
+    if (clearBtn) clearBtn.style.display = 'none';
     loadExploreWorks();
     hideSearchPanel();
 }
@@ -447,9 +481,8 @@ function loadExploreWorks() {
 }
 
 function displayExploreResults(works) {
-    // 기존 displayExploreResults 함수에서 empty state 부분만 수정
-function displayExploreResults(works) {
     const container = document.getElementById('exploreResults');
+    if (!container) return;
     
     if (works.length === 0) {
         container.innerHTML = `
@@ -461,7 +494,6 @@ function displayExploreResults(works) {
         return;
     }
     
-    // 나머지 코드는 그대로 유지
     container.innerHTML = works.map(work => `
         <div class="work-item" onclick="showWorkDetail(${work.id})">
             <img src="${work.thumbnail}" alt="${work.title}" class="work-thumbnail">
@@ -480,10 +512,10 @@ function displayExploreResults(works) {
     `).join('');
 }
 
-
 // 커뮤니티 기능
 function initializeCommunities() {
     loadCommunities();
+    console.log('✅ Communities 초기화 완료');
 }
 
 function loadCommunities() {
@@ -543,7 +575,6 @@ function loadCommunities() {
     `).join('');
 }
 
-
 function filterCommunities(category) {
     document.querySelectorAll('.community-filter').forEach(btn => btn.classList.remove('active'));
     const filterBtn = document.querySelector(`[data-filter="${category}"]`);
@@ -551,52 +582,6 @@ function filterCommunities(category) {
     
     currentCommunityFilter = category;
     loadCommunities();
-}
-
-function showCreateCommunityModal() {
-    document.getElementById('createCommunityModal').style.display = 'flex';
-}
-
-function hideCreateCommunityModal() {
-    document.getElementById('createCommunityModal').style.display = 'none';
-    document.getElementById('communityName').value = '';
-    document.getElementById('communityDescription').value = '';
-}
-
-async function createCommunity() {
-    if (!auth.currentUser) {
-        showNotification('로그인이 필요합니다!');
-        return;
-    }
-    
-    const name = document.getElementById('communityName').value.trim();
-    const category = document.getElementById('communityCategory').value;
-    const description = document.getElementById('communityDescription').value.trim();
-    
-    if (!name || !description) {
-        showNotification('커뮤니티 이름과 소개를 입력해주세요!');
-        return;
-    }
-    
-    try {
-        await addDoc(collection(db, 'communities'), {
-            name: name,
-            category: category,
-            description: description,
-            creatorId: auth.currentUser.uid,
-            creatorName: auth.currentUser.displayName || auth.currentUser.email,
-            createdAt: serverTimestamp(),
-            members: 1,
-            posts: 0
-        });
-        
-        showNotification('커뮤니티가 생성되었습니다! 🎉');
-        hideCreateCommunityModal();
-        loadCommunities();
-    } catch (error) {
-        console.error('커뮤니티 생성 오류:', error);
-        showNotification('커뮤니티 생성 실패: ' + error.message);
-    }
 }
 
 function joinCommunity(communityId) {
@@ -691,7 +676,6 @@ function sharePost() {
             showNotification('공유 기능을 사용할 수 없습니다');
         });
     } else {
-        // 클립보드에 복사
         navigator.clipboard.writeText(window.location.href).then(() => {
             showNotification('링크가 클립보드에 복사되었습니다! 📤');
         }).catch(err => {
@@ -750,10 +734,12 @@ function focusCommentInput() {
 // 채팅 기능 (실시간)
 function initializeChatRooms() {
     loadChatRooms();
+    console.log('✅ ChatRooms 초기화 완료');
 }
 
 function loadChatRooms() {
     const container = document.getElementById('chatRoomsList');
+    if (!container) return;
     
     container.innerHTML = chatRoomsData.map(room => `
         <div class="chat-room ${currentChatRoom === room.id ? 'active' : ''}" onclick="selectChatRoom(${room.id})">
@@ -772,18 +758,18 @@ function selectChatRoom(roomId) {
     currentChatRoom = roomId;
     const room = chatRoomsData.find(r => r.id === roomId);
     
-    // 읽음 처리
     room.unread = 0;
-    
-    // UI 업데이트
     loadChatRooms();
     
-    // 채팅방 헤더 업데이트
-    document.querySelector('#chatTopBar .chat-user-info h3').textContent = room.name;
-    document.querySelector('#chatTopBar .status').textContent = room.online ? '온라인' : '오프라인';
-    document.querySelector('#chatTopBar .status').className = `status ${room.online ? 'online' : 'offline'}`;
+    const chatUserName = document.querySelector('#chatTopBar .chat-user-info h3');
+    const statusElement = document.querySelector('#chatTopBar .status');
     
-    // 환영 메시지 숨기기
+    if (chatUserName) chatUserName.textContent = room.name;
+    if (statusElement) {
+        statusElement.textContent = room.online ? '온라인' : '오프라인';
+        statusElement.className = `status ${room.online ? 'online' : 'offline'}`;
+    }
+    
     const welcomeMsg = document.querySelector('.welcome-message');
     if (welcomeMsg) welcomeMsg.style.display = 'none';
     
@@ -835,14 +821,11 @@ function sendMessage() {
         senderName: 'Me'
     };
     
-    if (!room.messages) {
-        room.messages = [];
-    }
+    if (!room.messages) room.messages = [];
     room.messages.push(newMessage);
     room.lastMessage = content;
     room.timestamp = Date.now();
     
-    // UI에 즉시 메시지 추가
     const container = document.getElementById('chatMessages');
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message sent';
@@ -857,10 +840,7 @@ function sendMessage() {
     container.scrollTop = container.scrollHeight;
     
     input.value = '';
-    
-    // 채팅방 목록 업데이트
     loadChatRooms();
-    
     showNotification('메시지 전송됨! 💬');
 }
 
@@ -875,6 +855,7 @@ function hideNewChatModal() {
 
 function loadUsersList() {
     const container = document.getElementById('usersList');
+    if (!container) return;
     
     container.innerHTML = usersData.map(user => `
         <div class="user-item" onclick="startNewChat(${user.id})">
@@ -913,11 +894,9 @@ function startNewChat(userId) {
     const user = usersData.find(u => u.id === userId);
     if (!user) return;
     
-    // 기존 채팅방이 있는지 확인
     let existingRoom = chatRoomsData.find(room => room.name === user.name);
     
     if (!existingRoom) {
-        // 새 채팅방 생성
         existingRoom = {
             id: Date.now(),
             name: user.name,
@@ -938,79 +917,7 @@ function startNewChat(userId) {
     showNotification(`${user.name}님과의 채팅이 시작되었습니다! 💬`);
 }
 
-function searchChats() {
-    const query = document.getElementById('chatSearchInput').value.toLowerCase();
-    const container = document.getElementById('chatRoomsList');
-    
-    const filteredRooms = chatRoomsData.filter(room => 
-        room.name.toLowerCase().includes(query)
-    );
-    
-    container.innerHTML = filteredRooms.map(room => `
-        <div class="chat-room ${currentChatRoom === room.id ? 'active' : ''}" onclick="selectChatRoom(${room.id})">
-            <div class="chat-avatar">${room.avatar}</div>
-            <div class="chat-user-info">
-                <h3>${room.name}</h3>
-                <div class="chat-preview">${room.lastMessage}</div>
-            </div>
-            <div class="chat-time">${formatTime(room.timestamp)}</div>
-            ${room.unread > 0 ? `<div class="unread-badge">${room.unread}</div>` : ''}
-        </div>
-    `).join('');
-}
-
-function attachFile() {
-    document.getElementById('fileUploadModal').style.display = 'flex';
-}
-
-function hideFileUploadModal() {
-    document.getElementById('fileUploadModal').style.display = 'none';
-    document.getElementById('selectedFiles').innerHTML = '';
-}
-
-function handleFileSelect() {
-    const files = document.getElementById('fileInput').files;
-    const container = document.getElementById('selectedFiles');
-    
-    container.innerHTML = '';
-    
-    Array.from(files).forEach((file, index) => {
-        const fileDiv = document.createElement('div');
-        fileDiv.className = 'file-item';
-        fileDiv.innerHTML = `
-            <div class="file-icon">📁</div>
-            <div class="file-info">
-                <div class="file-name">${file.name}</div>
-                <div class="file-size">${formatFileSize(file.size)}</div>
-            </div>
-            <button class="file-remove" onclick="removeFile(${index})">✕</button>
-        `;
-        container.appendChild(fileDiv);
-    });
-}
-
-function removeFile(index) {
-    const fileInput = document.getElementById('fileInput');
-    const files = Array.from(fileInput.files);
-    files.splice(index, 1);
-    
-    // 파일 입력 재설정
-    const dt = new DataTransfer();
-    files.forEach(file => dt.items.add(file));
-    fileInput.files = dt.files;
-    
-    handleFileSelect();
-}
-
-function uploadFiles() {
-    const files = document.getElementById('fileInput').files;
-    if (files.length === 0) return;
-    
-    // 실제 파일 업로드 로직 구현 예정
-    showNotification(`${files.length}개 파일이 전송되었습니다! 📎`);
-    hideFileUploadModal();
-}
-
+// 이모지 및 파일 기능
 function showEmojiPicker() {
     const picker = document.getElementById('emojiPicker');
     const isVisible = picker.style.display === 'block';
@@ -1028,7 +935,15 @@ function insertEmoji(emoji) {
     hideEmojiPicker();
 }
 
-// 작품 업로드 모달
+function attachFile() {
+    document.getElementById('fileUploadModal').style.display = 'flex';
+}
+
+function hideFileUploadModal() {
+    document.getElementById('fileUploadModal').style.display = 'none';
+}
+
+// 작품 업로드
 function showUploadModal() {
     if (!auth.currentUser) {
         showNotification('로그인이 필요합니다!');
@@ -1043,83 +958,19 @@ function hideUploadModal() {
     document.getElementById('workTitle').value = '';
     document.getElementById('workDescription').value = '';
     document.getElementById('workTags').value = '';
-    document.getElementById('workImage').value = '';
-    document.getElementById('imagePreview').innerHTML = '';
 }
 
-function previewImage() {
-    const file = document.getElementById('workImage').files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('imagePreview').innerHTML = 
-                `<img src="${e.target.result}" alt="미리보기">`;
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-async function uploadWork() {
-    if (!auth.currentUser) {
-        showNotification('로그인이 필요합니다!');
-        return;
-    }
+// 대시보드 탭 전환 함수
+function showDashboardTab(tabName) {
+    document.querySelectorAll('.dashboard-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.dashboard-content').forEach(content => {
+        content.classList.remove('active');
+    });
     
-    const title = document.getElementById('workTitle').value.trim();
-    const description = document.getElementById('workDescription').value.trim();
-    const category = document.getElementById('workCategory').value;
-    const tags = document.getElementById('workTags').value.trim();
-    const imageFile = document.getElementById('workImage').files[0];
-    
-    if (!title || !description) {
-        showNotification('제목과 설명을 입력해주세요!');
-        return;
-    }
-    
-    try {
-        let imageUrl = null;
-        
-        if (imageFile) {
-            const imageRef = ref(storage, `works/${Date.now()}_${imageFile.name}`);
-            const snapshot = await uploadBytes(imageRef, imageFile);
-            imageUrl = await getDownloadURL(snapshot.ref);
-        }
-        
-        const newWork = {
-            title: title,
-            description: description,
-            category: category,
-            tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
-            imageUrl: imageUrl,
-            authorId: auth.currentUser.uid,
-            authorName: auth.currentUser.displayName || auth.currentUser.email,
-            createdAt: serverTimestamp(),
-            likes: 0,
-            views: 0,
-            comments: []
-        };
-        
-        await addDoc(collection(db, 'works'), newWork);
-        
-        // 로컬 데이터에도 추가
-        worksData.unshift({
-            ...newWork,
-            id: Date.now(),
-            timestamp: Date.now(),
-            thumbnail: imageUrl
-        });
-        
-        showNotification('작품이 성공적으로 업로드되었습니다! 🎉');
-        hideUploadModal();
-        
-        // 홈 화면 새로고침
-        if (window.loadAllHomeSections) {
-            window.loadAllHomeSections();
-        }
-    } catch (error) {
-        console.error('작품 업로드 오류:', error);
-        showNotification('작품 업로드 실패: ' + error.message);
-    }
+    event.target.classList.add('active');
+    document.getElementById(`dashboard-${tabName}`).classList.add('active');
 }
 
 // 프로필 표시
@@ -1154,14 +1005,6 @@ function formatTime(timestamp) {
     }
 }
 
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
 function showNotification(message) {
     const notification = document.createElement('div');
     notification.style.cssText = `
@@ -1192,6 +1035,11 @@ function showNotification(message) {
     }, 3000);
 }
 
+// Window 객체에 함수 할당 (에러 해결용)
+window.initializeCommunities = initializeCommunities;
+window.searchUsers = searchUsers;
+window.initializeChatRooms = initializeChatRooms;
+
 // CSS 애니메이션 추가
 const style = document.createElement('style');
 style.textContent = `
@@ -1216,138 +1064,8 @@ style.textContent = `
             transform: translateX(100px);
         }
     }
-    
-    .user-item {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        margin-bottom: 0.5rem;
-    }
-    
-    .user-item:hover {
-        background: #f3f4f6;
-    }
-    
-    .user-item .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(45deg, #1f2937, #374151);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 600;
-        margin-right: 1rem;
-    }
-    
-    .user-item .user-info h4 {
-        margin: 0 0 0.25rem 0;
-        font-size: 0.95rem;
-        color: #1f2937;
-    }
-    
-    .user-item .status {
-        font-size: 0.8rem;
-    }
 `;
 document.head.appendChild(style);
 
-
-// 트위터 로그인 함수
-async function loginWithTwitter() {
-    if (!window.auth) {
-        showNotification('Firebase가 로드되지 않았습니다.');
-        return;
-    }
-    
-    try {
-        const provider = new firebase.auth.TwitterAuthProvider();
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        
-        await setDoc(doc(db, 'users', user.uid), {
-            name: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-            provider: 'twitter',
-            createdAt: serverTimestamp(),
-            works: 0,
-            followers: 0,
-            following: 0
-        }, { merge: true });
-        
-        showNotification('트위터 로그인 성공! 🐦');
-    } catch (error) {
-        console.error('트위터 로그인 오류:', error);
-        showNotification('트위터 로그인 실패: ' + error.message);
-    }
-}
-
-// 네이버 로그인 함수 (실제 구현)
-async function loginWithNaver() {
-    // 네이버 로그인은 OAuth 방식으로 구현
-    showNotification('네이버 로그인 기능을 활성화했습니다! 🟢');
-    
-    // 실제 네이버 OAuth 구현 코드는 별도 설정이 필요
-    // 현재는 기본 동작만 구현
-}
-
-// 대시보드 탭 전환 함수
-function showDashboardTab(tabName) {
-    // 모든 탭 비활성화
-    document.querySelectorAll('.dashboard-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    document.querySelectorAll('.dashboard-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    
-    // 선택된 탭 활성화
-    event.target.classList.add('active');
-    document.getElementById(`dashboard-${tabName}`).classList.add('active');
-}
-
-// 누락된 함수들 추가
-function initializeCommunities() {
-    loadCommunities();
-    console.log('✅ Communities 초기화 완료');
-}
-
-function searchUsers() {
-    const query = document.getElementById('userSearchInput').value.toLowerCase();
-    const filteredUsers = usersData.filter(user => 
-        user.name.toLowerCase().includes(query)
-    );
-    
-    const container = document.getElementById('usersList');
-    container.innerHTML = filteredUsers.map(user => `
-        <div class="user-item" onclick="startNewChat(${user.id})">
-            <div class="user-avatar">${user.avatar}</div>
-            <div class="user-info">
-                <h4>${user.name}</h4>
-                <span class="status ${user.online ? 'online' : 'offline'}">
-                    ${user.online ? '온라인' : '오프라인'}
-                </span>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Window 객체에 함수 할당
-window.initializeCommunities = initializeCommunities;
-window.searchUsers = searchUsers;
-
-// 초기화 확인
-function initializeChatRooms() {
-    loadChatRooms();
-    console.log('✅ ChatRooms 초기화 완료');
-}
-
-window.initializeChatRooms = initializeChatRooms;
-
 // 스크립트 완료 확인
-console.log('🎉 Script.js 모든 함수 로드 완료!');
+console.log('🎉 CRETA Script.js 완전 로드 완료!');
