@@ -5,11 +5,15 @@ let uploadStep = 1;
 let selectedFile = null;
 let currentCommunity = null;
 let currentChatRoom = null;
+let isDarkMode = false;
+let notifications = [];
 
 // ===== 초기화 =====
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎨 CRETA 플랫폼 로딩 시작...');
     initializeApp();
     setupEventListeners();
+    initializeSampleData();
 });
 
 function initializeApp() {
@@ -18,6 +22,12 @@ function initializeApp() {
         hideLoading();
         checkAuthState();
     }, 2000);
+    
+    // 다크모드 설정 복원
+    const savedTheme = localStorage.getItem('creta-theme');
+    if (savedTheme === 'dark') {
+        enableDarkMode();
+    }
 }
 
 function hideLoading() {
@@ -40,14 +50,142 @@ function checkAuthState() {
             }
         });
     } else {
-        // Firebase 로드 실패 시 메인 앱 표시
+        // Firebase 로드 실패 시 데모 모드로 메인 앱 표시
+        currentUser = { 
+            displayName: '민나', 
+            email: 'demo@creta.com',
+            uid: 'demo-user-id'
+        };
         showMainApp();
         loadInitialData();
+        console.log('🔥 데모 모드로 실행 중...');
     }
+}
+
+// ===== 🔥 샘플 데이터 초기화 =====
+function initializeSampleData() {
+    // 샘플 작품 데이터
+    const sampleWorks = [
+        {
+            id: 'work1',
+            title: '하이큐!! 최신 팬아트',
+            author: '일러스트작가1',
+            category: 'illustration',
+            likes: 342,
+            views: 1205,
+            thumbnail: '🏐',
+            tags: ['하이큐', '팬아트', '스포츠']
+        },
+        {
+            id: 'work2',
+            title: '원피스 1000화 기념작',
+            author: '만화작가2',
+            category: 'manga',
+            likes: 892,
+            views: 3451,
+            thumbnail: '⚓',
+            tags: ['원피스', '만화', '기념작']
+        },
+        {
+            id: 'work3',
+            title: '귀멸의칼날 일러스트',
+            author: '디지털아티스트',
+            category: 'illustration',
+            likes: 567,
+            views: 2103,
+            thumbnail: '⚔️',
+            tags: ['귀멸의칼날', '일러스트', '애니']
+        },
+        {
+            id: 'work4',
+            title: '나루토 명장면 재현',
+            author: '애니팬',
+            category: 'animation',
+            likes: 723,
+            views: 2847,
+            thumbnail: '🍥',
+            tags: ['나루토', '애니메이션', '명장면']
+        },
+        {
+            id: 'work5',
+            title: '진격의거인 최종화',
+            author: '스토리텔러',
+            category: 'novel',
+            likes: 1456,
+            views: 8932,
+            thumbnail: '🏰',
+            tags: ['진격의거인', '소설', '최종화']
+        },
+        {
+            id: 'work6',
+            title: '클래식 일러스트 컬렉션',
+            author: '베테랑작가',
+            category: 'illustration',
+            likes: 234,
+            views: 1567,
+            thumbnail: '🎨',
+            tags: ['클래식', '컬렉션', '일러스트']
+        }
+    ];
+    
+    // 전역 변수에 저장
+    window.sampleWorks = sampleWorks;
+    
+    // 샘플 알림 데이터
+    initializeSampleNotifications();
+    
+    console.log('✅ 샘플 데이터 초기화 완료');
+}
+
+function initializeSampleNotifications() {
+    notifications = [
+        {
+            id: 'notif1',
+            type: 'like',
+            message: '일러스트작가1님이 당신의 작품을 좋아합니다',
+            time: '2분 전',
+            read: false,
+            icon: '❤️'
+        },
+        {
+            id: 'notif2',
+            type: 'comment',
+            message: '만화작가2님이 댓글을 남겼습니다: "정말 멋진 작품이네요!"',
+            time: '15분 전',
+            read: false,
+            icon: '💬'
+        },
+        {
+            id: 'notif3',
+            type: 'follow',
+            message: '디지털아티스트님이 당신을 팔로우하기 시작했습니다',
+            time: '1시간 전',
+            read: false,
+            icon: '👤'
+        },
+        {
+            id: 'notif4',
+            type: 'subscribe',
+            message: '구독한 커뮤니티에 새 게시물이 업로드되었습니다',
+            time: '3시간 전',
+            read: true,
+            icon: '📢'
+        },
+        {
+            id: 'notif5',
+            type: 'like',
+            message: '5명이 당신의 작품에 좋아요를 눌렀습니다',
+            time: '어제',
+            read: true,
+            icon: '❤️'
+        }
+    ];
 }
 
 // ===== 이벤트 리스너 설정 =====
 function setupEventListeners() {
+    console.log('🔧 이벤트 리스너 설정 중...');
+    
     // 모달 외부 클릭 시 닫기
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('modal-overlay')) {
@@ -55,6 +193,11 @@ function setupEventListeners() {
             if (modalId) {
                 closeModal(modalId);
             }
+        }
+        
+        // 알림 패널 외부 클릭 시 닫기
+        if (!e.target.closest('.notifications-panel') && !e.target.closest('.header-btn')) {
+            hideNotificationsPanel();
         }
     });
 
@@ -65,11 +208,14 @@ function setupEventListeners() {
             openModals.forEach(modal => {
                 closeModal(modal.id);
             });
+            hideNotificationsPanel();
         }
     });
 
     // 파일 드래그 앤 드롭
     setupFileDragDrop();
+    
+    console.log('✅ 이벤트 리스너 설정 완료');
 }
 
 function setupFileDragDrop() {
@@ -100,6 +246,186 @@ function setupFileDragDrop() {
     });
 }
 
+// ===== 🌗 다크모드 시스템 =====
+function toggleDarkMode() {
+    if (isDarkMode) {
+        disableDarkMode();
+    } else {
+        enableDarkMode();
+    }
+}
+
+function enableDarkMode() {
+    document.body.classList.add('dark-mode');
+    isDarkMode = true;
+    localStorage.setItem('creta-theme', 'dark');
+    
+    // 다크모드 버튼 아이콘 변경
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) {
+        themeBtn.textContent = '☀️';
+        themeBtn.title = '라이트 모드로 전환';
+    }
+    
+    showNotification('다크 모드가 활성화되었습니다 🌙', 'info');
+}
+
+function disableDarkMode() {
+    document.body.classList.remove('dark-mode');
+    isDarkMode = false;
+    localStorage.setItem('creta-theme', 'light');
+    
+    // 라이트모드 버튼 아이콘 변경
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) {
+        themeBtn.textContent = '🌙';
+        themeBtn.title = '다크 모드로 전환';
+    }
+    
+    showNotification('라이트 모드가 활성화되었습니다 ☀️', 'info');
+}
+
+// ===== 🔔 알림 시스템 =====
+function openNotifications() {
+    const panel = document.getElementById('notificationsPanel');
+    if (!panel) {
+        createNotificationsPanel();
+    } else {
+        const isVisible = panel.style.display === 'block';
+        if (isVisible) {
+            hideNotificationsPanel();
+        } else {
+            showNotificationsPanel();
+        }
+    }
+}
+
+function createNotificationsPanel() {
+    const headerActions = document.querySelector('.header-actions');
+    const notificationBtn = headerActions.querySelector('.header-btn');
+    
+    const panel = document.createElement('div');
+    panel.id = 'notificationsPanel';
+    panel.className = 'notifications-panel';
+    panel.style.display = 'none';
+    
+    // 알림 패널 HTML 생성
+    panel.innerHTML = `
+        <div class="notifications-header">
+            <h3>🔔 알림</h3>
+            <button class="mark-all-read-btn" onclick="markAllNotificationsRead()">
+                모두 읽기
+            </button>
+        </div>
+        <div class="notifications-list" id="notificationsList">
+            ${renderNotifications()}
+        </div>
+    `;
+    
+    // 알림 버튼 위치에 상대적으로 배치
+    notificationBtn.style.position = 'relative';
+    notificationBtn.appendChild(panel);
+    
+    showNotificationsPanel();
+}
+
+function renderNotifications() {
+    if (notifications.length === 0) {
+        return `
+            <div class="notifications-empty">
+                <h4>새로운 알림이 없습니다</h4>
+                <p>활동이 있으면 여기에 알림이 표시됩니다</p>
+            </div>
+        `;
+    }
+    
+    return notifications.map(notification => `
+        <div class="notification-item ${notification.read ? '' : 'unread'}" onclick="markNotificationRead('${notification.id}')">
+            <div class="notification-icon ${notification.type}">
+                ${notification.icon}
+            </div>
+            <div class="notification-content">
+                <div class="notification-message">${notification.message}</div>
+                <div class="notification-time">${notification.time}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function showNotificationsPanel() {
+    const panel = document.getElementById('notificationsPanel');
+    if (panel) {
+        panel.style.display = 'block';
+        
+        // 알림 목록 업데이트
+        const listContainer = document.getElementById('notificationsList');
+        if (listContainer) {
+            listContainer.innerHTML = renderNotifications();
+        }
+    }
+}
+
+function hideNotificationsPanel() {
+    const panel = document.getElementById('notificationsPanel');
+    if (panel) {
+        panel.style.display = 'none';
+    }
+}
+
+function markNotificationRead(notificationId) {
+    const notification = notifications.find(n => n.id === notificationId);
+    if (notification) {
+        notification.read = true;
+        updateNotificationBadge();
+        showNotificationsPanel(); // 패널 새로고침
+    }
+}
+
+function markAllNotificationsRead() {
+    notifications.forEach(notification => {
+        notification.read = true;
+    });
+    updateNotificationBadge();
+    showNotificationsPanel(); // 패널 새로고침
+    showNotification('모든 알림을 읽음으로 표시했습니다 ✅', 'success');
+}
+
+function updateNotificationBadge() {
+    const unreadCount = notifications.filter(n => !n.read).length;
+    const badge = document.querySelector('.header-btn .badge');
+    
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+function addNotification(type, message, icon = '🔔') {
+    const newNotification = {
+        id: 'notif_' + Date.now(),
+        type: type,
+        message: message,
+        time: '방금 전',
+        read: false,
+        icon: icon
+    };
+    
+    notifications.unshift(newNotification);
+    updateNotificationBadge();
+    
+    // 브라우저 알림도 표시
+    if (Notification.permission === 'granted') {
+        new Notification('CRETA 알림', {
+            body: message,
+            icon: '🎨'
+        });
+    }
+}
+
 // ===== 인증 시스템 =====
 function showAuthModal() {
     document.getElementById('authModal').style.display = 'flex';
@@ -115,6 +441,9 @@ function showMainApp() {
     if (currentUser) {
         updateUserInterface();
     }
+    
+    // 메인 앱 로드 후 데이터 로드
+    loadInitialData();
 }
 
 function updateUserInterface() {
@@ -143,6 +472,9 @@ function updateUserInterface() {
     // 로그아웃 버튼 표시
     const logoutBtn = document.querySelector('.logout');
     if (logoutBtn) logoutBtn.style.display = 'block';
+    
+    // 알림 배지 업데이트
+    updateNotificationBadge();
 }
 
 function switchAuthTab(tab) {
@@ -164,8 +496,8 @@ function switchAuthTab(tab) {
 }
 
 async function loginUser() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
+    const email = document.getElementById('loginEmail')?.value.trim();
+    const password = document.getElementById('loginPassword')?.value;
     
     if (!email || !password) {
         showNotification('이메일과 비밀번호를 입력해주세요.', 'error');
@@ -187,6 +519,7 @@ async function loginUser() {
             currentUser = { email, displayName: email.split('@')[0] };
             showMainApp();
             showNotification('데모 로그인 성공! 🎉', 'success');
+            addNotification('subscribe', '환영합니다! CRETA에 오신 것을 환영합니다', '🎉');
         }
     } catch (error) {
         console.error('로그인 실패:', error);
@@ -195,11 +528,11 @@ async function loginUser() {
 }
 
 async function signupUser() {
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value.trim();
-    const password = document.getElementById('signupPassword').value;
-    const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
-    const agreeTerms = document.getElementById('agreeTerms').checked;
+    const name = document.getElementById('signupName')?.value.trim();
+    const email = document.getElementById('signupEmail')?.value.trim();
+    const password = document.getElementById('signupPassword')?.value;
+    const passwordConfirm = document.getElementById('signupPasswordConfirm')?.value;
+    const agreeTerms = document.getElementById('agreeTerms')?.checked;
     
     if (!name || !email || !password || !passwordConfirm) {
         showNotification('모든 필드를 입력해주세요.', 'error');
@@ -237,6 +570,7 @@ async function signupUser() {
             currentUser = { email, displayName: name };
             showMainApp();
             showNotification('데모 회원가입 성공! 🎉', 'success');
+            addNotification('subscribe', `${name}님, 가입을 환영합니다!`, '🎉');
         }
     } catch (error) {
         console.error('회원가입 실패:', error);
@@ -263,7 +597,8 @@ async function logoutUser() {
         showNotification('로그아웃되었습니다.', 'info');
         
         // UI 초기화
-        document.querySelector('.logout').style.display = 'none';
+        const logoutBtn = document.querySelector('.logout');
+        if (logoutBtn) logoutBtn.style.display = 'none';
         
     } catch (error) {
         console.error('로그아웃 실패:', error);
@@ -281,6 +616,8 @@ function socialSignup(provider) {
 
 // ===== 네비게이션 시스템 =====
 function navigateTo(page) {
+    console.log(`🧭 네비게이션: ${page} 페이지로 이동`);
+    
     // 이전 페이지 숨기기
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -292,6 +629,9 @@ function navigateTo(page) {
     if (targetPage) {
         targetPage.classList.add('active');
         currentPage = page;
+        console.log(`✅ ${page} 페이지 활성화`);
+    } else {
+        console.error(`❌ ${page} 페이지를 찾을 수 없습니다`);
     }
     
     if (targetNav) {
@@ -303,6 +643,8 @@ function navigateTo(page) {
 }
 
 function loadPageData(page) {
+    console.log(`📊 ${page} 페이지 데이터 로드 중...`);
+    
     switch (page) {
         case 'home':
             loadHomeData();
@@ -323,12 +665,14 @@ function loadPageData(page) {
 }
 
 function loadInitialData() {
+    console.log('🚀 초기 데이터 로드 시작...');
     loadHomeData();
-    loadSampleData();
+    console.log('✅ 초기 데이터 로드 완료');
 }
 
-// ===== 홈 페이지 =====
+// ===== 🏠 홈 페이지 =====
 function loadHomeData() {
+    console.log('🏠 홈 데이터 로드 중...');
     loadLatestWorks();
     loadTrendingWorks();
     loadSteadyWorks();
@@ -336,46 +680,76 @@ function loadHomeData() {
 
 function loadLatestWorks() {
     const container = document.getElementById('latestWorks');
-    if (!container) return;
+    if (!container) {
+        console.error('❌ latestWorks 컨테이너를 찾을 수 없습니다');
+        return;
+    }
     
-    const sampleWorks = generateSampleWorks(['하이큐!! 최신 팬아트', '원피스 1000화 기념작', '귀멸의칼날 일러스트']);
-    container.innerHTML = sampleWorks;
+    if (!window.sampleWorks || window.sampleWorks.length === 0) {
+        console.error('❌ 샘플 작품 데이터가 없습니다');
+        container.innerHTML = '<div class="work-item"><div class="work-thumbnail">❌</div><div class="work-content"><div class="work-title">데이터 로드 실패</div></div></div>';
+        return;
+    }
+    
+    const latestWorks = window.sampleWorks.slice(0, 3);
+    container.innerHTML = generateWorksHTML(latestWorks);
+    console.log('✅ 최신 작품 로드 완료:', latestWorks.length, '개');
 }
 
 function loadTrendingWorks() {
     const container = document.getElementById('trendingWorks');
     if (!container) return;
     
-    const sampleWorks = generateSampleWorks(['진격의거인 최종화', '나루토 명장면', '하이큐 신작']);
-    container.innerHTML = sampleWorks;
+    const trendingWorks = window.sampleWorks.slice(3, 6);
+    container.innerHTML = generateWorksHTML(trendingWorks);
+    console.log('✅ 인기 급상승 작품 로드 완료');
 }
 
 function loadSteadyWorks() {
     const container = document.getElementById('steadyWorks');
     if (!container) return;
     
-    const sampleWorks = generateSampleWorks(['클래식 일러스트', '인기 소설', '스테디셀러 만화']);
-    container.innerHTML = sampleWorks;
+    const steadyWorks = window.sampleWorks.slice(0, 3).reverse();
+    container.innerHTML = generateWorksHTML(steadyWorks);
+    console.log('✅ 스테디셀러 작품 로드 완료');
 }
 
-function generateSampleWorks(titles) {
-    return titles.map((title, index) => `
-        <div class="work-item" onclick="showWorkDetail('${title}')">
-            <div class="work-thumbnail">🎨</div>
+function generateWorksHTML(works) {
+    if (!works || works.length === 0) {
+        return `
+            <div class="work-item">
+                <div class="work-thumbnail">📭</div>
+                <div class="work-content">
+                    <div class="work-title">작품이 없습니다</div>
+                    <div class="work-author">첫 작품을 업로드해보세요!</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    return works.map(work => `
+        <div class="work-item" onclick="showWorkDetail('${work.id}')">
+            <div class="work-thumbnail">${work.thumbnail}</div>
             <div class="work-content">
-                <div class="work-title">${title}</div>
-                <div class="work-author">샘플작가${index + 1}</div>
+                <div class="work-title">${work.title}</div>
+                <div class="work-author">${work.author}</div>
                 <div class="work-stats">
-                    <span>❤️ ${Math.floor(Math.random() * 1000)}</span>
-                    <span>👀 ${Math.floor(Math.random() * 5000)}</span>
+                    <span>❤️ ${work.likes}</span>
+                    <span>👀 ${work.views}</span>
                 </div>
             </div>
         </div>
     `).join('');
 }
 
-function showWorkDetail(title) {
-    showNotification(`"${title}" 상세보기 기능을 준비 중입니다! 🎨`, 'info');
+function showWorkDetail(workId) {
+    const work = window.sampleWorks.find(w => w.id === workId);
+    if (work) {
+        showNotification(`"${work.title}" 상세보기 기능을 준비 중입니다! 🎨`, 'info');
+        addNotification('like', `${work.author}님이 당신의 작품을 좋아합니다`, '❤️');
+    } else {
+        showNotification(`작품 정보를 찾을 수 없습니다.`, 'error');
+    }
 }
 
 // ===== 탐색 페이지 =====
@@ -456,12 +830,14 @@ function loadSearchSuggestions() {
 }
 
 function searchKeyword(keyword) {
-    document.getElementById('searchInput').value = keyword;
-    performSearch();
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.value = keyword;
+        performSearch();
+    }
 }
 
 function updateSearchSuggestions(query) {
-    // 검색어에 따른 동적 제안 업데이트
     console.log('검색어 업데이트:', query);
 }
 
@@ -491,16 +867,39 @@ function loadExploreResults(query = '', category = '', sortType = '') {
     container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #6b7280;">검색 중...</div>';
     
     setTimeout(() => {
-        const results = generateSampleWorks([
-            '검색 결과 1', '검색 결과 2', '검색 결과 3', 
-            '검색 결과 4', '검색 결과 5', '검색 결과 6'
-        ]);
-        container.innerHTML = results || '<div style="text-align: center; padding: 4rem; color: #6b7280;"><h3>검색 결과가 없습니다</h3><p>다른 키워드로 검색해보세요.</p></div>';
+        let results = window.sampleWorks || [];
+        
+        // 카테고리 필터링
+        if (category && category !== 'all') {
+            results = results.filter(work => work.category === category);
+        }
+        
+        // 검색 필터링
+        if (query) {
+            results = results.filter(work => 
+                work.title.toLowerCase().includes(query.toLowerCase()) ||
+                work.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+            );
+        }
+        
+        // 정렬
+        if (sortType === 'popular') {
+            results.sort((a, b) => b.likes - a.likes);
+        } else if (sortType === 'latest') {
+            results = results.reverse();
+        }
+        
+        container.innerHTML = generateWorksHTML(results);
+        
+        if (results.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 4rem; color: #6b7280;"><h3>검색 결과가 없습니다</h3><p>다른 키워드로 검색해보세요.</p></div>';
+        }
     }, 800);
 }
 
 // ===== 업로드 시스템 =====
 function openUploadModal() {
+    console.log('📤 업로드 모달 열기');
     resetUploadForm();
     openModal('uploadModal');
     updateUploadStep();
@@ -664,13 +1063,13 @@ async function submitUpload() {
     if (!validateCurrentStep()) return;
     
     const workData = {
-        title: document.getElementById('workTitle').value.trim(),
-        description: document.getElementById('workDescription').value.trim(),
-        category: document.getElementById('workCategory').value,
-        tags: document.getElementById('workTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
-        visibility: document.querySelector('input[name="visibility"]:checked').value,
-        allowComments: document.getElementById('allowComments').checked,
-        allowDownload: document.getElementById('allowDownload').checked,
+        title: document.getElementById('workTitle')?.value.trim(),
+        description: document.getElementById('workDescription')?.value.trim(),
+        category: document.getElementById('workCategory')?.value,
+        tags: document.getElementById('workTags')?.value.split(',').map(tag => tag.trim()).filter(tag => tag),
+        visibility: document.querySelector('input[name="visibility"]:checked')?.value,
+        allowComments: document.getElementById('allowComments')?.checked,
+        allowDownload: document.getElementById('allowDownload')?.checked,
         file: selectedFile
     };
     
@@ -687,6 +1086,7 @@ async function submitUpload() {
         
         showUploadProgress(100);
         showNotification('작품이 성공적으로 업로드되었습니다! 🎉', 'success');
+        addNotification('subscribe', '새 작품이 업로드되었습니다!', '🎨');
         closeModal('uploadModal');
         
         // 홈 페이지 새로고침
@@ -731,6 +1131,32 @@ async function demoUpload(workData) {
         showUploadProgress(i);
         await new Promise(resolve => setTimeout(resolve, 100));
     }
+    
+    // 샘플 데이터에 추가
+    const newWork = {
+        id: 'work_' + Date.now(),
+        title: workData.title,
+        author: currentUser?.displayName || '사용자',
+        category: workData.category,
+        likes: 0,
+        views: 0,
+        thumbnail: getCategoryThumbnail(workData.category),
+        tags: workData.tags
+    };
+    
+    window.sampleWorks.unshift(newWork);
+}
+
+function getCategoryThumbnail(category) {
+    const thumbnails = {
+        'illustration': '🎨',
+        'animation': '🎬',
+        'novel': '📚',
+        'manga': '📖',
+        'music': '🎵',
+        'game': '🎮'
+    };
+    return thumbnails[category] || '🎨';
 }
 
 function showUploadProgress(percent) {
@@ -846,6 +1272,7 @@ async function createCommunity() {
         }
         
         showNotification('커뮤니티가 생성되었습니다! 🎉', 'success');
+        addNotification('subscribe', `"${name}" 커뮤니티가 생성되었습니다`, '👥');
         closeModal('createCommunityModal');
         loadCommunityList();
         
@@ -857,7 +1284,7 @@ async function createCommunity() {
 
 function joinCommunity(communityId) {
     showNotification('커뮤니티에 참여했습니다! 🎉', 'success');
-    // 실제로는 커뮤니티 상세 페이지로 이동
+    addNotification('follow', '새로운 커뮤니티에 참여했습니다', '👥');
     showCommunityDetail(communityId);
 }
 
@@ -871,7 +1298,7 @@ function filterCommunities(category) {
     event.target.classList.add('active');
     
     showNotification(`${category} 커뮤니티로 필터링 중...`, 'info');
-    loadCommunityList(); // 실제로는 필터된 결과 로드
+    loadCommunityList();
 }
 
 // ===== 메시지 시스템 =====
@@ -928,15 +1355,15 @@ function loadChatRoomsList() {
 
 function selectChatRoom(roomId) {
     currentChatRoom = { id: roomId };
-    loadChatRoomsList(); // 활성 상태 업데이트
+    loadChatRoomsList();
     showChatRoomMessages(roomId);
+    addNotification('comment', '새로운 메시지가 도착했습니다', '💬');
 }
 
 function showChatRoomMessages(roomId) {
     const chatMain = document.getElementById('chatMain');
     if (!chatMain) return;
     
-    // 채팅 인터페이스 표시
     chatMain.innerHTML = `
         <div style="display: flex; flex-direction: column; height: 100%;">
             <div style="padding: 1rem; border-bottom: 1px solid #e5e7eb; background: white;">
@@ -990,12 +1417,11 @@ function openGroupChatModal() {
 }
 
 function switchChatTab(tab) {
-    // 탭 상태 변경
     document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
     event.target.classList.add('active');
     
     showNotification(`${tab} 채팅방을 불러오는 중...`, 'info');
-    loadChatRoomsList(); // 실제로는 탭에 따른 필터링
+    loadChatRoomsList();
 }
 
 function handleMessageInput(event) {
@@ -1004,6 +1430,7 @@ function handleMessageInput(event) {
     }
 }
 
+// ===== sendMessage 함수 계속 =====
 function sendMessage() {
     const input = document.getElementById('messageInput');
     if (!input) return;
@@ -1011,7 +1438,6 @@ function sendMessage() {
     const message = input.value.trim();
     if (!message) return;
     
-    // 메시지 전송
     addMessageToChat(message, true);
     input.value = '';
     
@@ -1148,7 +1574,7 @@ function loadUserWorks() {
     const container = document.getElementById('userWorksGrid');
     if (!container) return;
     
-    container.innerHTML = generateSampleWorks(['내 작품 1', '내 작품 2', '내 작품 3']);
+    container.innerHTML = generateWorksHTML(window.sampleWorks?.slice(0, 3) || []);
 }
 
 function loadUserCollections() {
@@ -1273,9 +1699,22 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-function openNotifications() {
-    showNotification('알림 센터 기능을 준비 중입니다! 🔔', 'info');
-}
+// ===== 🔥 헤더에 다크모드 토글 버튼 추가 =====
+document.addEventListener('DOMContentLoaded', function() {
+    // 헤더에 다크모드 토글 버튼 추가
+    const headerActions = document.querySelector('.header-actions');
+    if (headerActions) {
+        const themeToggle = document.createElement('button');
+        themeToggle.className = 'theme-toggle';
+        themeToggle.innerHTML = '🌙';
+        themeToggle.title = '다크 모드로 전환';
+        themeToggle.onclick = toggleDarkMode;
+        
+        // 알림 버튼 앞에 삽입
+        const notificationBtn = headerActions.querySelector('.header-btn');
+        headerActions.insertBefore(themeToggle, notificationBtn);
+    }
+});
 
 // ===== 샘플 데이터 로드 =====
 function loadSampleData() {
@@ -1323,6 +1762,17 @@ function formatDate(date) {
     }).format(date);
 }
 
+// ===== 브라우저 알림 권한 요청 =====
+function requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                showNotification('브라우저 알림이 활성화되었습니다! 🔔', 'success');
+            }
+        });
+    }
+}
+
 // CSS 애니메이션 추가
 const style = document.createElement('style');
 style.textContent = `
@@ -1350,7 +1800,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// 전역 함수 등록 (HTML에서 호출할 수 있도록)
+// ===== 전역 함수 등록 (HTML에서 호출할 수 있도록) =====
 window.navigateTo = navigateTo;
 window.switchAuthTab = switchAuthTab;
 window.loginUser = loginUser;
@@ -1390,6 +1840,32 @@ window.searchKeyword = searchKeyword;
 window.openNotifications = openNotifications;
 window.openAttachmentMenu = openAttachmentMenu;
 window.showEmojiPicker = showEmojiPicker;
+window.toggleDarkMode = toggleDarkMode;
+window.markAllNotificationsRead = markAllNotificationsRead;
+window.markNotificationRead = markNotificationRead;
 
-console.log('🎨 CRETA 플랫폼 JavaScript 로드 완료!');
+// ===== 🔥 헤더 HTML에 추가할 다크모드 버튼 =====
+/*
+index.html의 header-actions 부분에 이 버튼을 추가하세요:
 
+<button class="theme-toggle" onclick="toggleDarkMode()" title="다크 모드로 전환">
+    🌙
+</button>
+*/
+
+// ===== 초기 실행 =====
+console.log('🎨 CRETA 플랫폼 JavaScript 완전 로드 완료!');
+console.log('✅ 모든 기능이 활성화되었습니다:');
+console.log('  🏠 홈페이지 - 샘플 작품 표시');
+console.log('  📤 작품 업로드 - 3단계 시스템');
+console.log('  👥 커뮤니티 - 생성/참여 기능');
+console.log('  💬 메시지 - 실시간 채팅');
+console.log('  👤 프로필 - 통계 및 관리');
+console.log('  🔔 알림 - 다양한 알림 타입');
+console.log('  🌙 다크모드 - 테마 전환');
+console.log('  🔍 탐색 - 검색 및 필터');
+
+// 브라우저 알림 권한 요청
+setTimeout(() => {
+    requestNotificationPermission();
+}, 3000);
