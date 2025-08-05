@@ -1310,3 +1310,44 @@ function showDashboardTab(tabName) {
     event.target.classList.add('active');
     document.getElementById(`dashboard-${tabName}`).classList.add('active');
 }
+
+// 누락된 함수들 추가
+function initializeCommunities() {
+    loadCommunities();
+    console.log('✅ Communities 초기화 완료');
+}
+
+function searchUsers() {
+    const query = document.getElementById('userSearchInput').value.toLowerCase();
+    const filteredUsers = usersData.filter(user => 
+        user.name.toLowerCase().includes(query)
+    );
+    
+    const container = document.getElementById('usersList');
+    container.innerHTML = filteredUsers.map(user => `
+        <div class="user-item" onclick="startNewChat(${user.id})">
+            <div class="user-avatar">${user.avatar}</div>
+            <div class="user-info">
+                <h4>${user.name}</h4>
+                <span class="status ${user.online ? 'online' : 'offline'}">
+                    ${user.online ? '온라인' : '오프라인'}
+                </span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Window 객체에 함수 할당
+window.initializeCommunities = initializeCommunities;
+window.searchUsers = searchUsers;
+
+// 초기화 확인
+function initializeChatRooms() {
+    loadChatRooms();
+    console.log('✅ ChatRooms 초기화 완료');
+}
+
+window.initializeChatRooms = initializeChatRooms;
+
+// 스크립트 완료 확인
+console.log('🎉 Script.js 모든 함수 로드 완료!');
