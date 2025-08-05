@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <!-- 로그인/회원가입 모달 (새로운 디자인) -->
+    <!-- 로그인/회원가입 모달 -->
     <div id="authModal" class="modal auth-modal-overlay" style="display: none;">
         <div class="auth-modal-content">
             <button class="auth-modal-close" onclick="hideAuthModal()">
@@ -152,33 +152,36 @@
         </header>
 
         <div class="main-layout">
+            <!-- 수정된 사이드바 (양옆 스크롤 제거) -->
             <nav class="sidebar">
-                <button class="nav-item active" onclick="showScreen('home')" data-screen="home">
-                    <div class="nav-icon">🏠</div>
-                    <span>홈</span>
-                </button>
-                <button class="nav-item" onclick="showScreen('explore')" data-screen="explore">
-                    <div class="nav-icon">🔍</div>
-                    <span>탐색</span>
-                </button>
-                <button class="nav-item" onclick="showScreen('community')" data-screen="community">
-                    <div class="nav-icon">👥</div>
-                    <span>커뮤니티</span>
-                </button>
-                <button class="nav-item" onclick="showScreen('messages')" data-screen="messages">
-                    <div class="nav-icon">💬</div>
-                    <span>메시지</span>
-                    <span class="nav-badge">2</span>
-                </button>
-                <button class="nav-item" onclick="showScreen('profile')" data-screen="profile">
-                    <div class="nav-icon">👤</div>
-                    <span>프로필</span>
-                </button>
-                <div class="nav-divider"></div>
-                <button class="nav-item upload-btn" onclick="showUploadModal()">
-                    <div class="nav-icon create-icon">➕</div>
-                    <span>작품 업로드</span>
-                </button>
+                <div class="nav-content">
+                    <button class="nav-item active" onclick="showScreen('home')" data-screen="home">
+                        <div class="nav-icon">🏠</div>
+                        <span>홈</span>
+                    </button>
+                    <button class="nav-item" onclick="showScreen('explore')" data-screen="explore">
+                        <div class="nav-icon">🔍</div>
+                        <span>탐색</span>
+                    </button>
+                    <button class="nav-item" onclick="showScreen('community')" data-screen="community">
+                        <div class="nav-icon">👥</div>
+                        <span>커뮤니티</span>
+                    </button>
+                    <button class="nav-item" onclick="showScreen('messages')" data-screen="messages">
+                        <div class="nav-icon">💬</div>
+                        <span>메시지</span>
+                        <span class="nav-badge">2</span>
+                    </button>
+                    <button class="nav-item" onclick="showScreen('profile')" data-screen="profile">
+                        <div class="nav-icon">👤</div>
+                        <span>프로필</span>
+                    </button>
+                    <div class="nav-divider"></div>
+                    <button class="nav-item upload-btn" onclick="showUploadModal()">
+                        <div class="nav-icon create-icon">➕</div>
+                        <span>작품 업로드</span>
+                    </button>
+                </div>
             </nav>
 
             <main class="content-area">
@@ -237,7 +240,8 @@
                         </div>
                     </section>
                 </div>
-                <!-- 탐색 화면 (연관검색어, 실시간 검색어 추가) -->
+
+                <!-- 탐색 화면 -->
                 <div id="explore" class="screen">
                     <div class="explore-container">
                         <div class="explore-header">
@@ -276,16 +280,6 @@
                                                     <span class="rank">2</span>
                                                     <span class="keyword" onclick="selectSuggestion('미루 업계')">미루 업계</span>
                                                     <span class="trend up">↑</span>
-                                                </div>
-                                                <div class="keyword-item">
-                                                    <span class="rank">3</span>
-                                                    <span class="keyword" onclick="selectSuggestion('라원스')">라원스</span>
-                                                    <span class="trend down">↓</span>
-                                                </div>
-                                                <div class="keyword-item">
-                                                    <span class="rank">4</span>
-                                                    <span class="keyword" onclick="selectSuggestion('강철울')">강철울</span>
-                                                    <span class="trend down">↓</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -332,8 +326,7 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- 커뮤니티 화면 (게시물 기능 강화) -->
+                <!-- 수정된 커뮤니티 화면 (네이버 밴드 스타일) -->
                 <div id="community" class="screen">
                     <div class="community-container">
                         <div class="community-header">
@@ -366,35 +359,187 @@
                         </div>
                     </div>
 
-                    <!-- 커뮤니티 생성 모달 -->
+                    <!-- 커뮤니티 생성 모달 (네이버 밴드 스타일) -->
                     <div id="createCommunityModal" class="modal" style="display: none;">
-                        <div class="modal-content">
+                        <div class="modal-content community-create-modal">
                             <div class="modal-header">
                                 <h2>새 커뮤니티 만들기</h2>
                                 <button class="modal-close" onclick="hideCreateCommunityModal()">✕</button>
                             </div>
                             <div class="modal-body">
-                                <div class="form-group">
-                                    <label>커뮤니티 이름</label>
-                                    <input type="text" id="communityName" placeholder="커뮤니티 이름을 입력하세요">
-                                </div>
-                                <div class="form-group">
-                                    <label>카테고리</label>
-                                    <select id="communityCategory">
-                                        <option value="animation">🎬 애니메이션</option>
-                                        <option value="illustration">🎨 일러스트</option>
-                                        <option value="novel">📚 소설</option>
-                                        <option value="manga">📖 만화</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>커뮤니티 소개</label>
-                                    <textarea id="communityDescription" placeholder="커뮤니티에 대해 간단히 소개해주세요"></textarea>
+                                <div class="community-create-form">
+                                    <div class="form-group">
+                                        <label>커뮤니티 프로필 이미지</label>
+                                        <div class="community-image-upload">
+                                            <input type="file" id="communityImage" accept="image/*" onchange="previewCommunityImage()">
+                                            <div class="upload-placeholder">
+                                                <span class="upload-icon">📸</span>
+                                                <span>이미지 추가</span>
+                                            </div>
+                                            <div id="communityImagePreview" class="image-preview"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>커뮤니티 이름 *</label>
+                                        <input type="text" id="communityName" placeholder="커뮤니티 이름을 입력하세요" maxlength="20">
+                                        <small class="form-hint">20자 이내로 입력해주세요</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>카테고리 *</label>
+                                        <select id="communityCategory">
+                                            <option value="">카테고리를 선택하세요</option>
+                                            <option value="animation">🎬 애니메이션</option>
+                                            <option value="illustration">🎨 일러스트</option>
+                                            <option value="novel">📚 소설</option>
+                                            <option value="manga">📖 만화</option>
+                                            <option value="game">🎮 게임</option>
+                                            <option value="music">🎵 음악</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>커뮤니티 소개</label>
+                                        <textarea id="communityDescription" placeholder="커뮤니티에 대해 간단히 소개해주세요" rows="4" maxlength="200"></textarea>
+                                        <small class="form-hint">200자 이내로 입력해주세요</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>공개 설정</label>
+                                        <div class="radio-group">
+                                            <label class="radio-item">
+                                                <input type="radio" name="communityPrivacy" value="public" checked>
+                                                <span class="radio-mark"></span>
+                                                <div class="radio-content">
+                                                    <strong>공개 커뮤니티</strong>
+                                                    <small>누구나 참여할 수 있습니다</small>
+                                                </div>
+                                            </label>
+                                            <label class="radio-item">
+                                                <input type="radio" name="communityPrivacy" value="private">
+                                                <span class="radio-mark"></span>
+                                                <div class="radio-content">
+                                                    <strong>비공개 커뮤니티</strong>
+                                                    <small>승인 후 참여할 수 있습니다</small>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" onclick="hideCreateCommunityModal()">취소</button>
-                                <button class="btn btn-primary" onclick="createCommunity()">만들기</button>
+                                <button class="btn btn-primary" onclick="createCommunity()">
+                                    <span class="icon">✨</span>커뮤니티 만들기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 개별 커뮤니티 페이지 -->
+                <div id="community-detail" class="screen">
+                    <div class="community-detail-container">
+                        <div class="community-detail-header">
+                            <button class="back-btn" onclick="showScreen('community')">
+                                <span class="icon">←</span>
+                                뒤로가기
+                            </button>
+                            <div class="community-info">
+                                <div class="community-avatar" id="currentCommunityAvatar">🎨</div>
+                                <div class="community-meta">
+                                    <h1 id="currentCommunityName">커뮤니티명</h1>
+                                    <div class="community-stats">
+                                        <span id="currentCommunityMembers">0명</span>
+                                        <span class="separator">•</span>
+                                        <span id="currentCommunityPosts">게시물 0개</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="community-actions">
+                                <button class="btn btn-primary community-join-btn" id="joinCommunityBtn" onclick="toggleJoinCommunity()">
+                                    <span class="icon">➕</span>참여하기
+                                </button>
+                                <button class="btn btn-secondary" onclick="shareCommunity()">
+                                    <span class="icon">📤</span>공유
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="community-detail-content">
+                            <div class="community-tabs">
+                                <button class="community-tab active" onclick="showCommunityTab('posts')" data-tab="posts">
+                                    📝 게시물
+                                </button>
+                                <button class="community-tab" onclick="showCommunityTab('members')" data-tab="members">
+                                    👥 멤버
+                                </button>
+                                <button class="community-tab" onclick="showCommunityTab('about')" data-tab="about">
+                                    ℹ️ 정보
+                                </button>
+                            </div>
+
+                            <!-- 게시물 탭 -->
+                            <div id="community-posts" class="community-tab-content active">
+                                <div class="post-create-section">
+                                    <button class="create-post-btn" onclick="showCreatePostModal()">
+                                        <span class="icon">✏️</span>
+                                        게시물 작성하기
+                                    </button>
+                                </div>
+                                <div class="community-posts-list" id="communityPostsList">
+                                    <!-- 게시물 목록이 여기에 표시됩니다 -->
+                                </div>
+                            </div>
+
+                            <!-- 멤버 탭 -->
+                            <div id="community-members" class="community-tab-content">
+                                <div class="members-list" id="communityMembersList">
+                                    <!-- 멤버 목록이 여기에 표시됩니다 -->
+                                </div>
+                            </div>
+
+                            <!-- 정보 탭 -->
+                            <div id="community-about" class="community-tab-content">
+                                <div class="community-description" id="communityAboutContent">
+                                    <!-- 커뮤니티 설명이 여기에 표시됩니다 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 게시물 작성 모달 (네이버 밴드 스타일) -->
+                    <div id="createPostModal" class="modal" style="display: none;">
+                        <div class="modal-content create-post-modal">
+                            <div class="modal-header">
+                                <h2>게시물 작성</h2>
+                                <button class="modal-close" onclick="hideCreatePostModal()">✕</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="post-create-form">
+                                    <div class="form-group">
+                                        <textarea id="postContent" placeholder="무슨 일이 일어나고 있나요?" rows="5"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>이미지 첨부</label>
+                                        <div class="post-image-upload">
+                                            <input type="file" id="postImages" multiple accept="image/*" onchange="previewPostImages()">
+                                            <div class="upload-area">
+                                                <span class="upload-icon">📷</span>
+                                                <span>이미지 추가 (최대 5장)</span>
+                                            </div>
+                                            <div id="postImagesPreview" class="images-preview"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>해시태그</label>
+                                        <input type="text" id="postTags" placeholder="#해시태그를 입력하세요">
+                                        <small class="form-hint">공백으로 구분해서 여러 개 입력 가능</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="hideCreatePostModal()">취소</button>
+                                <button class="btn btn-primary" onclick="createPost()">
+                                    <span class="icon">📝</span>게시하기
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -403,27 +548,39 @@
                     <div id="postDetailModal" class="modal" style="display: none;">
                         <div class="modal-content post-detail-modal">
                             <div class="modal-header">
-                                <h2 id="postDetailTitle">게시물 제목</h2>
+                                <div class="post-detail-author">
+                                    <div class="author-avatar" id="postAuthorAvatar">👤</div>
+                                    <div class="author-info">
+                                        <h3 id="postAuthorName">작성자</h3>
+                                        <small id="postCreatedTime">방금 전</small>
+                                    </div>
+                                </div>
                                 <button class="modal-close" onclick="hidePostDetail()">✕</button>
                             </div>
                             <div class="modal-body">
                                 <div class="post-detail-content" id="postDetailContent">
                                     <!-- 게시물 내용이 여기에 표시됩니다 -->
                                 </div>
+                                <div class="post-detail-images" id="postDetailImages">
+                                    <!-- 게시물 이미지들이 여기에 표시됩니다 -->
+                                </div>
+                                <div class="post-detail-tags" id="postDetailTags">
+                                    <!-- 해시태그들이 여기에 표시됩니다 -->
+                                </div>
                                 
                                 <!-- 게시물 액션 -->
                                 <div class="post-actions">
-                                    <button class="action-btn like-btn" onclick="toggleLike()">
+                                    <button class="action-btn like-btn" onclick="togglePostLike()" id="postLikeBtn">
                                         <span class="icon">❤️</span>
-                                        <span class="count" id="likeCount">0</span>
+                                        <span class="count" id="postLikeCount">0</span>
                                     </button>
                                     <button class="action-btn comment-btn" onclick="focusCommentInput()">
                                         <span class="icon">💬</span>
-                                        <span class="count" id="commentCount">0</span>
+                                        <span class="count" id="postCommentCount">0</span>
                                     </button>
-                                    <button class="action-btn bookmark-btn" onclick="toggleBookmark()">
+                                    <button class="action-btn bookmark-btn" onclick="togglePostBookmark()" id="postBookmarkBtn">
                                         <span class="icon">🔖</span>
-                                        <span class="count" id="bookmarkCount">0</span>
+                                        <span class="count" id="postBookmarkCount">0</span>
                                     </button>
                                     <button class="action-btn share-btn" onclick="sharePost()">
                                         <span class="icon">📤</span>
@@ -436,7 +593,7 @@
                                     <div class="comments-header">
                                         <h4>댓글</h4>
                                     </div>
-                                    <div class="comments-list" id="commentsList">
+                                    <div class="comments-list" id="postCommentsList">
                                         <!-- 댓글들이 여기에 표시됩니다 -->
                                     </div>
                                     <div class="comment-input-section">
@@ -451,16 +608,28 @@
                     </div>
                 </div>
 
-                <!-- 메시지 화면 (기능 강화) -->
+                <!-- 수정된 메시지 화면 (카카오톡 스타일) -->
                 <div id="messages" class="screen">
                     <div class="messages-layout">
                         <div class="chat-sidebar">
                             <div class="chat-header">
                                 <h2>💬 메시지</h2>
-                                <button class="new-chat-btn" onclick="showNewChatModal()">✏️</button>
+                                <div class="chat-header-actions">
+                                    <button class="chat-action-btn" onclick="showNewChatModal()" title="새 채팅">
+                                        ✏️
+                                    </button>
+                                    <button class="chat-action-btn" onclick="showGroupChatModal()" title="단체채팅">
+                                        👥
+                                    </button>
+                                </div>
                             </div>
                             <div class="chat-search">
-                                <input type="text" placeholder="채팅방 검색..." oninput="searchChats()" id="chatSearchInput">
+                                <input type="text" placeholder="채팅방, 이름 검색" oninput="searchChats()" id="chatSearchInput">
+                            </div>
+                            <div class="chat-tabs">
+                                <button class="chat-tab active" onclick="showChatTab('all')" data-tab="all">전체</button>
+                                <button class="chat-tab" onclick="showChatTab('unread')" data-tab="unread">안읽음</button>
+                                <button class="chat-tab" onclick="showChatTab('favorites')" data-tab="favorites">즐겨찾기</button>
                             </div>
                             <div class="chat-list" id="chatRoomsList">
                                 <!-- 채팅방 목록이 여기에 표시됩니다 -->
@@ -477,9 +646,10 @@
                                     </div>
                                 </div>
                                 <div class="chat-actions">
+                                    <button class="chat-action">🔍</button>
                                     <button class="chat-action">📞</button>
                                     <button class="chat-action">📹</button>
-                                    <button class="chat-action">ℹ️</button>
+                                    <button class="chat-action">⚙️</button>
                                 </div>
                             </div>
                             
@@ -492,7 +662,7 @@
                             </div>
                             
                             <div class="chat-input-area">
-                                <button class="attachment-btn" onclick="attachFile()">📎</button>
+                                <button class="attachment-btn" onclick="showAttachmentMenu()">➕</button>
                                 <div class="input-wrapper">
                                     <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." 
                                            onkeypress="handleMessageInput(event)">
@@ -512,7 +682,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="search-users">
-                                    <input type="text" placeholder="사용자 검색..." id="userSearchInput" oninput="searchUsers()">
+                                    <input type="text" placeholder="이름 또는 이메일 검색..." id="userSearchInput" oninput="searchUsers()">
                                 </div>
                                 <div class="users-list" id="usersList">
                                     <!-- 사용자 목록이 여기에 표시됩니다 -->
@@ -521,114 +691,80 @@
                         </div>
                     </div>
 
-                    <!-- 이모지 피커 -->
-                    <div id="emojiPicker" class="emoji-picker" style="display: none;">
-                        <div class="emoji-grid">
-                            <span class="emoji" onclick="insertEmoji('😀')">😀</span>
-                            <span class="emoji" onclick="insertEmoji('😃')">😃</span>
-                            <span class="emoji" onclick="insertEmoji('😄')">😄</span>
-                            <span class="emoji" onclick="insertEmoji('😁')">😁</span>
-                            <span class="emoji" onclick="insertEmoji('😆')">😆</span>
-                            <span class="emoji" onclick="insertEmoji('😅')">😅</span>
-                            <span class="emoji" onclick="insertEmoji('😂')">😂</span>
-                            <span class="emoji" onclick="insertEmoji('🤣')">🤣</span>
-                            <span class="emoji" onclick="insertEmoji('🥲')">🥲</span>
-                            <span class="emoji" onclick="insertEmoji('😊')">😊</span>
-                            <span class="emoji" onclick="insertEmoji('😇')">😇</span>
-                            <span class="emoji" onclick="insertEmoji('🙂')">🙂</span>
-                            <span class="emoji" onclick="insertEmoji('🙃')">🙃</span>
-                            <span class="emoji" onclick="insertEmoji('😉')">😉</span>
-                            <span class="emoji" onclick="insertEmoji('😌')">😌</span>
-                            <span class="emoji" onclick="insertEmoji('😍')">😍</span>
-                            <span class="emoji" onclick="insertEmoji('🥰')">🥰</span>
-                            <span class="emoji" onclick="insertEmoji('😘')">😘</span>
-                            <span class="emoji" onclick="insertEmoji('😗')">😗</span>
-                            <span class="emoji" onclick="insertEmoji('😙')">😙</span>
-                            <span class="emoji" onclick="insertEmoji('😚')">😚</span>
-                            <span class="emoji" onclick="insertEmoji('😋')">😋</span>
-                            <span class="emoji" onclick="insertEmoji('😛')">😛</span>
-                            <span class="emoji" onclick="insertEmoji('😝')">😝</span>
-                            <span class="emoji" onclick="insertEmoji('😜')">😜</span>
-                            <span class="emoji" onclick="insertEmoji('🤪')">🤪</span>
-                            <span class="emoji" onclick="insertEmoji('🤨')">🤨</span>
-                            <span class="emoji" onclick="insertEmoji('🧐')">🧐</span>
-                            <span class="emoji" onclick="insertEmoji('🤓')">🤓</span>
-                            <span class="emoji" onclick="insertEmoji('😎')">😎</span>
-                            <span class="emoji" onclick="insertEmoji('🥸')">🥸</span>
-                            <span class="emoji" onclick="insertEmoji('🤩')">🤩</span>
-                            <span class="emoji" onclick="insertEmoji('🥳')">🥳</span>
-                            <span class="emoji" onclick="insertEmoji('😏')">😏</span>
-                            <span class="emoji" onclick="insertEmoji('😒')">😒</span>
-                            <span class="emoji" onclick="insertEmoji('😞')">😞</span>
-                            <span class="emoji" onclick="insertEmoji('😔')">😔</span>
-                            <span class="emoji" onclick="insertEmoji('😟')">😟</span>
-                            <span class="emoji" onclick="insertEmoji('😕')">😕</span>
-                            <span class="emoji" onclick="insertEmoji('🙁')">🙁</span>
-                            <span class="emoji" onclick="insertEmoji('☹️')">☹️</span>
-                            <span class="emoji" onclick="insertEmoji('😣')">😣</span>
-                            <span class="emoji" onclick="insertEmoji('😖')">😖</span>
-                            <span class="emoji" onclick="insertEmoji('😫')">😫</span>
-                            <span class="emoji" onclick="insertEmoji('😩')">😩</span>
-                            <span class="emoji" onclick="insertEmoji('🥺')">🥺</span>
-                            <span class="emoji" onclick="insertEmoji('😢')">😢</span>
-                            <span class="emoji" onclick="insertEmoji('😭')">😭</span>
-                            <span class="emoji" onclick="insertEmoji('❤️')">❤️</span>
-                            <span class="emoji" onclick="insertEmoji('💕')">💕</span>
-                            <span class="emoji" onclick="insertEmoji('💖')">💖</span>
-                            <span class="emoji" onclick="insertEmoji('💗')">💗</span>
-                            <span class="emoji" onclick="insertEmoji('💙')">💙</span>
-                            <span class="emoji" onclick="insertEmoji('💚')">💚</span>
-                            <span class="emoji" onclick="insertEmoji('💛')">💛</span>
-                            <span class="emoji" onclick="insertEmoji('🧡')">🧡</span>
-                            <span class="emoji" onclick="insertEmoji('💜')">💜</span>
-                            <span class="emoji" onclick="insertEmoji('🖤')">🖤</span>
-                            <span class="emoji" onclick="insertEmoji('🤍')">🤍</span>
-                            <span class="emoji" onclick="insertEmoji('🤎')">🤎</span>
-                            <span class="emoji" onclick="insertEmoji('💔')">💔</span>
-                            <span class="emoji" onclick="insertEmoji('❣️')">❣️</span>
-                            <span class="emoji" onclick="insertEmoji('💯')">💯</span>
-                            <span class="emoji" onclick="insertEmoji('👍')">👍</span>
-                            <span class="emoji" onclick="insertEmoji('👎')">👎</span>
-                            <span class="emoji" onclick="insertEmoji('👏')">👏</span>
-                            <span class="emoji" onclick="insertEmoji('🙏')">🙏</span>
-                        </div>
-                    </div>
-
-                    <!-- 파일 업로드 모달 -->
-                    <div id="fileUploadModal" class="modal" style="display: none;">
+                    <!-- 단체채팅 생성 모달 -->
+                    <div id="groupChatModal" class="modal" style="display: none;">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h2>파일 첨부</h2>
-                                <button class="modal-close" onclick="hideFileUploadModal()">✕</button>
+                                <h2>단체채팅 만들기</h2>
+                                <button class="modal-close" onclick="hideGroupChatModal()">✕</button>
                             </div>
                             <div class="modal-body">
-                                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
-                                    <div class="upload-icon">📁</div>
-                                    <p>클릭하여 파일을 선택하거나 드래그하여 업로드하세요</p>
-                                    <input type="file" id="fileInput" style="display: none;" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx" onchange="handleFileSelect()">
+                                <div class="form-group">
+                                    <label>채팅방 이름</label>
+                                    <input type="text" id="groupChatName" placeholder="채팅방 이름을 입력하세요">
                                 </div>
-                                <div class="selected-files" id="selectedFiles">
-                                    <!-- 선택된 파일들이 여기에 표시됩니다 -->
+                                <div class="form-group">
+                                    <label>참여자 선택</label>
+                                    <div class="search-users">
+                                        <input type="text" placeholder="참여자 검색..." id="groupUserSearchInput" oninput="searchGroupUsers()">
+                                    </div>
+                                    <div class="selected-users" id="selectedUsers">
+                                        <!-- 선택된 사용자들이 여기에 표시됩니다 -->
+                                    </div>
+                                    <div class="group-users-list" id="groupUsersList">
+                                        <!-- 사용자 목록이 여기에 표시됩니다 -->
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-secondary" onclick="hideFileUploadModal()">취소</button>
-                                <button class="btn btn-primary" onclick="uploadFiles()">전송</button>
+                                <button class="btn btn-secondary" onclick="hideGroupChatModal()">취소</button>
+                                <button class="btn btn-primary" onclick="createGroupChat()">
+                                    <span class="icon">👥</span>단체채팅 만들기
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 프로필 화면 -->
+                    <!-- 첨부파일 메뉴 -->
+                    <div id="attachmentMenu" class="attachment-menu" style="display: none;">
+                        <div class="attachment-options">
+                            <button class="attachment-option" onclick="attachImage()">
+                                <span class="icon">📷</span>사진
+                            </button>
+                            <button class="attachment-option" onclick="attachVideo()">
+                                <span class="icon">🎥</span>동영상
+                            </button>
+                            <button class="attachment-option" onclick="attachFile()">
+                                <span class="icon">📁</span>파일
+                            </button>
+                            <button class="attachment-option" onclick="attachLocation()">
+                                <span class="icon">📍</span>위치
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 수정된 프로필 화면 (포스타입/유튜브 스타일) -->
                 <div id="profile" class="screen">
                     <div class="profile-container">
                         <!-- 프로필 헤더 -->
-                        <div class="profile-banner">
-                            <div class="profile-main">
-                                <div class="profile-avatar-large" id="profileAvatar">👤</div>
+                        <div class="profile-header">
+                            <div class="profile-cover">
+                                <div class="cover-image" id="profileCover"></div>
+                                <button class="edit-cover-btn" onclick="editCoverImage()">
+                                    <span class="icon">📷</span>커버 편집
+                                </button>
+                            </div>
+                            <div class="profile-main-info">
+                                <div class="profile-avatar-section">
+                                    <div class="profile-avatar-large" id="profileAvatar">👤</div>
+                                    <button class="edit-avatar-btn" onclick="editProfileImage()">
+                                        <span class="icon">📷</span>
+                                    </button>
+                                </div>
                                 <div class="profile-info">
                                     <h1 id="profileName">사용자</h1>
-                                    <p class="profile-bio" id="profileEmail">이메일</p>
+                                    <p class="profile-handle" id="profileHandle">@username</p>
+                                    <p class="profile-bio" id="profileBio">안녕하세요! 창작자입니다.</p>
                                     <div class="profile-stats">
                                         <div class="stat">
                                             <span class="stat-number" id="userWorks">0</span>
@@ -636,89 +772,206 @@
                                         </div>
                                         <div class="stat">
                                             <span class="stat-number" id="userFollowers">0</span>
-                                            <span class="stat-label">팔로워</span>
+                                            <span class="stat-label">구독자</span>
                                         </div>
                                         <div class="stat">
                                             <span class="stat-number" id="userFollowing">0</span>
-                                            <span class="stat-label">팔로잉</span>
+                                            <span class="stat-label">구독</span>
                                         </div>
                                         <div class="stat">
-                                            <span class="stat-number" id="userRevenue">0</span>
-                                            <span class="stat-label">수익</span>
+                                            <span class="stat-number" id="userViews">0</span>
+                                            <span class="stat-label">조회수</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-actions">
+                                        <button class="btn btn-primary" onclick="showEditProfileModal()">
+                                            <span class="icon">✏️</span>프로필 편집
+                                        </button>
+                                        <button class="btn btn-secondary" onclick="shareProfile()">
+                                            <span class="icon">📤</span>공유
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 프로필 탭 메뉴 -->
+                        <div class="profile-tabs">
+                            <button class="profile-tab active" onclick="showProfileTab('home')" data-tab="home">
+                                <span class="icon">🏠</span>홈
+                            </button>
+                            <button class="profile-tab" onclick="showProfileTab('works')" data-tab="works">
+                                <span class="icon">🎨</span>작품
+                            </button>
+                            <button class="profile-tab" onclick="showProfileTab('playlists')" data-tab="playlists">
+                                <span class="icon">📚</span>컬렉션
+                            </button>
+                            <button class="profile-tab" onclick="showProfileTab('community')" data-tab="community">
+                                <span class="icon">👥</span>커뮤니티
+                            </button>
+                            <button class="profile-tab" onclick="showProfileTab('about')" data-tab="about">
+                                <span class="icon">ℹ️</span>정보
+                            </button>
+                            <button class="profile-tab" onclick="showProfileTab('analytics')" data-tab="analytics">
+                                <span class="icon">📊</span>분석
+                            </button>
+                        </div>
+
+                        <!-- 프로필 탭 컨텐츠 -->
+                        <div class="profile-tab-contents">
+                            <!-- 홈 탭 -->
+                            <div id="profile-home" class="profile-tab-content active">
+                                <div class="profile-home-grid">
+                                    <div class="recent-works-section">
+                                        <h3>최근 작품</h3>
+                                        <div class="recent-works" id="recentWorksContainer">
+                                            <!-- 최근 작품들이 여기에 표시됩니다 -->
+                                        </div>
+                                    </div>
+                                    <div class="activity-section">
+                                        <h3>최근 활동</h3>
+                                        <div class="activity-feed" id="activityFeedContainer">
+                                            <!-- 활동 피드가 여기에 표시됩니다 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 작품 탭 -->
+                            <div id="profile-works" class="profile-tab-content">
+                                <div class="works-filters">
+                                    <button class="filter-btn active" onclick="filterWorks('all')" data-filter="all">전체</button>
+                                    <button class="filter-btn" onclick="filterWorks('illustration')" data-filter="illustration">일러스트</button>
+                                    <button class="filter-btn" onclick="filterWorks('animation')" data-filter="animation">애니메이션</button>
+                                    <button class="filter-btn" onclick="filterWorks('novel')" data-filter="novel">소설</button>
+                                    <button class="filter-btn" onclick="filterWorks('manga')" data-filter="manga">만화</button>
+                                </div>
+                                <div class="user-works-grid" id="userWorksContainer">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">🎨</div>
+                                        <h3>아직 업로드한 작품이 없어요</h3>
+                                        <p>첫 작품을 업로드해보세요!</p>
+                                        <button class="btn btn-primary" onclick="showUploadModal()">
+                                            <span class="icon">➕</span>작품 업로드
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 컬렉션 탭 -->
+                            <div id="profile-playlists" class="profile-tab-content">
+                                <div class="playlists-section">
+                                    <div class="section-header">
+                                        <h3>내 컬렉션</h3>
+                                        <button class="btn btn-primary" onclick="createPlaylist()">
+                                            <span class="icon">➕</span>컬렉션 만들기
+                                        </button>
+                                    </div>
+                                    <div class="playlists-grid" id="playlistsContainer">
+                                        <!-- 컬렉션들이 여기에 표시됩니다 -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 커뮤니티 탭 -->
+                            <div id="profile-community" class="profile-tab-content">
+                                <div class="joined-communities" id="joinedCommunitiesContainer">
+                                    <!-- 참여한 커뮤니티들이 여기에 표시됩니다 -->
+                                </div>
+                            </div>
+
+                            <!-- 정보 탭 -->
+                            <div id="profile-about" class="profile-tab-content">
+                                <div class="about-section">
+                                    <div class="about-card">
+                                        <h4>기본 정보</h4>
+                                        <div class="about-item">
+                                            <span class="label">가입일:</span>
+                                            <span class="value" id="joinDate">2024년 1월</span>
+                                        </div>
+                                        <div class="about-item">
+                                            <span class="label">총 조회수:</span>
+                                            <span class="value" id="totalViews">0회</span>
+                                        </div>
+                                        <div class="about-item">
+                                            <span class="label">총 좋아요:</span>
+                                            <span class="value" id="totalLikes">0개</span>
+                                        </div>
+                                    </div>
+                                    <div class="about-card">
+                                        <h4>연락처</h4>
+                                        <div class="contact-links" id="contactLinks">
+                                            <!-- 연락처 링크들이 여기에 표시됩니다 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 분석 탭 -->
+                            <div id="profile-analytics" class="profile-tab-content">
+                                <div class="analytics-dashboard">
+                                    <div class="analytics-cards">
+                                        <div class="analytics-card">
+                                            <h4>이번 달 조회수</h4>
+                                            <div class="analytics-number">1,234</div>
+                                            <div class="analytics-change positive">+15.3%</div>
+                                        </div>
+                                        <div class="analytics-card">
+                                            <h4>새 구독자</h4>
+                                            <div class="analytics-number">89</div>
+                                            <div class="analytics-change positive">+8.2%</div>
+                                        </div>
+                                        <div class="analytics-card">
+                                            <h4>작품 좋아요</h4>
+                                            <div class="analytics-number">456</div>
+                                            <div class="analytics-change positive">+12.7%</div>
+                                        </div>
+                                        <div class="analytics-card">
+                                            <h4>총 수익</h4>
+                                            <div class="analytics-number">₩127,000</div>
+                                            <div class="analytics-change positive">+23.1%</div>
+                                        </div>
+                                    </div>
+                                    <div class="analytics-charts">
+                                        <div class="chart-placeholder">
+                                            <div class="placeholder-icon">📊</div>
+                                            <h4>상세 분석 준비 중</h4>
+                                            <p>작품별 상세 통계와 트렌드 분석 기능을 준비하고 있습니다.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 대시보드 섹션 -->
-                        <div class="dashboard-section">
-                            <div class="dashboard-tabs">
-                                <button class="dashboard-tab active" onclick="showDashboardTab('overview')">📊 개요</button>
-                                <button class="dashboard-tab" onclick="showDashboardTab('analytics')">📈 분석</button>
-                                <button class="dashboard-tab" onclick="showDashboardTab('earnings')">💰 수익</button>
-                                <button class="dashboard-tab" onclick="showDashboardTab('settings')">⚙️ 설정</button>
+                    <!-- 프로필 편집 모달 -->
+                    <div id="editProfileModal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>프로필 편집</h2>
+                                <button class="modal-close" onclick="hideEditProfileModal()">✕</button>
                             </div>
-
-                            <div id="dashboard-overview" class="dashboard-content active">
-                                <div class="dashboard-grid">
-                                    <div class="dashboard-card">
-                                        <h3>이번 달 조회수</h3>
-                                        <div class="dashboard-number">1,234</div>
-                                        <div class="dashboard-change positive">+15.3%</div>
-                                    </div>
-                                    <div class="dashboard-card">
-                                        <h3>새 팔로워</h3>
-                                        <div class="dashboard-number">89</div>
-                                        <div class="dashboard-change positive">+8.2%</div>
-                                    </div>
-                                    <div class="dashboard-card">
-                                        <h3>작품 좋아요</h3>
-                                        <div class="dashboard-number">456</div>
-                                        <div class="dashboard-change positive">+12.7%</div>
-                                    </div>
-                                    <div class="dashboard-card">
-                                        <h3>이번 달 수익</h3>
-                                        <div class="dashboard-number">₩127,000</div>
-                                        <div class="dashboard-change positive">+23.1%</div>
-                                    </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>닉네임</label>
+                                    <input type="text" id="editProfileName" placeholder="닉네임을 입력하세요">
+                                </div>
+                                <div class="form-group">
+                                    <label>사용자명</label>
+                                    <input type="text" id="editProfileHandle" placeholder="@username">
+                                </div>
+                                <div class="form-group">
+                                    <label>자기소개</label>
+                                    <textarea id="editProfileBio" placeholder="자기소개를 입력하세요" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>웹사이트</label>
+                                    <input type="url" id="editProfileWebsite" placeholder="https://example.com">
                                 </div>
                             </div>
-
-                            <div id="dashboard-analytics" class="dashboard-content">
-                                <div class="analytics-placeholder">
-                                    <div class="placeholder-icon">📊</div>
-                                    <h3>상세 분석 준비 중</h3>
-                                    <p>작품별 상세 통계와 트렌드 분석 기능을 준비하고 있습니다.</p>
-                                </div>
-                            </div>
-
-                            <div id="dashboard-earnings" class="dashboard-content">
-                                <div class="earnings-placeholder">
-                                    <div class="placeholder-icon">💰</div>
-                                    <h3>수익 관리 준비 중</h3>
-                                    <p>수익 관리 및 정산 기능을 준비하고 있습니다.</p>
-                                </div>
-                            </div>
-
-                            <div id="dashboard-settings" class="dashboard-content">
-                                <div class="settings-placeholder">
-                                    <div class="placeholder-icon">⚙️</div>
-                                    <h3>계정 설정 준비 중</h3>
-                                    <p>프로필 설정 및 계정 관리 기능을 준비하고 있습니다.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- 내 작품 섹션 -->
-                        <div class="user-works-section">
-                            <h3>내 작품</h3>
-                            <div class="user-works-grid" id="userWorksContainer">
-                                <div class="empty-state">
-                                    <h3>아직 업로드한 작품이 없어요</h3>
-                                    <p>첫 작품을 업로드해보세요!</p>
-                                    <button class="btn btn-primary" onclick="showUploadModal()">작품 업로드</button>
-                                </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" onclick="hideEditProfileModal()">취소</button>
+                                <button class="btn btn-primary" onclick="saveProfileChanges()">저장</button>
                             </div>
                         </div>
                     </div>
@@ -727,47 +980,182 @@
         </div>
     </div>
 
-    <!-- 작품 업로드 모달 -->
-    <div id="uploadModal" class="modal" style="display: none;">
-        <div class="modal-content">
+    <!-- 수정된 작품 업로드 모달 -->
+    <div id="uploadModal" class="modal upload-modal" style="display: none;">
+        <div class="modal-content upload-modal-content">
             <div class="modal-header">
                 <h2>✨ 새 작품 업로드</h2>
                 <button class="modal-close" onclick="hideUploadModal()">✕</button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>작품 제목 *</label>
-                    <input type="text" id="workTitle" placeholder="멋진 작품 제목을 입력하세요">
+            <div class="modal-body upload-modal-body">
+                <div class="upload-steps">
+                    <div class="upload-step active" data-step="1">
+                        <span class="step-number">1</span>
+                        <span class="step-title">파일 업로드</span>
+                    </div>
+                    <div class="upload-step" data-step="2">
+                        <span class="step-number">2</span>
+                        <span class="step-title">작품 정보</span>
+                    </div>
+                    <div class="upload-step" data-step="3">
+                        <span class="step-number">3</span>
+                        <span class="step-title">게시 설정</span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>작품 설명</label>
-                    <textarea id="workDescription" placeholder="작품에 대한 설명을 입력하세요" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>카테고리</label>
-                    <select id="workCategory">
-                        <option value="illustration">🎨 일러스트</option>
-                        <option value="animation">🎬 애니메이션</option>
-                        <option value="novel">📚 소설</option>
-                        <option value="manga">📖 만화</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>작품 이미지 *</label>
-                    <input type="file" id="workImage" accept="image/*" onchange="previewImage()">
-                    <div id="imagePreview" class="image-preview"></div>
-                </div>
-                <div class="form-group">
-                    <label>태그</label>
-                    <input type="text" id="workTags" placeholder="태그를 쉼표로 구분해서 입력하세요 (예: 하이큐, 팬아트, 애니메이션)">
+
+                <div class="upload-content">
+                    <!-- Step 1: 파일 업로드 -->
+                    <div id="upload-step-1" class="upload-step-content active">
+                        <div class="file-upload-area" onclick="document.getElementById('workImage').click()">
+                            <div class="upload-placeholder">
+                                <div class="upload-icon">📁</div>
+                                <h3>작품 파일을 업로드하세요</h3>
+                                <p>이미지, 동영상, 문서 파일을 지원합니다</p>
+                                <button class="btn btn-primary upload-trigger">
+                                    <span class="icon">📤</span>파일 선택
+                                </button>
+                            </div>
+                            <input type="file" id="workImage" accept="image/*,video/*,.pdf,.doc,.docx" onchange="handleWorkFileSelect()" style="display: none;">
+                        </div>
+                        <div id="uploadPreview" class="upload-preview"></div>
+                    </div>
+
+                    <!-- Step 2: 작품 정보 -->
+                    <div id="upload-step-2" class="upload-step-content">
+                        <div class="form-group">
+                            <label>작품 제목 *</label>
+                            <input type="text" id="workTitle" placeholder="멋진 작품 제목을 입력하세요" maxlength="100">
+                            <small class="form-hint">100자 이내로 입력해주세요</small>
+                        </div>
+                        <div class="form-group">
+                            <label>작품 설명</label>
+                            <textarea id="workDescription" placeholder="작품에 대한 설명을 입력하세요" rows="4" maxlength="500"></textarea>
+                            <small class="form-hint">500자 이내로 입력해주세요</small>
+                        </div>
+                        <div class="form-group">
+                            <label>카테고리 *</label>
+                            <select id="workCategory">
+                                <option value="">카테고리를 선택하세요</option>
+                                <option value="illustration">🎨 일러스트</option>
+                                <option value="animation">🎬 애니메이션</option>
+                                <option value="novel">📚 소설</option>
+                                <option value="manga">📖 만화</option>
+                                <option value="music">🎵 음악</option>
+                                <option value="game">🎮 게임</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>태그</label>
+                            <input type="text" id="workTags" placeholder="태그를 입력하세요 (예: 하이큐, 팬아트, 애니메이션)">
+                            <small class="form-hint">쉼표로 구분해서 입력하세요</small>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: 게시 설정 -->
+                    <div id="upload-step-3" class="upload-step-content">
+                        <div class="form-group">
+                            <label>공개 설정</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="workVisibility" value="public" checked>
+                                    <span class="radio-mark"></span>
+                                    <div class="radio-content">
+                                        <strong>공개</strong>
+                                        <small>누구나 볼 수 있습니다</small>
+                                    </div>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="workVisibility" value="unlisted">
+                                    <span class="radio-mark"></span>
+                                    <div class="radio-content">
+                                        <strong>링크로만 공개</strong>
+                                        <small>링크를 아는 사람만 볼 수 있습니다</small>
+                                    </div>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="workVisibility" value="private">
+                                    <span class="radio-mark"></span>
+                                    <div class="radio-content">
+                                        <strong>비공개</strong>
+                                        <small>나만 볼 수 있습니다</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>댓글 허용</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="allowComments" checked>
+                                    <span class="checkbox-mark"></span>
+                                    <span>댓글을 허용합니다</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="allowRatings" checked>
+                                    <span class="checkbox-mark"></span>
+                                    <span>평점을 허용합니다</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>게시 일정</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="publishSchedule" value="now" checked>
+                                    <span class="radio-mark"></span>
+                                    <span>지금 게시</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="publishSchedule" value="scheduled">
+                                    <span class="radio-mark"></span>
+                                    <span>예약 게시</span>
+                                </label>
+                            </div>
+                            <div id="scheduleDateTime" class="schedule-inputs" style="display: none;">
+                                <input type="datetime-local" id="publishDateTime">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="hideUploadModal()">취소</button>
-                <button class="btn btn-primary" onclick="uploadWork()">
-                    <span class="upload-icon">📤</span>
-                    업로드
-                </button>
+            <div class="modal-footer upload-modal-footer">
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">0%</span>
+                </div>
+                <div class="upload-actions">
+                    <button class="btn btn-secondary" id="uploadPrevBtn" onclick="previousUploadStep()" style="display: none;">이전</button>
+                    <button class="btn btn-secondary" onclick="hideUploadModal()">취소</button>
+                    <button class="btn btn-primary" id="uploadNextBtn" onclick="nextUploadStep()">다음</button>
+                    <button class="btn btn-primary" id="uploadSubmitBtn" onclick="uploadWork()" style="display: none;">
+                        <span class="upload-icon">📤</span>업로드
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 이모지 피커 -->
+    <div id="emojiPicker" class="emoji-picker" style="display: none;">
+        <div class="emoji-header">
+            <div class="emoji-categories">
+                <button class="emoji-category active" data-category="recent">⏰</button>
+                <button class="emoji-category" data-category="smileys">😀</button>
+                <button class="emoji-category" data-category="people">👤</button>
+                <button class="emoji-category" data-category="nature">🌿</button>
+                <button class="emoji-category" data-category="food">🍎</button>
+                <button class="emoji-category" data-category="activities">⚽</button>
+                <button class="emoji-category" data-category="travel">🚗</button>
+                <button class="emoji-category" data-category="objects">💡</button>
+                <button class="emoji-category" data-category="symbols">❤️</button>
+                <button class="emoji-category" data-category="flags">🏁</button>
+            </div>
+        </div>
+        <div class="emoji-content">
+            <div class="emoji-grid" id="emojiGrid">
+                <!-- 이모지들이 동적으로 로드됩니다 -->
             </div>
         </div>
     </div>
@@ -794,8 +1182,11 @@
         const storage = getStorage(app);
 
         // 카카오 SDK 초기화
-        Kakao.init('YOUR_KAKAO_APP_KEY');
+        if (typeof Kakao !== 'undefined') {
+            Kakao.init('YOUR_KAKAO_APP_KEY');
+        }
 
+        // Window 객체에 Firebase 기능 할당
         window.auth = auth;
         window.db = db;
         window.storage = storage;
@@ -821,19 +1212,20 @@
         window.ref = ref;
         window.uploadBytes = uploadBytes;
         window.getDownloadURL = getDownloadURL;
-        window.Kakao = Kakao;
 
+        // 로딩 화면 처리
         setTimeout(() => {
             document.getElementById('loadingScreen').style.display = 'none';
         }, 2000);
 
+        // 인증 상태 변경 감지
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 updateUserInterface(user);
                 showMainApp();
                 loadAllHomeSections();
-                initializeCommunities();
-                initializeChatRooms();
+                window.initializeCommunities && window.initializeCommunities();
+                window.initializeChatRooms && window.initializeChatRooms();
             } else {
                 showAuthModal();
                 resetUserInterface();
@@ -1002,22 +1394,18 @@
         }
 
         function showWorkDetail(work) {
-            showNotification(`"${work.title || work}" 상세보기 기능 준비 중입니다! 🎨`);
+            if (window.showNotification) {
+                window.showNotification(`"${work.title || work}" 상세보기 기능 준비 중입니다! 🎨`);
+            }
         }
 
-        function initializeCommunities() {
-            window.initializeCommunities();
-        }
-
-        function initializeChatRooms() {
-            window.initializeChatRooms();
-        }
-
+        // Window 객체에 함수 할당
         window.updateUserInterface = updateUserInterface;
         window.resetUserInterface = resetUserInterface;
         window.loadWorks = loadWorks;
         window.loadAllHomeSections = loadAllHomeSections;
         window.showMainApp = showMainApp;
+        window.showWorkDetail = showWorkDetail;
     </script>
 
     <script src="script.js"></script>
