@@ -474,22 +474,23 @@ body {
 .main-layout {
     display: flex;
     flex: 1;
-    max-width: 1400px;
+    max-width: 1200px; /* 1400px에서 1200px로 축소 */
     margin: 0 auto;
     width: 100%;
+    min-height: calc(100vh - 80px); /* 높이 조정 */
 }
 
 .sidebar {
-    width: 240px;
+    width: 200px; /* 240px에서 200px로 축소 */
     background: linear-gradient(180deg, #1f2937 0%, #374151 30%, #f9fafb 70%, #ffffff 100%);
     border-right: 1px solid #e5e7eb;
-    padding: 1.5rem 0;
-    height: calc(100vh - 76px);
+    padding: 1rem 0; /* 1.5rem에서 1rem으로 축소 */
+    height: calc(100vh - 80px);
     overflow-y: auto;
     position: sticky;
-    top: 76px;
+    top: 80px;
+    flex-shrink: 0; /* 추가: 사이드바 크기 고정 */
 }
-
 .sidebar::-webkit-scrollbar {
     display: none;
 }
@@ -502,19 +503,19 @@ body {
 .nav-item {
     display: flex;
     align-items: center;
-    padding: 1rem 1.5rem;
+    padding: 0.8rem 1rem; /* 1rem 1.5rem에서 축소 */
     cursor: pointer;
     transition: all 0.3s ease;
     border: none;
     background: none;
     width: 100%;
     text-align: left;
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* 0.9rem에서 축소 */
     font-weight: 500;
     color: #ffffff;
     position: relative;
-    gap: 1rem;
-    margin: 0.2rem 0;
+    gap: 0.8rem;
+    margin: 0.1rem 0; /* 0.2rem에서 축소 */
 }
 
 .nav-item:hover {
@@ -607,7 +608,8 @@ body {
     background: linear-gradient(180deg, #f9fafb 0%, #ffffff 100%);
     overflow-y: auto;
     color: #1f2937;
-    padding: 2rem;
+    padding: 1.5rem; /* 2rem에서 1.5rem으로 축소 */
+    min-width: 0; /* 추가: 플렉스 아이템 축소 허용 */
 }
 
 .content-area::-webkit-scrollbar {
