@@ -66,27 +66,28 @@
                     <button class="btn auth-primary-btn" onclick="loginUser()">로그인</button>
                     
                     <div class="social-divider">
-                        <span>또는 아래 방법으로 회원가입 하세요</span>
+                        <span>Creta가 처음이신가요? 회원가입 하기</span>
                     </div>
 
                     <div class="social-login">
-                        <button class="social-btn kakao-btn" onclick="loginWithKakao()">
-                            <span class="social-icon">💬</span>
-                            카카오로 시작하기
-                        </button>
-                        <button class="social-btn naver-btn" onclick="loginWithNaver()">
-                            <span class="social-icon">N</span>
-                            네이버로 시작하기
-                        </button>
-                        <button class="social-btn apple-btn" onclick="loginWithApple()">
-                            <span class="social-icon">🍎</span>
-                            Apple로 시작하기
-                        </button>
-                        <button class="social-btn google-btn" onclick="loginWithGoogle()">
-                            <span class="social-icon">🔵</span>
-                            유심심로 시작하기
-                        </button>
-                    </div>
+                        <div class="social-login">
+    <button class="social-btn twitter-btn" onclick="loginWithTwitter()">
+        <span class="social-icon">🐦</span>
+        트위터로 시작하기
+    </button>
+    <button class="social-btn google-btn" onclick="loginWithGoogle()">
+        <span class="social-icon">🔵</span>
+        구글로 시작하기
+    </button>
+    <button class="social-btn kakao-btn" onclick="loginWithKakao()">
+        <span class="social-icon">💬</span>
+        카카오로 시작하기
+    </button>
+    <button class="social-btn naver-btn" onclick="loginWithNaver()">
+        <span class="social-icon">N</span>
+        네이버로 시작하기
+    </button>
+</div>
                 </div>
 
                 <!-- 회원가입 폼 -->
@@ -643,48 +644,111 @@
                 </div>
 
                 <!-- 프로필 화면 -->
-                <div id="profile" class="screen">
-                    <div class="profile-container">
-                        <div class="profile-banner">
-                            <div class="profile-main">
-                                <div class="profile-avatar-large" id="profileAvatar">👤</div>
-                                <div class="profile-info">
-                                    <h1 id="profileName">사용자</h1>
-                                    <p class="profile-bio" id="profileEmail">이메일</p>
-                                    <div class="profile-stats">
-                                        <div class="stat">
-                                            <span class="stat-number" id="userWorks">0</span>
-                                            <span class="stat-label">작품</span>
-                                        </div>
-                                        <div class="stat">
-                                            <span class="stat-number">0</span>
-                                            <span class="stat-label">팔로워</span>
-                                        </div>
-                                        <div class="stat">
-                                            <span class="stat-number">0</span>
-                                            <span class="stat-label">팔로잉</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- 기존 프로필 화면 내용을 이것으로 교체 -->
+<div id="profile" class="screen">
+    <div class="profile-container">
+        <!-- 프로필 헤더 -->
+        <div class="profile-banner">
+            <div class="profile-main">
+                <div class="profile-avatar-large" id="profileAvatar">👤</div>
+                <div class="profile-info">
+                    <h1 id="profileName">사용자</h1>
+                    <p class="profile-bio" id="profileEmail">이메일</p>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-number" id="userWorks">0</span>
+                            <span class="stat-label">작품</span>
                         </div>
-                        
-                        <div class="user-works-section">
-                            <h3>내 작품</h3>
-                            <div class="user-works-grid" id="userWorksContainer">
-                                <div class="empty-state">
-                                    <div class="empty-icon">🎨</div>
-                                    <h3>아직 업로드한 작품이 없어요</h3>
-                                    <p>첫 작품을 업로드해보세요!</p>
-                                    <button class="btn btn-primary" onclick="showUploadModal()">작품 업로드</button>
-                                </div>
-                            </div>
+                        <div class="stat">
+                            <span class="stat-number" id="userFollowers">0</span>
+                            <span class="stat-label">팔로워</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" id="userFollowing">0</span>
+                            <span class="stat-label">팔로잉</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" id="userRevenue">0</span>
+                            <span class="stat-label">수익</span>
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
+        </div>
+
+        <!-- 대시보드 섹션 -->
+        <div class="dashboard-section">
+            <div class="dashboard-tabs">
+                <button class="dashboard-tab active" onclick="showDashboardTab('overview')">📊 개요</button>
+                <button class="dashboard-tab" onclick="showDashboardTab('analytics')">📈 분석</button>
+                <button class="dashboard-tab" onclick="showDashboardTab('earnings')">💰 수익</button>
+                <button class="dashboard-tab" onclick="showDashboardTab('settings')">⚙️ 설정</button>
+            </div>
+
+            <div id="dashboard-overview" class="dashboard-content active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>이번 달 조회수</h3>
+                        <div class="dashboard-number">1,234</div>
+                        <div class="dashboard-change positive">+15.3%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>새 팔로워</h3>
+                        <div class="dashboard-number">89</div>
+                        <div class="dashboard-change positive">+8.2%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>작품 좋아요</h3>
+                        <div class="dashboard-number">456</div>
+                        <div class="dashboard-change positive">+12.7%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>이번 달 수익</h3>
+                        <div class="dashboard-number">₩127,000</div>
+                        <div class="dashboard-change positive">+23.1%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard-analytics" class="dashboard-content">
+                <div class="analytics-placeholder">
+                    <div class="placeholder-icon">📊</div>
+                    <h3>상세 분석 준비 중</h3>
+                    <p>작품별 상세 통계와 트렌드 분석 기능을 준비하고 있습니다.</p>
+                </div>
+            </div>
+
+            <div id="dashboard-earnings" class="dashboard-content">
+                <div class="earnings-placeholder">
+                    <div class="placeholder-icon">💰</div>
+                    <h3>수익 관리 준비 중</h3>
+                    <p>수익 관리 및 정산 기능을 준비하고 있습니다.</p>
+                </div>
+            </div>
+
+            <div id="dashboard-settings" class="dashboard-content">
+                <div class="settings-placeholder">
+                    <div class="placeholder-icon">⚙️</div>
+                    <h3>계정 설정 준비 중</h3>
+                    <p>프로필 설정 및 계정 관리 기능을 준비하고 있습니다.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 내 작품 섹션 -->
+        <div class="user-works-section">
+            <h3>내 작품</h3>
+            <div class="user-works-grid" id="userWorksContainer">
+                <div class="empty-state">
+                    <div class="empty-icon">🎨</div>
+                    <h3>아직 업로드한 작품이 없어요</h3>
+                    <p>첫 작품을 업로드해보세요!</p>
+                    <button class="btn btn-primary" onclick="showUploadModal()">작품 업로드</button>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
     <!-- 작품 업로드 모달 -->
     <div id="uploadModal" class="modal" style="display: none;">
