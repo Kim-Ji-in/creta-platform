@@ -136,7 +136,21 @@
                 </div>
             </div>
         </header>
-
+<button class="theme-toggle" onclick="toggleDarkMode()" title="다크 모드로 전환">
+        🌙
+    </button>
+    
+    <button class="header-btn" onclick="openNotifications()">
+        <span class="icon">🔔</span>
+        <span class="badge">3</span>
+    </button>
+    <div class="user-profile" onclick="goToProfile()">
+        <span id="userInitial">U</span>
+    </div>
+    <button class="header-btn logout" onclick="logoutUser()" style="display: none;">
+        로그아웃
+    </button>
+</div>
         <div class="app-body">
             <!-- 사이드바 -->
             <nav class="sidebar">
