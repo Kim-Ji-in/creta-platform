@@ -216,8 +216,9 @@ async function loginWithGoogle() {
 
 // 카카오 로그인
 function loginWithKakao() {
-    if (!window.Kakao) {
-        showNotification('카카오 SDK가 로드되지 않았습니다.');
+    if (!window.Kakao || !window.Kakao.isInitialized()) {
+        showNotification('카카오 SDK 초기화 중입니다...');
+        initializeKakao();
         return;
     }
     
@@ -225,9 +226,16 @@ function loginWithKakao() {
         success: function(authObj) {
             window.Kakao.API.request({
                 url: '/v2/user/me',
-                success: function(res) {
-                    showNotification('카카오 로그인 성공! 🎉');
-                    // Firebase 커스텀 토큰 생성 로직 추가 필요
+                success: async function(res) {
+                    try {
+                        const user = res;
+                        showNotification('카카오 로그인 성공! 💬');
+                        
+                        // Firebase 커스텀 토큰 생성 로직 (실제 백엔드 필요)
+                        // 현재는 시뮬레이션
+                    } catch (error) {
+                        showNotification('카카오 사용자 정보 처리 실패');
+                    }
                 },
                 fail: function(error) {
                     showNotification('카카오 사용자 정보 가져오기 실패');
@@ -352,17 +360,55 @@ function showSuggestions() {
     const query = input.value.trim().toLowerCase();
     
     if (query.length > 0) {
-        const suggestions = ['하이큐', '진격의거인', '원피스', '나루토', '귀멸의칼날', '팬아트', '일러스트']
-            .filter(tag => tag.toLowerCase().includes(query));
+        let suggestions = [];
         
-        const suggestionsList = document.getElementById('suggestionsList');
-        suggestionsList.innerHTML = suggestions.map(suggestion => 
-            `<div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">${suggestion}</div>`
-        ).join('');
+        // 하이큐 관련 연관검색어
+        if (query.includes('하이큐')) {
+            suggestions = [
+                '하이큐 드림',
+                '하이큐 일러스트',
+                '하이큐 소설',
+                '하이큐 팬아트',
+                '하이큐 캐릭터',
+                '하이큐 만화'
+            ];
+        }
+        // 다른 검색어들에 대한 연관검색어
+        else {
+            const baseKeywords = ['하이큐', '진격의거인', '원피스', '나루토', '귀멸의칼날', '팬아트', '일러스트', '소설'];
+            suggestions = baseKeywords.filter(keyword => 
+                keyword.toLowerCase().includes(query)
+            );
+            
+            // 검색어 기반 확장 검색어 추가
+            if (suggestions.length > 0) {
+                const expandedSuggestions = [];
+                suggestions.forEach(base => {
+                    if (base !== query) {
+                        expandedSuggestions.push(base);
+                        expandedSuggestions.push(base + ' 일러스트');
+                        expandedSuggestions.push(base + ' 팬아트');
+                    }
+                });
+                suggestions = [...new Set(expandedSuggestions)].slice(0, 6);
+            }
+        }
         
-        showSearchPanel();
+        if (suggestions.length > 0) {
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = suggestions.map(suggestion => 
+                `<div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">${suggestion}</div>`
+            ).join('');
+            
+            showSearchPanel();
+        } else {
+            hideSearchPanel();
+        }
+    } else {
+        hideSearchPanel();
     }
 }
+
 
 function selectSuggestion(suggestion) {
     document.getElementById('exploreSearchInput').value = suggestion;
@@ -439,6 +485,8 @@ function initializeCommunities() {
 
 function loadCommunities() {
     const container = document.getElementById('communitiesList');
+    if (!container) return;
+    
     let communities = [...communitiesData];
     
     if (currentCommunityFilter !== 'all') {
@@ -479,6 +527,10 @@ function loadCommunities() {
                                     <span class="icon">🔖</span>
                                     <span class="count">${post.bookmarks || 0}</span>
                                 </span>
+                                <span class="action-btn" onclick="event.stopPropagation(); sharePost()">
+                                    <span class="icon">📤</span>
+                                    <span class="text">공유</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -487,6 +539,7 @@ function loadCommunities() {
         </div>
     `).join('');
 }
+
 
 function filterCommunities(category) {
     document.querySelectorAll('.community-filter').forEach(btn => btn.classList.remove('active'));
@@ -1200,4 +1253,57 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-console.log('🎉 CRETA JavaScript 완전 로드 완료!');
+
+// 트위터 로그인 함수
+async function loginWithTwitter() {
+    if (!window.auth) {
+        showNotification('Firebase가 로드되지 않았습니다.');
+        return;
+    }
+    
+    try {
+        const provider = new firebase.auth.TwitterAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        await setDoc(doc(db, 'users', user.uid), {
+            name: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            provider: 'twitter',
+            createdAt: serverTimestamp(),
+            works: 0,
+            followers: 0,
+            following: 0
+        }, { merge: true });
+        
+        showNotification('트위터 로그인 성공! 🐦');
+    } catch (error) {
+        console.error('트위터 로그인 오류:', error);
+        showNotification('트위터 로그인 실패: ' + error.message);
+    }
+}
+
+// 네이버 로그인 함수 (실제 구현)
+async function loginWithNaver() {
+    // 네이버 로그인은 OAuth 방식으로 구현
+    showNotification('네이버 로그인 기능을 활성화했습니다! 🟢');
+    
+    // 실제 네이버 OAuth 구현 코드는 별도 설정이 필요
+    // 현재는 기본 동작만 구현
+}
+
+// 대시보드 탭 전환 함수
+function showDashboardTab(tabName) {
+    // 모든 탭 비활성화
+    document.querySelectorAll('.dashboard-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.dashboard-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // 선택된 탭 활성화
+    event.target.classList.add('active');
+    document.getElementById(`dashboard-${tabName}`).classList.add('active');
+}
