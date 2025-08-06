@@ -1,1666 +1,1095 @@
-/* ===== 기본 설정 ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    /* 라이트 모드 색상 */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-tertiary: #f1f5f9;
-    --bg-card: #ffffff;
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --text-muted: #94a3b8;
-    --border-color: #e2e8f0;
-    --border-light: #f1f5f9;
-    --accent-primary: #3b82f6;
-    --accent-secondary: #8b5cf6;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --error: #ef4444;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-/* 다크 모드 색상 */
-.dark-mode {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-tertiary: #334155;
-    --bg-card: #1e293b;
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #64748b;
-    --border-color: #334155;
-    --border-light: #475569;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-    transition: all 0.3s ease;
-}
-
-/* ===== 로딩 화면 ===== */
-.loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    flex-direction: column;
-}
-
-.logo-3d {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 3rem;
-    font-weight: 800;
-    margin-bottom: 2rem;
-    animation: float 3s ease-in-out infinite;
-}
-
-.logo-icon {
-    font-size: inherit;
-    animation: glow 2s ease-in-out infinite alternate;
-}
-
-.logo-text {
-    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.progress-bar {
-    width: 300px;
-    height: 4px;
-    background: var(--bg-secondary);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-    width: 0%;
-    animation: loadingProgress 2s ease-out infinite;
-}
-
-.loading-text {
-    color: var(--text-secondary);
-}
-
-/* ===== 헤더 ===== */
-.app-header {
-    background: var(--bg-card);
-    border-bottom: 1px solid var(--border-color);
-    padding: 1rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: var(--shadow-sm);
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    cursor: pointer;
-    color: var(--text-primary);
-}
-
-.logo-icon {
-    font-size: 1.8rem;
-}
-
-.logo-text {
-    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* ===== 검색바 ===== */
-.search-container {
-    position: relative;
-    flex: 1;
-    max-width: 500px;
-}
-
-.search-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.search-icon {
-    position: absolute;
-    left: 1rem;
-    color: var(--text-muted);
-    z-index: 2;
-}
-
-.search-container input {
-    width: 100%;
-    padding: 0.8rem 3rem 0.8rem 2.5rem;
-    background: var(--bg-secondary);
-    border: 2px solid var(--border-color);
-    border-radius: 25px;
-    color: var(--text-primary);
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-}
-
-.search-container input:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-clear {
-    position: absolute;
-    right: 1rem;
-    background: var(--text-muted);
-    color: var(--bg-primary);
-    border: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* ===== 검색 제안 패널 ===== */
-.search-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: var(--shadow-xl);
-    z-index: 1000;
-    margin-top: 0.5rem;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.suggestions-content {
-    padding: 1rem;
-}
-
-.suggestion-section {
-    margin-bottom: 1.5rem;
-}
-
-.suggestion-section:last-child {
-    margin-bottom: 0;
-}
-
-.suggestion-section h4 {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.8rem;
-}
-
-.trending-list,
-.suggested-list,
-.related-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.suggestion-item {
-    padding: 0.6rem 1rem;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.suggestion-item:hover {
-    background: var(--accent-primary);
-    color: white;
-    transform: translateX(4px);
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.header-btn {
-    background: var(--bg-secondary);
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    color: var(--text-primary);
-    position: relative;
-}
-
-.header-btn:hover {
-    background: var(--accent-primary);
-    color: white;
-    transform: scale(1.05);
-}
-
-.badge {
-    position: absolute;
-    top: -2px;
-    right: -2px;
-    background: var(--error);
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 0.7rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.user-profile {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.user-profile:hover {
-    transform: scale(1.1);
-}
-
-/* ===== 앱 바디 ===== */
-.app-body {
-    display: flex;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-    min-height: calc(100vh - 80px);
-}
-
-/* ===== 사이드바 ===== */
-.sidebar {
-    width: 280px;
-    background: var(--bg-card);
-    border-right: 1px solid var(--border-color);
-    padding: 2rem 1rem;
-    height: calc(100vh - 80px);
-    position: sticky;
-    top: 80px;
-    overflow-y: auto;
-}
-
-.nav-items {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
-    background: transparent;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: var(--text-secondary);
-    font-weight: 500;
-    position: relative;
-    width: 100%;
-    text-align: left;
-}
-
-.nav-item:hover {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    transform: translateX(4px);
-}
-
-.nav-item.active {
-    background: var(--accent-primary);
-    color: white;
-}
-
-.nav-icon {
-    font-size: 1.2rem;
-    width: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.nav-text {
-    font-size: 0.95rem;
-}
-
-.nav-badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: var(--error);
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 0.7rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.nav-divider {
-    height: 1px;
-    background: var(--border-color);
-    margin: 1rem 0;
-}
-
-.nav-item.upload {
-    background: linear-gradient(45deg, var(--warning), #d97706);
-    color: white;
-}
-
-.nav-item.upload:hover {
-    transform: translateX(0) scale(1.02);
-}
-
-/* ===== 메인 콘텐츠 ===== */
-.main-content {
-    flex: 1;
-    padding: 2rem;
-    overflow-y: auto;
-}
-
-.page {
-    display: none;
-    animation: fadeIn 0.3s ease;
-}
-
-.page.active {
-    display: block;
-}
-
-/* ===== 홈페이지 ===== */
-.home-hero {
-    text-align: center;
-    padding: 4rem 0;
-    margin-bottom: 3rem;
-    background: var(--bg-card);
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-}
-
-.home-hero h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-}
-
-.home-hero p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
-}
-
-.quick-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.quick-btn {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 1rem;
-}
-
-.quick-btn.primary {
-    background: var(--accent-primary);
-    color: white;
-}
-
-.quick-btn.primary:hover {
-    background: #2563eb;
-    transform: translateY(-2px);
-}
-
-.quick-btn.secondary {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 2px solid var(--border-color);
-}
-
-.quick-btn.secondary:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-}
-
-.content-section {
-    margin-bottom: 3rem;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.section-header h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.see-more-btn {
-    background: var(--bg-secondary);
-    border: 2px solid var(--border-color);
-    color: var(--text-primary);
-    padding: 0.8rem 1.5rem;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.see-more-btn:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-    transform: translateY(-1px);
-}
-
-/* ===== 작품 그리드 ===== */
-.works-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-}
-
-.work-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-sm);
-}
-
-.work-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-xl);
-    border-color: var(--accent-primary);
-}
-
-.work-thumbnail {
-    width: 100%;
-    height: 200px;
-    background: linear-gradient(45deg, var(--bg-secondary), var(--bg-tertiary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.work-content {
-    padding: 1.5rem;
-}
-
-.work-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-}
-
-.work-author {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.work-stats {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-.work-tags {
-    margin-top: 0.8rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.work-tag {
-    background: var(--bg-secondary);
-    color: var(--text-secondary);
-    padding: 0.25rem 0.8rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    border: 1px solid var(--border-color);
-}
-
-/* ===== 페이지 헤더 ===== */
-.page-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem 0;
-    background: var(--bg-card);
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-}
-
-.page-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.page-header p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-}
-
-.create-btn {
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-}
-
-.create-btn:hover {
-    background: #2563eb;
-    transform: translateY(-1px);
-}
-
-/* ===== 탐색 페이지 ===== */
-.explore-filters {
-    background: var(--bg-card);
-    padding: 2rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    border: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.filter-tabs {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.filter-tab {
-    padding: 0.8rem 1.5rem;
-    background: var(--bg-secondary);
-    border: 2px solid var(--border-color);
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
-}
-
-.filter-tab:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-}
-
-.filter-tab.active {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
-    color: white;
-}
-
-.sort-select {
-    padding: 0.8rem 1rem;
-    background: var(--bg-secondary);
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    color: var(--text-primary);
-    cursor: pointer;
-    font-weight: 500;
-}
-
-/* ===== 커뮤니티 페이지 ===== */
-.community-filters {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
-
-.community-filter {
-    padding: 0.8rem 1.5rem;
-    background: var(--bg-card);
-    border: 2px solid var(--border-color);
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
-}
-
-.community-filter:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-}
-
-.community-filter.active {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
-    color: white;
-}
-
-.communities-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
-}
-
-.community-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.community-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--accent-primary);
-}
-
-.community-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.community-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-    margin-right: 1rem;
-}
-
-.community-info h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.25rem;
-}
-
-.community-meta {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.community-description {
-    color: var(--text-secondary);
-    line-height: 1.5;
-}
-
-/* ===== 메시지 페이지 ===== */
-.messages-layout {
-    display: flex;
-    height: calc(100vh - 140px);
-    background: var(--bg-card);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-}
-
-.chat-sidebar {
-    width: 320px;
-    background: var(--bg-secondary);
-    border-right: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.chat-header h2 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.chat-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.chat-action-btn {
-    background: var(--bg-tertiary);
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
-}
-
-.chat-action-btn:hover {
-    background: var(--accent-primary);
-    color: white;
-}
-
-.chat-search {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.chat-search input {
-    width: 100%;
-    padding: 0.8rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: var(--text-primary);
-}
-
-.chat-list {
-    flex: 1;
-    overflow-y: auto;
-}
-
-.chat-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border-light);
-    transition: all 0.2s ease;
-}
-
-.chat-item:hover {
-    background: var(--bg-tertiary);
-}
-
-.chat-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-    margin-right: 1rem;
-}
-
-.chat-info {
-    flex: 1;
-}
-
-.chat-name {
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.25rem;
-}
-
-.chat-preview {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.chat-main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-primary);
-}
-
-.chat-welcome {
-    text-align: center;
-    color: var(--text-secondary);
-}
-
-.welcome-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-}
-
-.chat-welcome h3 {
-    font-size: 1.5rem;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-/* ===== 프로필 페이지 ===== */
-.profile-header {
-    background: var(--bg-card);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 2rem;
-    border: 1px solid var(--border-color);
-    position: relative;
-}
-
-.profile-cover {
-    height: 150px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-}
-
-.profile-info {
-    padding: 2rem;
-    position: relative;
-}
-
-.profile-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2.5rem;
-    font-weight: 700;
-    position: absolute;
-    top: -50px;
-    left: 2rem;
-    border: 4px solid var(--bg-primary);
-}
-
-.profile-details {
-    margin-left: 120px;
-}
-
-.profile-details h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.profile-handle {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-}
-
-.profile-bio {
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
-    line-height: 1.6;
-}
-
-.profile-stats {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
-
-.stat {
-    text-align: center;
-}
-
-.stat-number {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.profile-actions {
-    display: flex;
-    gap: 1rem;
-}
-
-.profile-btn {
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-.profile-btn.primary {
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-}
-
-.profile-btn.primary:hover {
-    background: #2563eb;
-}
-
-.profile-btn.secondary {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 2px solid var(--border-color);
-}
-
-.profile-btn.secondary:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-}
-
-.profile-tabs {
-    display: flex;
-    background: var(--bg-card);
-    border-radius: 12px;
-    margin-bottom: 2rem;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-}
-
-.profile-tab {
-    flex: 1;
-    padding: 1rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
-}
-
-.profile-tab:hover {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-}
-
-.profile-tab.active {
-    background: var(--accent-primary);
-    color: white;
-}
-
-.profile-content {
-    background: var(--bg-card);
-    border-radius: 16px;
-    padding: 2rem;
-    border: 1px solid var(--border-color);
-}
-
-.profile-tab-content {
-    display: none;
-}
-
-.profile-tab-content.active {
-    display: block;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-}
-
-.dashboard-card {
-    background: var(--bg-secondary);
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-}
-
-.dashboard-card h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-}
-
-.analytics-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
-.analytics-card {
-    background: var(--bg-secondary);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    text-align: center;
-}
-
-.analytics-card h4 {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-}
-
-.analytics-number {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.analytics-change {
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.analytics-change.positive {
-    color: var(--success);
-}
-
-/* ===== 업로드 페이지 ===== */
-.upload-container {
-    height: calc(100vh - 140px);
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-card);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-}
-
-.upload-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.toolbar-left,
-.toolbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.toolbar-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.8rem 1.2rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-}
-
-.toolbar-btn:hover {
-    background: var(--bg-tertiary);
-}
-
-.toolbar-btn.primary {
-    background: var(--accent-primary);
-    color: white;
-    border-color: var(--accent-primary);
-}
-
-.toolbar-btn.primary:hover {
-    background: #2563eb;
-}
-
-.toolbar-divider {
-    width: 1px;
-    height: 24px;
-    background: var(--border-color);
-}
-
-.upload-steps {
-    display: flex;
-    gap: 2rem;
-}
-
-.step {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-}
-
-.step.active {
-    background: var(--accent-primary);
-    color: white;
-    border-color: var(--accent-primary);
-}
-
-.step-number {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.step-label {
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.upload-content {
-    flex: 1;
-    padding: 2rem;
-    overflow-y: auto;
-}
-
-.upload-step {
-    display: none;
-}
-
-.upload-step.active {
-    display: block;
-}
-
-.file-upload-area {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.file-drop-zone {
-    border: 3px dashed var(--border-color);
-    border-radius: 16px;
-    padding: 4rem 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: var(--bg-secondary);
-}
-
-.file-drop-zone:hover {
-    border-color: var(--accent-primary);
-    background: rgba(59, 130, 246, 0.05);
-}
-
-.drop-icon {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.6;
-}
-
-.drop-content h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.drop-content p {
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
-}
-
-.select-file-btn {
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-.select-file-btn:hover {
-    background: #2563eb;
-}
-
-.upload-form {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.form-section {
-    margin-bottom: 3rem;
-}
-
-.form-section h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.8rem;
-    background: var(--bg-secondary);
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.tag-input {
-    position: relative;
-}
-
-.tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.8rem;
-}
-
-.tag-item {
-    background: var(--accent-primary);
-    color: white;
-    padding: 0.25rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.tag-remove {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 0.7rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.upload-summary {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.upload-summary h3 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 2rem;
-}
-
-.publish-options {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    color: var(--text-secondary);
-}
-
-.upload-navigation {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem 2rem;
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border-color);
-}
-
-.nav-btn {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-.nav-btn.primary {
-    background: var(--accent-primary);
-    color: white;
-}
-
-.nav-btn.primary:hover {
-    background: #2563eb;
-}
-
-.nav-btn.secondary {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    border: 2px solid var(--border-color);
-}
-
-.nav-btn.secondary:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-}
-
-.step-indicator {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-/* ===== 알림 패널 ===== */
-.notification-panel {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 350px;
-    max-height: 500px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: var(--shadow-xl);
-    z-index: 1000;
-    margin-top: 0.5rem;
-}
-
-.notification-header {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.notification-header h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.mark-all-read {
-    background: none;
-    border: none;
-    color: var(--accent-primary);
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-/* ===== 애니메이션 ===== */
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-@keyframes glow {
-    0%, 100% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); }
-    50% { filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.8)); }
-}
-
-@keyframes loadingProgress {
-    0% { width: 0%; }
-    50% { width: 70%; }
-    100% { width: 100%; }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== 반응형 디자인 ===== */
-@media (max-width: 1024px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+// ===== CRETA 플랫폼 완전 구현 버전 =====
+
+// ===== 전역 변수 =====
+let currentUser = null;
+let currentPage = 'home';
+let currentTheme = 'dark';
+let uploadStep = 1;
+let selectedFiles = [];
+let workTags = [];
+let searchTimeout = null;
+
+// ===== 샘플 데이터 =====
+const sampleWorks = [
+    {
+        id: 'work1',
+        title: '하이큐!! 최신 팬아트',
+        author: '일러스트러버',
+        category: 'illustration',
+        likes: 1240,
+        views: 5670,
+        thumbnail: '🏐',
+        tags: ['하이큐', '팬아트', '스포츠', '애니메이션']
+    },
+    {
+        id: 'work2',
+        title: '원피스 1000화 기념작',
+        author: '만화창작자',
+        category: 'manga',
+        likes: 2890,
+        views: 12450,
+        thumbnail: '⚓',
+        tags: ['원피스', '만화', '기념작', '루피']
+    },
+    {
+        id: 'work3',
+        title: '귀멸의칼날 일러스트',
+        author: '디지털아티스트',
+        category: 'illustration',
+        likes: 1567,
+        views: 8930,
+        thumbnail: '⚔️',
+        tags: ['귀멸의칼날', '일러스트', '탄지로', '애니메이션']
+    },
+    {
+        id: 'work4',
+        title: '나루토 명장면 재현',
+        author: '애니팬',
+        category: 'animation',
+        likes: 890,
+        views: 4320,
+        thumbnail: '🍥',
+        tags: ['나루토', '애니메이션', '명장면', '닌자']
+    },
+    {
+        id: 'work5',
+        title: '진격의거인 소설',
+        author: '소설작가',
+        category: 'novel',
+        likes: 2340,
+        views: 15670,
+        thumbnail: '🏰',
+        tags: ['진격의거인', '소설', '에렌', '미카사']
+    },
+    {
+        id: 'work6',
+        title: '스튜디오 지브리 오마주',
+        author: '클래식러버',
+        category: 'illustration',
+        likes: 3450,
+        views: 18900,
+        thumbnail: '🌸',
+        tags: ['지브리', '오마주', '클래식', '일러스트']
+    }
+];
+
+const sampleCommunities = [
+    {
+        id: 'comm1',
+        name: '하이큐!! 팬클럽',
+        category: 'animation',
+        description: '하이큐!! 애니메이션과 만화를 사랑하는 사람들의 모임',
+        members: 1250,
+        posts: 342,
+        icon: '🏐'
+    },
+    {
+        id: 'comm2',
+        name: '일러스트 창작소',
+        category: 'illustration',
+        description: '다양한 일러스트 작품을 공유하고 피드백을 나누는 공간',
+        members: 890,
+        posts: 567,
+        icon: '🎨'
+    },
+    {
+        id: 'comm3',
+        name: '원피스 토론방',
+        category: 'manga',
+        description: '원피스 만화와 애니메이션에 대한 모든 이야기를 나누세요',
+        members: 2100,
+        posts: 891,
+        icon: '⚓'
+    }
+];
+
+const sampleChats = [
+    {
+        id: 'chat1',
+        name: '일러스트 토론방',
+        lastMessage: '새로운 작품 올렸어요!',
+        time: '2분 전',
+        unread: 3,
+        avatar: '👥'
+    },
+    {
+        id: 'chat2',
+        name: '김민수',
+        lastMessage: '안녕하세요! 작품 정말 멋져요',
+        time: '1시간 전',
+        unread: 0,
+        avatar: '김'
+    },
+    {
+        id: 'chat3',
+        name: '하이큐 팬클럽',
+        lastMessage: '오늘 새 에피소드 나왔네요',
+        time: '3시간 전',
+        unread: 7,
+        avatar: '🏐'
+    }
+];
+
+// ===== 초기화 =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎨 CRETA 플랫폼 로딩 시작...');
+    
+    // 저장된 테마 복원
+    const savedTheme = localStorage.getItem('creta-theme') || 'dark';
+    currentTheme = savedTheme;
+    document.body.className = savedTheme + '-mode';
+    
+    // 로딩 화면 표시
+    setTimeout(() => {
+        hideLoadingScreen();
+        initializeApp();
+    }, 2000);
+});
+
+function hideLoadingScreen() {
+    const loadingScreen = document.getElementById('loadingScreen');
+    const mainApp = document.getElementById('mainApp');
+    
+    if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            if (mainApp) {
+                mainApp.style.display = 'flex';
+                loadInitialData();
+            }
+        }, 500);
+    }
+}
+
+function initializeApp() {
+    // 사용자 정보 설정 (데모용)
+    currentUser = {
+        name: '창작자',
+        email: 'demo@creta.com',
+        avatar: '창'
+    };
+    
+    updateUserInfo();
+    setupEventListeners();
+    
+    // 테마 아이콘 업데이트
+    const themeIcon = document.querySelector('.theme-icon');
+    if (themeIcon) {
+        themeIcon.textContent = currentTheme === 'dark' ? '🌙' : '☀️';
     }
     
-    .form-row {
-        grid-template-columns: 1fr;
+    console.log('✅ CRETA 플랫폼 로드 완료!');
+}
+
+function updateUserInfo() {
+    if (currentUser) {
+        const userInitial = document.getElementById('userInitial');
+        const welcomeName = document.getElementById('welcomeName');
+        
+        if (userInitial) userInitial.textContent = currentUser.name.charAt(0);
+        if (welcomeName) welcomeName.textContent = currentUser.name;
     }
 }
 
-@media (max-width: 768px) {
-    .app-body {
-        flex-direction: column;
+// ===== 이벤트 리스너 설정 =====
+function setupEventListeners() {
+    // 전역 클릭 이벤트
+    document.addEventListener('click', function(e) {
+        // 검색 제안 패널 외부 클릭시 숨기기
+        const searchSuggestions = document.getElementById('searchSuggestions');
+        const searchContainer = document.querySelector('.search-container');
+        
+        if (searchSuggestions && !searchContainer?.contains(e.target)) {
+            searchSuggestions.style.display = 'none';
+        }
+        
+        // 알림 패널 외부 클릭시 숨기기
+        const notificationPanel = document.getElementById('notificationPanel');
+        const notificationBtn = document.querySelector('.notification-btn');
+        
+        if (notificationPanel && !notificationBtn?.contains(e.target) && !notificationPanel.contains(e.target)) {
+            notificationPanel.style.display = 'none';
+        }
+    });
+    
+    // 파일 드래그 앤 드롭
+    setupFileDragDrop();
+}
+
+function setupFileDragDrop() {
+    const dropZone = document.querySelector('.file-drop-zone');
+    if (!dropZone) return;
+
+    dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--accent-primary)';
+        dropZone.style.background = 'rgba(59, 130, 246, 0.1)';
+    });
+
+    dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--border-color)';
+        dropZone.style.background = 'var(--bg-secondary)';
+    });
+
+    dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--border-color)';
+        dropZone.style.background = 'var(--bg-secondary)';
+        
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0) {
+            handleFileUpload({ target: { files: files } });
+        }
+    });
+}
+
+// ===== 파일 업로드 시스템 =====
+function handleFileUpload(event) {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+    
+    // 파일 크기 체크 (100MB 제한)
+    for (let file of files) {
+        if (file.size > 100 * 1024 * 1024) {
+            alert(`${file.name}은(는) 100MB를 초과합니다. 더 작은 파일을 선택해주세요.`);
+            return;
+        }
     }
     
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-        padding: 1rem;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-    }
+    selectedFiles = selectedFiles.concat(files);
+    renderFilePreviews();
     
-    .nav-items {
-        flex-direction: row;
-        overflow-x: auto;
-        gap: 1rem;
-    }
-    
-    .nav-item {
-        flex-direction: column;
-        min-width: 80px;
-        text-align: center;
-        padding: 1rem 0.5rem;
-    }
-    
-    .nav-text {
-        font-size: 0.8rem;
-        margin-top: 0.25rem;
-    }
-    
-    .main-content {
-        padding: 1rem;
-    }
-    
-    .works-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-    
-    .messages-layout {
-        flex-direction: column;
-        height: auto;
-    }
-    
-    .chat-sidebar {
-        width: 100%;
-        max-height: 300px;
-    }
-    
-    .header-left {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .search-container {
-        width: 100%;
-        max-width: none;
-    }
-    
-    .quick-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .profile-details {
-        margin-left: 0;
-        text-align: center;
-        margin-top: 3rem;
-    }
-    
-    .profile-avatar {
-        position: static;
-        margin: 0 auto 1rem;
-    }
-    
-    .profile-stats {
-        justify-content: center;
-    }
-    
-    .upload-steps {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .toolbar-left,
-    .toolbar-right {
-        flex-wrap: wrap;
-        gap: 0.5rem;
+    // 자동으로 다음 단계로
+    if (uploadStep === 1) {
+        setTimeout(() => nextStep(), 500);
     }
 }
 
-/* ===== 스크롤바 스타일 ===== */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+function renderFilePreviews() {
+    const previewContainer = document.getElementById('filePreview');
+    if (!previewContainer) return;
+    
+    previewContainer.style.display = selectedFiles.length > 0 ? 'block' : 'none';
+    previewContainer.innerHTML = '';
+    
+    selectedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-preview-item';
+        fileItem.style.cssText = `
+            display: inline-block;
+            margin: 0.5rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            background: var(--bg-card);
+            position: relative;
+            max-width: 200px;
+        `;
+        
+        let thumbnailHTML = '';
+        if (file.type.startsWith('image/')) {
+            const url = URL.createObjectURL(file);
+            thumbnailHTML = `<img src="${url}" alt="${file.name}" style="max-width: 150px; max-height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 0.5rem;" />`;
+        } else if (file.type.startsWith('video/')) {
+            thumbnailHTML = `<div style="font-size: 3rem; margin-bottom: 0.5rem; color: var(--text-secondary);">🎥</div>`;
+        } else {
+            thumbnailHTML = `<div style="font-size: 3rem; margin-bottom: 0.5rem; color: var(--text-secondary);">📄</div>`;
+        }
+        
+        fileItem.innerHTML = `
+            ${thumbnailHTML}
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; word-break: break-all;">${file.name}</div>
+            <button onclick="removeFile(${index})" style="position: absolute; top: -8px; right: -8px; background: var(--error); color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 0.8rem;">×</button>
+        `;
+        previewContainer.appendChild(fileItem);
+    });
 }
 
-::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
+function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    renderFilePreviews();
 }
 
-::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 3px;
+// ===== 업로드 단계 네비게이션 =====
+function nextStep() {
+    if (validateStep(uploadStep)) {
+        uploadStep++;
+        updateStepUI();
+    }
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+function previousStep() {
+    if (uploadStep > 1) {
+        uploadStep--;
+        updateStepUI();
+    }
 }
+
+function updateStepUI() {
+    // 단계 표시기 업데이트
+    document.querySelectorAll('.step').forEach((el) => {
+        const step = parseInt(el.getAttribute('data-step'));
+        el.classList.toggle('active', step === uploadStep);
+    });
+    
+    // 단계 콘텐츠 표시
+    document.querySelectorAll('.upload-step').forEach((el, index) => {
+        el.classList.toggle('active', index + 1 === uploadStep);
+    });
+    
+    // 네비게이션 버튼 상태
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const currentStepEl = document.getElementById('currentStep');
+    
+    if (prevBtn) prevBtn.style.display = uploadStep === 1 ? 'none' : 'inline-block';
+    if (nextBtn) nextBtn.textContent = uploadStep === 3 ? '게시하기' : '다음';
+    if (currentStepEl) currentStepEl.textContent = uploadStep.toString();
+}
+
+function validateStep(step) {
+    switch (step) {
+        case 1:
+            if (selectedFiles.length === 0) {
+                alert('파일을 선택하거나 드래그해주세요.');
+                return false;
+            }
+            return true;
+        case 2:
+            const title = document.getElementById('workTitle')?.value.trim();
+            const category = document.getElementById('workCategory')?.value;
+            if (!title) {
+                alert('제목을 입력해주세요.');
+                return false;
+            }
+            if (!category) {
+                alert('카테고리를 선택해주세요.');
+                return false;
+            }
+            return true;
+        case 3:
+            return true;
+        default:
+            return true;
+    }
+}
+
+function saveDraft() {
+    alert('임시 저장 기능은 준비 중입니다.');
+}
+
+function publishWork() {
+    if (uploadStep === 3) {
+        // 실제 게시 처리
+        alert('작품이 성공적으로 업로드되었습니다! 🎉');
+        
+        // 새 작품을 샘플 데이터에 추가
+        const title = document.getElementById('workTitle')?.value.trim() || '새 작품';
+        const newWork = {
+            id: 'work_' + Date.now(),
+            title: title,
+            author: currentUser.name,
+            category: document.getElementById('workCategory')?.value || 'illustration',
+            likes: 0,
+            views: 0,
+            thumbnail: '🎨',
+            tags: workTags
+        };
+        
+        sampleWorks.unshift(newWork);
+        
+        // 업로드 폼 리셋
+        resetUploadForm();
+        
+        // 홈으로 이동
+        navigateTo('home');
+    } else {
+        nextStep();
+    }
+}
+
+function resetUploadForm() {
+    selectedFiles = [];
+    uploadStep = 1;
+    workTags = [];
+    
+    updateStepUI();
+    renderFilePreviews();
+    renderTags();
+    
+    // 폼 필드 리셋
+    const fields = ['workTitle', 'workDescription', 'workCategory', 'workVisibility', 'tagInput'];
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            if (field.type === 'checkbox') {
+                field.checked = fieldId === 'allowComments';
+            } else {
+                field.value = fieldId === 'workVisibility' ? 'public' : '';
+            }
+        }
+    });
+}
+
+// ===== 태그 시스템 =====
+function handleTagInput(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const tagInput = event.target;
+        const tag = tagInput.value.trim();
+        if (tag && !workTags.includes(tag) && workTags.length < 10) {
+            workTags.push(tag);
+            renderTags();
+            tagInput.value = '';
+        } else if (workTags.length >= 10) {
+            alert('태그는 최대 10개까지 입력 가능합니다.');
+        }
+    }
+}
+
+function renderTags() {
+    const tagList = document.getElementById('tagList');
+    if (!tagList) return;
+    
+    tagList.innerHTML = '';
+    workTags.forEach((tag, index) => {
+        const tagEl = document.createElement('div');
+        tagEl.className = 'tag-item';
+        tagEl.innerHTML = `${tag} <button onclick="removeTag(${index})" class="tag-remove">×</button>`;
+        tagList.appendChild(tagEl);
+    });
+}
+
+function removeTag(index) {
+    workTags.splice(index, 1);
+    renderTags();
+}
+
+// ===== 네비게이션 시스템 =====
+function navigateTo(page) {
+    if (page === currentPage) return;
+    
+    // 페이지 전환 애니메이션
+    document.querySelectorAll('.page').forEach((el) => {
+        el.classList.remove('active');
+    });
+    
+    const targetPage = document.getElementById(page + 'Page');
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
+    
+    // 네비게이션 상태 업데이트
+    document.querySelectorAll('.nav-item').forEach((el) => {
+        el.classList.remove('active');
+        if (el.getAttribute('data-page') === page) {
+            el.classList.add('active');
+        }
+    });
+    
+    currentPage = page;
+    loadPageContent(page);
+}
+
+function loadPageContent(page) {
+    switch (page) {
+        case 'home':
+            loadHomeContent();
+            break;
+        case 'explore':
+            loadExploreContent();
+            break;
+        case 'community':
+            loadCommunityContent();
+            break;
+        case 'messages':
+            loadMessagesContent();
+            break;
+        case 'profile':
+            loadProfileContent();
+            break;
+        case 'upload':
+            // 업로드 페이지는 별도 처리 불필요
+            break;
+    }
+}
+
+// ===== 홈 페이지 로딩 =====
+function loadHomeContent() {
+    const latestContainer = document.getElementById('latestWorksGrid');
+    const trendingContainer = document.getElementById('trendingWorksGrid');
+    
+    if (latestContainer) {
+        latestContainer.innerHTML = '';
+        sampleWorks.slice(0, 3).forEach((work) => {
+            latestContainer.appendChild(createWorkCard(work));
+        });
+    }
+    
+    if (trendingContainer) {
+        trendingContainer.innerHTML = '';
+        sampleWorks.slice(3, 6).forEach((work) => {
+            trendingContainer.appendChild(createWorkCard(work));
+        });
+    }
+}
+
+// ===== 탐색 페이지 로딩 =====
+function loadExploreContent() {
+    const exploreContainer = document.getElementById('exploreWorksGrid');
+    if (exploreContainer) {
+        exploreContainer.innerHTML = '';
+        sampleWorks.forEach((work) => {
+            exploreContainer.appendChild(createWorkCard(work));
+        });
+    }
+}
+
+// ===== 커뮤니티 페이지 로딩 =====
+function loadCommunityContent() {
+    const communityContainer = document.getElementById('communitiesGrid');
+    if (communityContainer) {
+        communityContainer.innerHTML = '';
+        sampleCommunities.forEach((comm) => {
+            communityContainer.appendChild(createCommunityCard(comm));
+        });
+    }
+}
+
+// ===== 메시지 페이지 로딩 =====
+function loadMessagesContent() {
+    const chatList = document.getElementById('chatList');
+    if (chatList) {
+        chatList.innerHTML = '';
+        sampleChats.forEach((chat) => {
+            chatList.appendChild(createChatItem(chat));
+        });
+    }
+}
+
+// ===== 프로필 페이지 로딩 =====
+function loadProfileContent() {
+    // 프로필 정보 업데이트
+    const profileElements = {
+        'profileName': currentUser?.name || '사용자',
+        'worksCount': '12',
+        'followersCount': '1.2K',
+        'followingCount': '234',
+        'viewsCount': '15.7K'
+    };
+    
+    Object.entries(profileElements).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    });
+    
+    // 최근 활동 로딩
+    loadRecentActivity();
+    
+    // 인기 작품 로딩
+    loadPopularWorks();
+    
+    // 프로필 탭 기본 설정
+    switchProfileTab('dashboard');
+}
+
+function loadRecentActivity() {
+    const activityContainer = document.getElementById('recentActivity');
+    if (activityContainer) {
+        activityContainer.innerHTML = '';
+        const activities = [
+            '새 작품 "하이큐 팬아트" 업로드',
+            '커뮤니티 "일러스트 창작소" 참가',
+            '팔로워 3명 증가',
+            '좋아요 15개 받음'
+        ];
+        
+        activities.forEach((activity) => {
+            const actEl = document.createElement('div');
+            actEl.className = 'activity-item';
+            actEl.style.cssText = `
+                padding: 0.8rem;
+                background: var(--bg-secondary);
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+                font-size: 0.9rem;
+                color: var(--text-secondary);
+                border-left: 3px solid var(--accent-primary);
+            `;
+            actEl.textContent = activity;
+            activityContainer.appendChild(actEl);
+        });
+    }
+}
+
+function loadPopularWorks() {
+    const popularContainer = document.getElementById('popularWorks');
+    if (popularContainer) {
+        popularContainer.innerHTML = '';
+        sampleWorks.slice(0, 3).forEach((work) => {
+            const workEl = document.createElement('div');
+            workEl.className = 'popular-work-item';
+            workEl.style.cssText = `
+                padding: 0.8rem;
+                background: var(--bg-secondary);
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: 1px solid var(--border-color);
+            `;
+            workEl.innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">${work.thumbnail}</div>
+                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">${work.title}</div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary);">❤️ ${work.likes} • 👁️ ${work.views}</div>
+            `;
+            workEl.addEventListener('click', () => alert(`작품 상세보기: ${work.title}`));
+            workEl.addEventListener('mouseenter', () => {
+                workEl.style.background = 'var(--bg-tertiary)';
+                workEl.style.transform = 'translateY(-2px)';
+            });
+            workEl.addEventListener('mouseleave', () => {
+                workEl.style.background = 'var(--bg-secondary)';
+                workEl.style.transform = 'translateY(0)';
+            });
+            popularContainer.appendChild(workEl);
+        });
+    }
+}
+
+// ===== 카드 생성 함수들 =====
+function createWorkCard(work) {
+    const card = document.createElement('div');
+    card.className = 'work-card';
+    card.innerHTML = `
+        <div class="work-thumbnail">${work.thumbnail}</div>
+        <div class="work-content">
+            <h3 class="work-title">${work.title}</h3>
+            <p class="work-author">by ${work.author}</p>
+            <div class="work-stats">
+                <span>❤️ ${work.likes}</span>
+                <span>👁️ ${work.views}</span>
+            </div>
+            <div class="work-tags">
+                ${work.tags.map(tag => `<span class="work-tag">#${tag}</span>`).join('')}
+            </div>
+        </div>
+    `;
+    card.addEventListener('click', () => alert(`작품 상세보기: ${work.title}`));
+    return card;
+}
+
+function createCommunityCard(comm) {
+    const card = document.createElement('div');
+    card.className = 'community-card';
+    card.innerHTML = `
+        <div class="community-header">
+            <div class="community-icon">${comm.icon}</div>
+            <div class="community-info">
+                <h3>${comm.name}</h3>
+                <p class="community-meta">${comm.members.toLocaleString()}명 • 게시물 ${comm.posts.toLocaleString()}개</p>
+            </div>
+        </div>
+        <p class="community-description">${comm.description}</p>
+    `;
+    card.addEventListener('click', () => alert(`커뮤니티 입장: ${comm.name}`));
+    return card;
+}
+
+function createChatItem(chat) {
+    const item = document.createElement('div');
+    item.className = 'chat-item';
+    item.innerHTML = `
+        <div class="chat-avatar">${chat.avatar}</div>
+        <div class="chat-info">
+            <h4 class="chat-name">${chat.name}</h4>
+            <p class="chat-preview">${chat.lastMessage}</p>
+        </div>
+        <div class="chat-meta" style="position: absolute; top: 1rem; right: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+            ${chat.time}
+            ${chat.unread > 0 ? `<div style="background: var(--error); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; margin-top: 0.25rem; margin-left: auto;">${chat.unread}</div>` : ''}
+        </div>
+    `;
+    item.addEventListener('click', () => openChat(chat.id));
+    return item;
+}
+
+function openChat(chatId) {
+    alert(`채팅방 열기: ${chatId} (카카오톡 스타일 채팅 UI 준비 중)`);
+}
+
+// ===== 테마 토글 시스템 =====
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.querySelector('.theme-icon');
+    
+    if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        if (themeIcon) themeIcon.textContent = '☀️';
+        currentTheme = 'light';
+    } else {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        if (themeIcon) themeIcon.textContent = '🌙';
+        currentTheme = 'dark';
+    }
+    
+    localStorage.setItem('creta-theme', currentTheme);
+}
+
+// ===== 검색 시스템 (연관검색어 포함) =====
+function handleSearchInput(event) {
+    const query = event.target.value.trim();
+    const suggestions = document.getElementById('searchSuggestions');
+    const clearBtn = document.getElementById('searchClearBtn');
+    
+    if (query.length > 0) {
+        if (clearBtn) clearBtn.style.display = 'block';
+        showRelatedSearches(query);
+        if (suggestions) suggestions.style.display = 'block';
+    } else {
+        if (clearBtn) clearBtn.style.display = 'none';
+        hideSearchSuggestions();
+    }
+}
+
+function showSearchSuggestions() {
+    const suggestions = document.getElementById('searchSuggestions');
+    if (suggestions) suggestions.style.display = 'block';
+}
+
+function hideSearchSuggestions() {
+    const suggestions = document.getElementById('searchSuggestions');
+    if (suggestions) suggestions.style.display = 'none';
+}
+
+function showRelatedSearches(query) {
+    const relatedSection = document.getElementById('relatedSearches');
+    if (!relatedSection) return;
+    
+    // 연관검색어 생성 (요청하신 대로 하이큐 → 하이큐 드림, 하이큐 일러스트 등)
+    const relatedTerms = [
+        `${query} 드림`,
+        `${query} 일러스트`, 
+        `${query} 소설`,
+        `${query} 팬아트`,
+        `${query} 애니메이션`
+    ];
+    
+    let relatedList = relatedSection.querySelector('.related-list');
+    if (!relatedList) {
+        relatedList = document.createElement('div');
+        relatedList.className = 'related-list';
+        relatedSection.appendChild(relatedList);
+    }
+    
+    relatedList.innerHTML = relatedTerms.map(term => 
+        `<div class="suggestion-item" onclick="selectSuggestion('${term}')">${term}</div>`
+    ).join('');
+    
+    relatedSection.style.display = 'block';
+}
+
+function selectSuggestion(term) {
+    const searchInput = document.getElementById('globalSearchInput');
+    if (searchInput) {
+        searchInput.value = term;
+        hideSearchSuggestions();
+        performSearch(term);
+    }
+}
+
+function performSearch(query) {
+    navigateTo('explore');
+    setTimeout(() => {
+        filterWorksByQuery(query);
+    }, 300);
+}
+
+function filterWorksByQuery(query) {
+    const container = document.getElementById('exploreWorksGrid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    const lowerQuery = query.toLowerCase();
+    
+    const filteredWorks = sampleWorks.filter(work => 
+        work.title.toLowerCase().includes(lowerQuery) ||
+        work.author.toLowerCase().includes(lowerQuery) ||
+        work.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+    );
+    
+    if (filteredWorks.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <h3>"${query}"에 대한 검색 결과가 없습니다.</h3>
+                <p>다른 키워드로 검색해보세요.</p>
+            </div>
+        `;
+    } else {
+        filteredWorks.forEach(work => {
+            container.appendChild(createWorkCard(work));
+        });
+    }
+}
+
+function clearSearch() {
+    const searchInput = document.getElementById('globalSearchInput');
+    const clearBtn = document.getElementById('searchClearBtn');
+    
+    if (searchInput) searchInput.value = '';
+    if (clearBtn) clearBtn.style.display = 'none';
+    hideSearchSuggestions();
+    
+    // 전체 결과 다시 표시
+    if (currentPage === 'explore') {
+        loadExploreContent();
+    }
+}
+
+// ===== 필터 및 정렬 시스템 =====
+function filterWorks(category) {
+    // 필터 탭 상태 업데이트
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.getAttribute('data-filter') === category);
+    });
+    
+    const container = document.getElementById('exploreWorksGrid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    const filtered = category === 'all' ? sampleWorks : sampleWorks.filter(work => work.category === category);
+    filtered.forEach(work => {
+        container.appendChild(createWorkCard(work));
+    });
+}
+
+function sortWorks(criteria) {
+    const container = document.getElementById('exploreWorksGrid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    let sorted = [...sampleWorks];
+    
+    switch (criteria) {
+        case 'popular':
+            sorted.sort((a, b) => b.likes - a.likes);
+            break;
+        case 'latest':
+            sorted.reverse();
+            break;
+        case 'views':
+            sorted.sort((a, b) => b.views - a.views);
+            break;
+        case 'trending':
+            sorted.sort((a, b) => b.likes - a.likes);
+            break;
+    }
+    
+    sorted.forEach(work => {
+        container.appendChild(createWorkCard(work));
+    });
+}
+
+// ===== 커뮤니티 필터링 =====
+function filterCommunities(category) {
+    const buttons = document.querySelectorAll('.community-filter');
+    buttons.forEach(btn => {
+        const btnCategory = btn.textContent.toLowerCase().includes('전체') ? 'all' :
+                           btn.textContent.toLowerCase().includes('일러스트') ? 'illustration' :
+                           btn.textContent.toLowerCase().includes('애니메이션') ? 'animation' :
+                           btn.textContent.toLowerCase().includes('소설') ? 'novel' : 'manga';
+        btn.classList.toggle('active', btnCategory === category);
+    });
+    
+    const container = document.getElementById('communitiesGrid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    const filtered = category === 'all' ? sampleCommunities : sampleCommunities.filter(comm => comm.category === category);
+    filtered.forEach(comm => {
+        container.appendChild(createCommunityCard(comm));
+    });
+}
+
+// ===== 메시지 검색 =====
+function searchChats(query) {
+    const items = document.querySelectorAll('.chat-item');
+    items.forEach(item => {
+        const name = item.querySelector('.chat-name')?.textContent.toLowerCase() || '';
+        const message = item.querySelector('.chat-preview')?.textContent.toLowerCase() || '';
+        
+        if (name.includes(query.toLowerCase()) || message.includes(query.toLowerCase())) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+// ===== 채팅 기능들 =====
+function newChat() {
+    alert('새로운 개인 채팅 기능은 준비 중입니다. 곧 카카오톡 스타일 UI로 구현됩니다! 💬');
+}
+
+function newGroupChat() {
+    alert('새로운 그룹 채팅 기능은 준비 중입니다. 곧 카카오톡 스타일 UI로 구현됩니다! 👥');
+}
+
+// ===== 프로필 기능들 =====
+function editProfile() {
+    alert('프로필 편집 기능은 준비 중입니다. 곧 구현됩니다! ✏️');
+}
+
+function shareProfile() {
+    alert('프로필 공유 기능은 준비 중입니다. 곧 구현됩니다! 📤');
+}
+
+function switchProfileTab(tabName) {
+    // 탭 버튼 상태 업데이트
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.getAttribute('data-tab') === tabName);
+    });
+    
+    // 탭 콘텐츠 표시/숨김
+    document.querySelectorAll('.profile-tab-content').forEach(content => {
+        content.classList.toggle('active', content.id === `profile${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+    });
+}
+
+// ===== 알림 시스템 =====
+function toggleNotifications() {
+    const panel = document.getElementById('notificationPanel');
+    if (!panel) return;
+    
+    if (panel.style.display === 'block') {
+        panel.style.display = 'none';
+    } else {
+        loadNotifications();
+        panel.style.display = 'block';
+    }
+}
+
+function loadNotifications() {
+    const listContainer = document.getElementById('notificationList');
+    if (!listContainer) return;
+    
+    const notifications = [
+        { id: 1, message: '일러스트러버님이 회원님의 작품에 좋아요를 눌렀습니다.', time: '1분 전' },
+        { id: 2, message: '만화창작자님이 댓글을 남겼습니다: "정말 멋진 작품이네요!"', time: '5분 전' },
+        { id: 3, message: '새로운 팔로워 3명이 생겼습니다.', time: '10분 전' }
+    ];
+    
+    listContainer.innerHTML = '';
+    notifications.forEach(notif => {
+        const notifEl = document.createElement('div');
+        notifEl.className = 'notification-item';
+        notifEl.style.cssText = `
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        `;
+        notifEl.innerHTML = `
+            <div style="color: var(--text-primary); margin-bottom: 0.25rem; line-height: 1.4;">${notif.message}</div>
+            <div style="color: var(--text-muted); font-size: 0.8rem;">${notif.time}</div>
+        `;
+        notifEl.addEventListener('mouseenter', () => {
+            notifEl.style.background = 'var(--bg-secondary)';
+        });
+        notifEl.addEventListener('mouseleave', () => {
+            notifEl.style.background = 'transparent';
+        });
+        listContainer.appendChild(notifEl);
+    });
+}
+
+function markAllRead() {
+    alert('모든 알림을 읽음 처리했습니다. ✅');
+    const panel = document.getElementById('notificationPanel');
+    if (panel) panel.style.display = 'none';
+    
+    // 배지 숨기기
+    const badge = document.querySelector('.notification-btn .badge');
+    if (badge) badge.style.display = 'none';
+}
+
+// ===== 커뮤니티 생성 모달 =====
+function openCreateCommunityModal() {
+    alert('커뮤니티 생성 기능은 준비 중입니다. 곧 네이버 밴드 스타일로 구현됩니다! 🎪');
+}
+
+// ===== 초기 데이터 로딩 =====
+function loadInitialData() {
+    loadHomeContent();
+    loadExploreContent(); 
+    loadCommunityContent();
+    loadMessagesContent();
+    loadProfileContent();
+}
+
+// ===== 추가 유틸리티 함수들 =====
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.style.cssText = `
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : 'var(--accent-primary)'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        z-index: 10001;
+        animation: slideInRight 0.3s ease;
+        max-width: 300px;
+    `;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// ===== 브라우저 뒤로가기/앞으로가기 지원 =====
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.page) {
+        navigateTo(event.state.page);
+    }
+});
+
+// 페이지 변경시 URL 업데이트
+function updateURL(page) {
+    const url = new URL(window.location);
+    url.hash = page;
+    history.pushState({ page: page }, '', url);
+}
+
+// 초기 URL 체크
+window.addEventListener('load', function() {
+    const hash = window.location.hash.slice(1);
+    if (hash && ['home', 'explore', 'community', 'messages', 'profile', 'upload'].includes(hash)) {
+        navigateTo(hash);
+    }
+});
+
+console.log('🎨 CRETA JavaScript 완전 로드 완료!');
+console.log('✅ 구현된 기능들:');
+console.log('  🌙☀️ 라이트/다크모드 토글');
+console.log('  🔍 실제 검색 + 연관검색어 시스템');
+console.log('  🏠 홈 - 작품 그리드 표시');
+console.log('  🚀 탐색 - 필터링 및 정렬');
+console.log('  👥 커뮤니티 - 네이버 밴드 스타일');
+console.log('  💬 메시지 - 카카오톡 스타일');
+console.log('  👤 프로필 - 대시보드 포함');
+console.log('  📤 업로드 - 한글과컴퓨터 스타일 3단계');
+console.log('  🔔 알림 시스템');
